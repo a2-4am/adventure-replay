@@ -1,0 +1,117 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+
+; clobbers A
+!macro STA_16 .addr, .value {
+         lda   #<.value
+         sta   .addr
+         lda   #>.value
+         sta   .addr+1
+}
+
+!macro MAKE_JSR .addr, .dest {
+         lda   #$20
+         sta   .addr
+         +STA_16 .addr+1, .dest
+}
+
+; clobbers A
+!macro MAKE_JMP .addr, .dest {
+         lda   #$4C
+         sta   .addr
+         +STA_16 .addr+1, .dest
+}
+
+; standard memory addresses
+CH                        = $24
+CV                        = $25
+BASL                      = $28
+RWTS_PTR                  = $48
+RNDL                      = $4E
+RNDH                      = $4F
+PRODOS_MLI                = $BF00
+PRODOS_BOOT_UNIT          = $BF30
+PRODOS_MEMORY_MAP         = $BF58
+KBD                       = $C000
+CLEARKBD                  = $C010
+ROM_TEXT                  = $FB2F
+ROM_FINALIZE_RESET        = $FB6F
+ROM_HOME                  = $FC58
+ROM_WAIT                  = $FCA8
+ROM_KEYIN                 = $FD1B
+
+; ProDOS constants
+CMD_ONLINE                = $C5
+CMD_SETPREFIX             = $C6
+CMD_GETPREFIX             = $C7
+CMD_OPEN                  = $C8
+CMD_READ                  = $CA
+CMD_WRITE                 = $CB
+CMD_CLOSE                 = $CC
+CMD_SEEK                  = $CE
+
+SELF_MODIFIED_BYTE        = $FD
+SELF_MODIFIED_WORD        = $FDFD
+
+;
+; .SYSTEM code starts here
+;
+         jmp   prefix_loop           ; magic jump
+         !byte $EE,$EE               ; magic bytes
+         !byte $41                   ; length of following buffer
+input_filename_start
+         !fill $41                   ; may contain filename passed in by caller
+input_filename_end
+;
+; Ensure ProDOS has a current prefix, otherwise opening any file will fail,
+; which is bad. If launched from Bitsy Bye, there will be no current prefix.
+; In that case, we get the boot volume name, then set the prefix to that.
+; PREFIX_BUFFER ($40 bytes) is clobbered but may be reused after.
+;
+prefix_loop
+         jsr   PRODOS_MLI
+op_prefix
+         !byte CMD_GETPREFIX         ; self-modified
+         !word parm_prefix
+         ldx   PREFIX_BUFFER
+         bne   clear_memory_map
+
+         ; get boot volume name
+         lda   PRODOS_BOOT_UNIT
+         sta   parm_online_unit
+         jsr   PRODOS_MLI
+         !byte CMD_ONLINE
+         !word parm_online
+
+         lda   PREFIX_BUFFER+1
+         and   #$0F
+         tax
+         inx
+         stx   PREFIX_BUFFER
+         lda   #$2F
+         sta   PREFIX_BUFFER+1
+         ; PREFIX_BUFFER is now a length-prefixed string
+         ; of '/' + the boot volume name
+
+         dec   op_prefix             ; -> CMD_SETPREFIX
+         bne   prefix_loop           ; always branches
+
+parm_prefix
+         !byte 1
+         !word PREFIX_BUFFER
+
+parm_online
+         !byte 2
+parm_online_unit
+         !byte SELF_MODIFIED_BYTE
+         !word PREFIX_BUFFER+1
+
+clear_memory_map
+         ; clear ProDOS memory bitmap
+         ldx   #$17
+         lda   #$00
+-        sta   PRODOS_MEMORY_MAP, x
+         dex
+         bpl   -
+         jmp   Stage1

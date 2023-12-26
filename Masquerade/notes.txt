@@ -1,0 +1,25 @@
+save game routine entry point $4C10 (first thing called after typing "SAVE GAME" <Return>)
+$4C30 calls $0806 to display "GAME NUMBER? (1-7)" prompt (inline after call, 0-terminated)
+$4C4A calls $0809 to get input, stores in $300+
+$4C4D checks first character of input and maps it to an integer #$01..#$07
+$4C5A multiplies that by 2 and stores it in $4CEB
+  which is the sector ID in a DOS-style RWTS parameter table starting at $4CE6
+starting address is $1E00
+track is #$00
+$4C63 calls $4CDE to write 1 sector (via $BD00)
+$4C68 increments sector and address by 1
+$4C6E calls $4CDE again
+
+so entire save state is $200 bytes, in memory @ $1E00..$1FFF (possibly put there temporarily during save, not persistent?)
+stored on disk in two consecutive sectors on track 0
+  slot 1 -> sectors 2-3
+  slot 2 -> sectors 4-5
+  slot 3 -> sectors 6-7
+  slot 4 -> sectors 8-9
+  slot 5 -> sectors A-B
+  slot 6 -> sectors C-D
+  slot 7 -> sectors E-F
+
+-=-=-
+
+$09D3 prints room name on text screen

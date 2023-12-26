@@ -1,0 +1,150 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+
+; Caller must define
+; - RWTS (address for code)
+; - PRODOS_BUFFER (address for file buffer)
+; - RWTS_FILENAMES (array of filenames)
+
+first_zp = $40
+last_zp  = $58
+
+!macro INSTALL_RWTS_DOS_SHIM {
+         ldx   #(move_rwts_end - move_rwts_start)
+-        lda   move_rwts_start-1, x
+         sta   RWTS-1, x
+         dex
+         bne   -
+}
+
+;------------------------------------------------------------------------------
+; RWTS DOS shim
+; hook to redirect DOS 3.3-style disk reads and writes to 1 or more ProDOS
+; files given by the macro +RWTS_FILENAMES (must be defined elsewhere)
+;------------------------------------------------------------------------------
+move_rwts_start
+!pseudopc RWTS {
+         jsr   SwapZP
+         sty   RWTS_PTR
+         sta   RWTS_PTR+1
+         ldy   #$02
+         lda   (RWTS_PTR), y         ; drive number
+         asl
+         tay
+         lda   rwts_filenames-2, y
+         sta   rwts_open_filename
+         lda   rwts_filenames-1, y
+         sta   rwts_open_filename+1
+         ldy   #$0C
+         lda   (RWTS_PTR), y         ; 1=read or 2=write
+         lsr                         ; 0=read or 1=write
+         ora   #CMD_READ             ; -> CMD_READ or CMD_WRITE
+         sta   op_rwts
+         lda   #$00
+         sta   rwts_seek_very_hi
+         ldy   #$04
+         lda   (RWTS_PTR), y         ; track
+         asl
+         asl
+         asl
+         rol   rwts_seek_very_hi
+         asl
+         rol   rwts_seek_very_hi
+         iny
+         ora   (RWTS_PTR), y         ; sector
+         sta   rwts_seek_hi
+         ldy   #$08
+         lda   (RWTS_PTR), y         ; address lo
+         sta   rwts_read_lo
+         iny
+         lda   (RWTS_PTR), y         ; address hi
+         sta   rwts_read_hi
+
+         jsr   PRODOS_MLI            ; open file
+         !byte CMD_OPEN
+         !word rwts_open
+
+         jsr   PRODOS_MLI            ; seek
+         !byte CMD_SEEK
+         !word rwts_seek
+
+         jsr   PRODOS_MLI            ; read or write
+op_rwts  !byte SELF_MODIFIED_BYTE
+         !word rwts_read
+
+         jsr   CloseAllFiles
+
+         ; /!\ execution falls through here
+SwapZP
+         pha
+         txa
+         pha
+         tya
+         pha
+         ldx   #(last_zp - first_zp)
+-        lda   first_zp, x
+         ldy   zp_array, x
+         sta   zp_array, x
+         sty   first_zp, x
+         dex
+         bpl   -
+         pla
+         tay
+         pla
+         tax
+         pla
+         clc
+         rts
+zp_array
+         !fill (last_zp - first_zp + 1)
+
+CloseAllFiles
+         jsr   PRODOS_MLI            ; close
+         !byte CMD_CLOSE
+         !word rwts_close
+         rts
+
+rwts_open
+         !byte 3
+rwts_open_filename
+         !word SELF_MODIFIED_WORD
+         !word PRODOS_BUFFER
+         !byte 0
+rwts_seek
+         !byte 2
+         !byte 1                     ; refnum (always 1)
+         !byte 0                     ; seek offset lo (always 0)
+rwts_seek_hi
+         !byte 0
+rwts_seek_very_hi
+         !byte 0
+rwts_read
+         !byte 4
+         !byte 1
+rwts_read_lo
+         !byte 0
+rwts_read_hi
+         !byte 0
+         !word $0100                 ; read length (always $100)
+         !word 0                     ; actual length
+rwts_close
+         !byte 1
+         !byte 0
+
+         +RWTS_FILENAMES
+
+QuitToProDOS
+         jsr   PRODOS_MLI
+         !byte $65
+         !word +
++        !byte 4
+QuitToProDOS_end
+}
+move_rwts_end
+
+!if (move_rwts_end-move_rwts_start) > $100 {
+         !serious "RWTS routine is too long, ", move_rwts_end-move_rwts_start, " bytes"
+;} else {
+;         !warn "RWTS routine is ", move_rwts_end-move_rwts_start, " bytes"
+}

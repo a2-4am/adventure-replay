@@ -1,0 +1,156 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+
+; exits with Z=1
+!macro INSTALL_BETTER_INPUT {
+         ldx   #(better_input_end - better_input_start)
+-        lda   better_input_start-1, x
+         sta   INPUT-1, x
+         dex
+         bne   -
+}
+
+;------------------------------------------------------------------------------
+; BetterInput routine
+; hook in interactive game mode to provide a better user experience when
+; typing
+;------------------------------------------------------------------------------
+better_input_start
+!pseudopc INPUT {
+InputMode1
+         cpy   min_ch
+         beq   @beginRetypingLastCommand
+         ; return left arrow until we're back at the beginning of the input line
+         lda   #$88
+         rts
+
+@beginRetypingLastCommand
+         inc   input_mode
+         ; /!\ execution falls through here
+
+InputMode2
+         ; return the next character from the saved input buffer
+         ldy   input_offset
+         lda   last_input, y
+         beq   GoToInputMode0
+         inc   input_offset
+         ldy   CH
+         rts
+
+GoToInputMode0
+         sta   input_mode
+         sta   input_offset
+         ; /!\ execution falls through here
+
+BetterInput                          ; main entry point
+         ldy   CH
+         cpy   min_ch
+         bcs   @checkInputMode
+         sty   min_ch
+@checkInputMode
+         lda   input_mode
+         cmp   #$01
+         beq   InputMode1
+         cmp   #$02
+         beq   InputMode2
+
+         lda   #$20
+         sta   (BASL), y
+@incRandom
+         inc   RNDL
+         bne   @checkKey
+         inc   RNDH
+@checkKey
+         lda   KBD
+         bpl   @incRandom
+         bit   CLEARKBD
+
+         ; convert backspace to left arrow
+         cmp   #$FF
+         bne   @checkUpArrow
+         lda   #$88                  ; left arrow
+
+@checkUpArrow
+         ; up arrow = retype last command
+         cmp   #$8B                  ; up arrow
+         bne   @checkOtherArrows
+         lda   last_input
+         beq   BetterInput           ; ignore if no previous command
+         inc   input_mode
+         bne   BetterInput           ; always branches
+
+@checkOtherArrows
+         ; ignore other arrows
+         cmp   #$8A                  ; down arrow
+         beq   BetterInput
+         cmp   #$95                  ; right arrow
+         beq   BetterInput
+
+         ; convert lowercase to uppercase
+         jsr   ToUpper
+
+         ; if no input yet, we're done (don't check for <return>)
+         cpy   min_ch
+         beq   @exit
+
+         cmp   #$8D
+         bne   @checkMax
+         ; on <return> after non-empty input, save input in internal buffer
+         ldy   min_ch
+         pha
+         txa
+         pha
+         ldx   #$00
+-        lda   (BASL), y
+         jsr   ToUpper               ; some games (e.g. QuestProbe) only accept
+                                     ; uppercase input while simultaneously
+                                     ; auto-lowercasing it for display, so we
+                                     ; need to re-convert to uppercase here
+         sta   last_input, x
+         inx
+         iny
+         cpy   CH
+         bcc   -
+         ;Y=CH
+         lda   #$28
+         sta   min_ch
+         lda   #$00
+         sta   last_input, x
+         pla
+         tax
+         pla
+
+@checkMax
+         ; check if input line is at max length
+         cpy   #$27
+         bcc   @exit
+
+         ; maxed out! only accept left arrow (or <return>, already handled)
+         cmp   #$88
+         bne   BetterInput
+
+@exit    rts
+
+ToUpper
+         cmp   #$E1
+         bcc   +
+         cmp   #$FB
+         bcs   +
+         and   #$DF
++        rts
+
+input_mode
+         !byte $00
+input_offset
+         !byte $00
+min_ch
+         !byte $28
+last_input
+         !fill $28
+}
+better_input_end
+
+!if (better_input_end-better_input_start) > $100 {
+         !serious "BetterInput routine is too long, ", better_input_end-better_input_start, " bytes"
+}

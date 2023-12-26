@@ -1,0 +1,111 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+
+; exits with Z=1
+!macro INSTALL_AUTOMATE_INPUT {
+         ; copy automate input routine into place
+         ldx   #(move_automate_end - move_automate_start)
+-        lda   move_automate_start-1, x
+         sta   INPUT-1, x
+         dex
+         bne   -
+         ; copy input filename into place
+         ldx   #(input_filename_end - input_filename_start)
+-        lda   input_filename_start-1, x
+         sta   INPUT_FILENAME-1, x
+         dex
+         bne   -
+}
+
+;------------------------------------------------------------------------------
+; AutomateInput routine
+; hook in non-interactive game mode to feed a sequence of commands to the
+; game parser from a text file
+;------------------------------------------------------------------------------
+move_automate_start
+!pseudopc INPUT {
+AutomateInput
+         stx   @x+1
+         sty   @y+1
+         ldy   CH
+         lda   #$20
+         sta   (BASL), y
+@automate_offset=*+1
+         ldy   #$00                  ; self-modified
+         bne   +
+
+         ;Y=0
+         tya                         ; clear buffer (in case of partial read)
+-        sta   AUTO_BUFFER, y
+         iny
+         bne   -
+
+         jsr   PRODOS_MLI            ; open automation file
+         !byte CMD_OPEN
+         !word parm_auto_open
+
+         jsr   PRODOS_MLI            ; seek
+         !byte CMD_SEEK
+         !word parm_auto_seek
+
+         jsr   PRODOS_MLI            ; read
+         !byte CMD_READ
+         !word parm_auto_read
+
+         jsr   CloseAllFiles
+
+         inc   parm_auto_seek_hi
+         ldy   #$00
++
+         inc   @automate_offset
+@wait_time=*+1
+         ldx   #0                    ; self-modified
+-        lda   #0
+         jsr   ROM_WAIT
+         bit   KBD
+         bmi   @done
+         dex
+         bpl   -
+         ;A=0
+         sta   @wait_time
+         lda   AUTO_BUFFER, y
+         beq   @done
+         ora   #$80
+         cmp   #$8D
+         bne   +
+         ldx   #$20                  ; wait longer after 'pressing' <return>
+         stx   @wait_time
++
+@x       ldx   #SELF_MODIFIED_BYTE
+@y       ldy   #SELF_MODIFIED_BYTE
+         rts
+@done    jmp   ($3F2)
+
+parm_auto_open
+         !byte 3
+         !word INPUT_FILENAME
+         !word PRODOS_BUFFER
+         !byte 0
+parm_auto_seek
+         !byte 2
+         !byte 1                     ; refnum (always 1)
+         !byte 0                     ; seek offset lo (always 0)
+parm_auto_seek_hi
+         !byte 0
+         !byte 0
+parm_auto_read
+         !byte 4
+         !byte 1
+         !word AUTO_BUFFER
+         !word $0100                 ; read length (always $100)
+         !word 0                     ; actual length
+
+INPUT_FILENAME
+         !fill $41
+}
+move_automate_end
+
+!if (move_automate_end-move_automate_start) > $100 {
+         !serious "AutomateInput routine is too long, ", move_automate_end-move_automate_start, " bytes"
+}
