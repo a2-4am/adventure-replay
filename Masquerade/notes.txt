@@ -20,6 +20,82 @@ stored on disk in two consecutive sectors on track 0
   slot 6 -> sectors C-D
   slot 7 -> sectors E-F
 
+restore game reads save data into $A800..$A9FF instead
+
 -=-=-
 
+offset $1F0 in save data contains room ID XOR #$13
+
 $09D3 prints room name on text screen
+
+$6C40 is table of addresses to room record, 2 bytes per ID
+entire room record is XOR #$55
+room record first #$0F bytes is room info + exits string
+  then room name in uppercase, terminated by #$0D
+
+00  --
+01  Cheap Hotel Room
+02  Cheap Hotel Lobby
+03  Telephone Booth
+04  City Street
+05  Theater Lobby
+06  City Street
+07  City Street
+08  Pile of Rubble
+09  Zoo Gate
+0a  Inside Zoo Gate
+0b  Zoo Midway
+0c  NW Midway
+0d  Monkey House
+0e  Bird House
+0f  SW Midway by Office
+10  Reptile House
+11  City Street
+12  --
+13  --
+14  --
+15  Metal Tunnel
+16  Metal Tunnel
+17  Metal Tunnel
+18  Metal Tunnel by Doors
+19  Inside Elevator
+1a  Inside Elevator
+1b  Mr. Topp's Office
+1c  --
+1d  --
+1e  Corridors
+1f  Corridors
+20  Corridors
+21  Corridors
+22  Corridors
+23  Corridors
+24  Corridors
+25  Corridors
+26  Corridors
+27  Corridors
+28  Corridors
+29  Corridors
+2a  Corridors
+2b  Corridors
+2c  Corridors
+2d  Corridors
+2e  Corridors
+2f  Corridors by Doors
+30  Corridors
+31  Corridors
+32  Weed Field
+33  Corridors of Filthmouth
+34  Inside Office
+35  Inside Gorilla Cage
+36  --
+37  Washroom
+38  Outside Topp's Door
+39  You Are Deceased
+3a  By Construction Zone
+3b  Construction Zone
+3c  --
+3d  Waiting Room
+3e  --
+3f  --
+40  --
+41  Outside Topp's Door
