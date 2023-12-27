@@ -89,6 +89,7 @@ HasAutomationFile1=*+1
          ; in OBJ file we just loaded, @ $6000
          jsr   $6000
 +        bit   $c054
+         bit   $c051
 
          ldx   #(move_stage3_end - move_stage3_start)
 -        lda   move_stage3_start - move_stage2_start + STAGE2 - 1, x
