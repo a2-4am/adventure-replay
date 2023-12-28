@@ -202,7 +202,7 @@ move_savegame_start
 PrintSavedGames
 ; in:    A contains 1 (read) or 2 (write)
 ; out:   $4CF2 set to A on entry
-;        A preserved
+;        all registers preserved
 ;        exits to caller
          pha
          tya
@@ -230,7 +230,7 @@ print_loop
          lda   save_slot_ascii
          sta   print_slot
          bit   $c051
-         jsr   $806
+         jsr   $0806
          !text "SLOT "
 print_slot
          !byte SELF_MODIFIED_BYTE
@@ -266,6 +266,12 @@ print_exit
          rts
 
 ForceGraphics
+; if you 'RESTORE GAME' *and* there is at least one saved game *and*
+; restoring the game fails (perhaps because you pressed <return> instead
+; of 1-7, or there is no game in the slot you selected, or cosmic rays),
+; SaveOrRestoreGame will never be called so we need an additional
+; hook to force graphics mode back on after PrintSavedGames went to
+; full text mode
          bit   $c050
          lda   $0300
          rts
