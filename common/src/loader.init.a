@@ -23,6 +23,17 @@
          +STA_16 .addr+1, .dest
 }
 
+; exits with Z=1 if machine can display lowercase
+; clobbers A
+!macro HAS_LOWERCASE {
+         lda   ROM_MACHINEID
+         cmp   #$A0                  ; Spectrum ED
+         beq   +
+         cmp   #$06                  ; Apple //e and later
++
+}
+
+
 ; standard memory addresses
 CH                        = $24
 CV                        = $25
@@ -37,9 +48,11 @@ KBD                       = $C000
 CLEARKBD                  = $C010
 ROM_TEXT                  = $FB2F
 ROM_FINALIZE_RESET        = $FB6F
+ROM_MACHINEID             = $FBB3
 ROM_HOME                  = $FC58
 ROM_WAIT                  = $FCA8
 ROM_KEYIN                 = $FD1B
+ROM_COUT                  = $FDED
 
 ; ProDOS constants
 CMD_ONLINE                = $C5

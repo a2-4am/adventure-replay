@@ -26,8 +26,6 @@ restore game reads save data into $A800..$A9FF instead
 
 offset $1F0 in save data contains room ID XOR #$13
 
-$09D3 prints room name on text screen
-
 $6C40 is table of addresses to room record, 2 bytes per ID
 entire room record is XOR #$55
 room record first #$0F bytes is room info + exits string
