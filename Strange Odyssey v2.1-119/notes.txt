@@ -1,0 +1,20 @@
+save games are BSAVE'd as real files (don't exist by default)
+routine at $151C (possibly generic?) prints DOS command via $FDED (<cr> + <ctrl-d> + "BSAVE" command)
+$15A5 holds command (example is saving game to slot A):
+  BSAVE AREC106A,A$4033,L256
+
+slot B produces "BSAVE AREC106B,A$4033,L256"
+etc.
+$15B4 contains ASCII slot $41,$42,$43,$44
+
+$152D is save game routine entry point
+$1535 prints "SAVING GAME"
+$1538 prompts "SAVE GAME AREA (A-D)?" and waits for response
+$153B+ sets up save data @ $4033
+$1557+ sets up exact DOS command string @ $15A5
+$156E executes DOS command
+$1571 increments "1" character inside DOS command, so it becomes e.g.
+  BSAVE AREC206A,A$4033,L256
+$1574+ makes some changes to $4033 buffer
+  somehow re-saves with the new filename (206 instead of 106) and updated data
+
