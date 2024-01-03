@@ -8,7 +8,7 @@ BUILDDIR=build
 SOURCES=$(wildcard src/*.a) $(wildcard ../common/src/*.a)
 EXE=$(BUILDDIR)/LOADER.SYSTEM\#FF2000
 DATA=$(wildcard ../common/res/*) $(wildcard res/*)
-DISKVOLUME=THE.COUNT
+DISKVOLUME=SAGA5
 BUILDDISK=$(BUILDDIR)/saga5.po
 
 .PHONY: clean mount all

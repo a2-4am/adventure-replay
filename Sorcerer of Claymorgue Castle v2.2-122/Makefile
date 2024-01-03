@@ -8,7 +8,7 @@ BUILDDIR=build
 SOURCES=$(wildcard src/*.a) $(wildcard ../common/src/*.a)
 EXE=$(BUILDDIR)/LOADER.SYSTEM\#FF2000
 DATA=$(wildcard ../common/res/*) $(wildcard res/*)
-DISKVOLUME=CLAYMORGUE
+DISKVOLUME=SAGA13
 BUILDDISK=$(BUILDDIR)/saga13.po
 
 .PHONY: clean mount all
