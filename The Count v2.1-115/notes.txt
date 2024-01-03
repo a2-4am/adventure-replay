@@ -2,11 +2,22 @@ disable random:
 $6FC5: EE -> AD
 $6FCA: EE -> AD
 
+-or-
+
+$F9C: A9 01 EE 9D 0F
+
+to set up monotonically increasing "random" values starting at 1
+  (I don't think this particular game requires changing numbers but other Scott Adams games do)
+
+-=-=-
+
 bypass title screen/restore game:
 $6A99: 20AF74 -> 4CBE6A
 
 bypass text intro screen:
 $6AC6: 20 -> 2C
+
+-=-=-
 
 restore game @ $74CF
 only available at program startup
@@ -20,6 +31,17 @@ $77A9 increments sector number in temporary storage
 $77AC calls $7811 again for a second read (still into $4033)
 $77AF copies some of it to ($4026) which seems to be $56DC
 
+-=-=-
+
 save game @ $152D
 available at any time ("SAVE GAME" <return>)
 $1530 calls $68B4 to print prompt "GAME AREA (A/B/C/D) ?" (address of string is inline after JSR)
+then $4003 contains lo-ASCII of chosen slot
+$153B checks that it's between $41 and $44
+...calls xxx which jumps to xxx which jumps to $775A
+$775A calls $77CB which sets up address in RWTS parameter table ($4033) and starting sector
+$775D-$7773 sets up first half of save data at $4033
+$7774 calls $780D which writes save data to disk
+$7777-$7791 sets up second half of save data (again at $4033)
+$7792 increments sector number in RWTS parameter table
+$7795 exits via jump to $780D to write second half of save data
