@@ -1,0 +1,139 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+!cpu 6502
+!to "build/LOADER.SYSTEM#FF2000",plain
+*=$2000
+
+; application-specific macros
+!macro RWTS_FILENAMES {
+side_b
+         !byte 6
+         !text "SIDE.B"
+rwts_filenames
+         !word side_b
+}
+
+; application-specific addresses
+PRODOS_BUFFER             = $B800    ; $400 bytes
+PREFIX_BUFFER             = $BC00    ; $40 bytes
+AUTO_BUFFER               = $BC00    ; $100 bytes
+RWTS                      = $BD00    ; max $100 bytes
+INPUT                     = $BE00    ; max $100 bytes
+
+         !src  "../common/src/loader.init.a"               ; must be first
+                                                           ; exits via Stage1
+         !src  "../common/src/loader.rwts.dos.shim.a"
+         !src  "../common/src/loader.automate.input.a"
+         !src  "../common/src/loader.better.input.a"
+
+Stage1
+         ; copy RWTS DOS shim into place
+         ; (includes CloseAllFiles routine, so must do this first)
+         +INSTALL_RWTS_DOS_SHIM
+         ; and set up redirect for DOS calls
+         +MAKE_JMP $B7B5, RWTS
+         ; and set up RWTS parameter table
+         lda   #$01
+         sta   $B7EA
+
+         ; set up our custom reset vector
+         +STA_16 $3F2, QuitToProDOS
+         jsr   ROM_FINALIZE_RESET
+
+         ; 0800..1FFF
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word parm_open1
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_read1
+         jsr   CloseAllFiles
+
+         ; 4000..8617
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word parm_open2
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_read2
+         jsr   CloseAllFiles
+
+         ; shorten prompt
+         ; TODO move this to OBJ file
+         lda   #$3E
+         sta   $7359
+         lda   #$20
+         sta   $735A
+         lda   #$00
+         sta   $735B
+
+         ; patch game to preserve our custom reset vector
+         ; TODO move this to OBJ file
+         lda   #$2C
+         sta   $6A54
+         sta   $6A57
+
+         ; always continue after returning from custom input routine
+         ; TODO move this to OBJ file
+         lda   #$00
+         sta   $6FD1
+
+         ; turn on lowercase display by default on machines that support it
+         +HAS_LOWERCASE
+         bne   +
+         lda   #$00
+         sta   $698C
++
+         lda   input_filename_start
+         beq   @no_auto
+         ; if we're using automation, install the AutomateInput hook
+         +INSTALL_AUTOMATE_INPUT
+         +MAKE_JSR $6FCD, AutomateInput
+         ; and bypass title screen / restore game / voice slot
+         +MAKE_JMP $6A99, $6ABE
+         ; and bypass text intro screen
+         lda   #$2C
+         sta   $6AC6
+         ; and de-randomize
+         sta   $6FC5
+         sta   $6FCA
+         bne   @start_game           ; always branches
+
+@no_auto
+         ; if we're not using automation, install the BetterInput hook instead
+         +INSTALL_BETTER_INPUT
+         +MAKE_JSR $6FCD, BetterInput
+
+@start_game
+         jmp   $0800
+
+parm_open1
+         !byte 3
+         !word obj_filename1
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read1
+         !byte 4
+         !byte 1
+         !word $0800
+         !word $FFFF
+         !word 0
+obj_filename1
+         !byte 8
+         !text "OBJ.0800"
+
+parm_open2
+         !byte 3
+         !word obj_filename2
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read2
+         !byte 4
+         !byte 1
+         !word $4000
+         !word $FFFF
+         !word 0
+obj_filename2
+         !byte 8
+         !text "OBJ.4000"

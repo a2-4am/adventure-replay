@@ -1,0 +1,25 @@
+disable random:
+$6FC5: EE -> AD
+$6FCA: EE -> AD
+
+bypass title screen/restore game:
+$6A99: 20AF74 -> 4CBE6A
+
+bypass text intro screen:
+$6AC6: 20 -> 2C
+
+restore game @ $74CF
+only available at program startup
+after selecting slot ("A"-"D"), jumps to $6923 -> $765C -> $7798
+$7798 calls subroutine at $77CB that munges A (previously ASCII slot as input)
+  into a sector number and stores it in a temporary address,
+  and sets up RWTS address ($B7F0/1) to $4033
+$779B calls subroutine at $7811 that sets RWTS track and sector and reads
+$779E copies some of it to $41C7
+$77A9 increments sector number in temporary storage
+$77AC calls $7811 again for a second read (still into $4033)
+$77AF copies some of it to ($4026) which seems to be $56DC
+
+save game @ $152D
+available at any time ("SAVE GAME" <return>)
+$1530 calls $68B4 to print prompt "GAME AREA (A/B/C/D) ?" (address of string is inline after JSR)
