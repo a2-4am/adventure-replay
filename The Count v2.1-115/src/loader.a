@@ -95,9 +95,17 @@ Stage1
          ; and bypass text intro screen
          lda   #$2C
          sta   $6AC6
-         ; and de-randomize
-         sta   $6FC5
-         sta   $6FCA
+         ; and de-randomize with monotonically increasing random values
+         lda   #$A9                  ; LDA #$00
+         sta   $0F9C
+         lda   #$00
+         sta   $0F9D
+         lda   #$EE                  ; INC $0F9D (value of LDA)
+         sta   $0F9E
+         lda   #$9D
+         sta   $0F9F
+         lda   #$0F
+         sta   $0FA0
          bne   @start_game           ; always branches
 
 @no_auto
