@@ -75,29 +75,6 @@ Stage1
          sta   $6A54
          sta   $6A57
 
-         ; and copy savegame code into place
-         ldx   #(move_savegame_end - move_savegame_start)
--        lda   move_savegame_start-1, x
-         sta   SAVEGAME-1, x
-         dex
-         bne   -
-
-         ; and change save prompt
-         ;X=0
--        lda   new_save_prompt, x
-         sta   $154F, x
-         sta   $750D, x
-         beq   +
-         inx
-         bne   -                     ; always branches
-+
-         ; and increase save slots
-         lda   #$31
-         sta   $1541
-         sta   $74D9
-         lda   #$3A
-         sta   $1545
-         sta   $74DD
          ; always continue after returning from custom input routine
          ; TODO move this to OBJ file
          lda   #$00
@@ -130,12 +107,38 @@ Stage1
          sta   $0F9F
          lda   #$0F
          sta   $0FA0
-         bne   @start_game           ; always branches
+         jmp   @start_game
 
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead
          +INSTALL_BETTER_INPUT
          +MAKE_JSR $6FCD, BetterInput
+
+         ; and copy savegame code into place
+         ldx   #(move_savegame_end - move_savegame_start)
+-        lda   move_savegame_start-1, x
+         sta   SAVEGAME-1, x
+         dex
+         bne   -
+
+         ; and change save prompt
+         ; TODO move this to OBJ file
+         ;X=0
+-        lda   new_save_prompt, x
+         sta   $154F, x
+         sta   $750D, x
+         beq   +
+         inx
+         bne   -                     ; always branches
++
+         ; and increase save slots
+         ; TODO move this to OBJ file
+         lda   #$31
+         sta   $1541
+         sta   $74D9
+         lda   #$3A
+         sta   $1545
+         sta   $74DD
 
          ; and hook save and restore routines
          +STA_16 $1536, PrintSavedGames
