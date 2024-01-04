@@ -35,7 +35,7 @@ Stage1
          +INSTALL_RWTS_DOS_SHIM
 
          ; copy reset code into place (game will set vector for us)
-         ; note that QuitToProDOS is inside RWTS (now in place)
+         ; note that QuitToProDOS is inside RWTS DOS shim (now in place)
          ldx   #(QuitToProDOS_end - QuitToProDOS)
 -        lda   QuitToProDOS-1, x
          sta   RESET_VECTOR-1, x
