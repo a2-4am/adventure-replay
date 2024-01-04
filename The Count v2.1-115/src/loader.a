@@ -17,7 +17,8 @@ rwts_filenames
 ; application-specific addresses
 PRODOS_BUFFER             = $B800    ; $400 bytes
 PREFIX_BUFFER             = $BC00    ; $40 bytes
-AUTO_BUFFER               = $BC00    ; $100 bytes
+AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
+SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persistent)
 RWTS                      = $BD00    ; max $100 bytes
 INPUT                     = $BE00    ; max $100 bytes
 
@@ -113,6 +114,21 @@ Stage1
          +INSTALL_BETTER_INPUT
          +MAKE_JSR $6FCD, BetterInput
 
+         ; and copy savegame code into place
+         ldx   #(move_savegame_end - move_savegame_start)
+-        lda   move_savegame_start-1, x
+         sta   SAVEGAME-1, x
+         dex
+         bne   -
+
+         ; and hook save and restore routines
+         +STA_16 $775B, OpenSaveFile
+         +STA_16 $7799, OpenSaveFile
+         +STA_16 $7775, SavePart1
+         +STA_16 $7796, SavePart2
+         +STA_16 $779C, RestorePart1
+         +STA_16 $77AD, RestorePart2
+
 @start_game
          jmp   $0800
 
@@ -145,3 +161,81 @@ parm_read2
 obj_filename2
          !byte 8
          !text "OBJ.4000"
+
+move_savegame_start
+!pseudopc SAVEGAME {
+OpenSaveFile
+; hooked from $775A (save) and $7798 (restore)
+; in:    A = lo-ASCII save slot ($41-$44)
+         sec
+         sbc   #$10                  ; 'A' -> '1'
+         sta   save_slot_ascii
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         rts
+
+RestorePart1
+; hooked from $779B
+         lda   #CMD_READ
+         !byte $2C
+SavePart1
+; hooked from $7774
+; in:    $4033 contains first $100 bytes of save data
+; out:   returns to caller on success
+;        jumps to $782C on error (this is what the original game does,
+;        but it's kind of harsh, it prints an error message and hangs)
+         lda   #CMD_WRITE
+         sta   save_op
+         jsr   PRODOS_MLI
+save_op  !byte SELF_MODIFIED_BYTE
+         !word save_rw
+         bcs   save_error
+         ldy   save_rw_actual
+         bne   save_error
+         ldy   save_rw_actual_hi
+         dey
+         bne   save_error
+         rts
+save_error
+         jsr   CloseAllFiles
+         jmp   $782C
+
+RestorePart2
+; hooked from $77AC
+         jsr   RestorePart1
+         jmp   CloseAllFiles
+
+SavePart2
+; hooked from $7795
+; in:    $4033 contains first $100 bytes of save data
+; out:   closes all open ProDOS files
+;        returns to caller on success
+;        jumps to $782C on error
+         jsr   SavePart1
+         jmp   CloseAllFiles
+
+save_open
+         !byte 3
+         !word save_filename
+         !word PRODOS_BUFFER
+         !byte 0
+save_rw
+         !byte 4
+         !byte 1
+save_rw_addr
+         !word $4033
+save_rw_len
+         !word $0100
+save_rw_actual
+         !byte SELF_MODIFIED_BYTE
+save_rw_actual_hi
+         !byte SELF_MODIFIED_BYTE
+
+save_filename
+         !byte 6
+         !text "SAVE."
+save_slot_ascii
+         !text "0"
+}
+move_savegame_end
