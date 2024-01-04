@@ -75,6 +75,29 @@ Stage1
          sta   $6A54
          sta   $6A57
 
+         ; and copy savegame code into place
+         ldx   #(move_savegame_end - move_savegame_start)
+-        lda   move_savegame_start-1, x
+         sta   SAVEGAME-1, x
+         dex
+         bne   -
+
+         ; and change save prompt
+         ;X=0
+-        lda   new_save_prompt, x
+         sta   $154F, x
+         sta   $750D, x
+         beq   +
+         inx
+         bne   -                     ; always branches
++
+         ; and increase save slots
+         lda   #$31
+         sta   $1541
+         sta   $74D9
+         lda   #$3A
+         sta   $1545
+         sta   $74DD
          ; always continue after returning from custom input routine
          ; TODO move this to OBJ file
          lda   #$00
@@ -114,14 +137,9 @@ Stage1
          +INSTALL_BETTER_INPUT
          +MAKE_JSR $6FCD, BetterInput
 
-         ; and copy savegame code into place
-         ldx   #(move_savegame_end - move_savegame_start)
--        lda   move_savegame_start-1, x
-         sta   SAVEGAME-1, x
-         dex
-         bne   -
-
          ; and hook save and restore routines
+         +STA_16 $1536, PrintSavedGames
+         +STA_16 $74D0, PrintSavedGames
          +STA_16 $775B, OpenSaveFile
          +STA_16 $7799, OpenSaveFile
          +STA_16 $7775, SavePart1
@@ -131,6 +149,9 @@ Stage1
 
 @start_game
          jmp   $0800
+
+new_save_prompt
+         !text "GAME NUMBER (1-9)? ",0
 
 parm_open1
          !byte 3
@@ -164,11 +185,111 @@ obj_filename2
 
 move_savegame_start
 !pseudopc SAVEGAME {
+PrintSavedGames
+; in:    none
+; out:   all registers preserved
+;        exits via $6896
+         pha
+         tya
+         pha
+         lda   #$31
+         sta   save_slot_ascii
+print_loop
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         bcs   print_slot_next
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word print_seek
+         bcs   +
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word print_read
++        php
+         jsr   CloseAllFiles
+         plp
+         bcs   print_slot_next
+         lda   print_read_actual
+         beq   print_slot_next
+         lda   save_slot_ascii
+         sta   print_slot
+         bit   $c051
+         lda   #$8D
+         jsr   ROM_COUT
+         lda   #<print_slot_prefix
+         ldy   #>print_slot_prefix
+         jsr   PrintPascalString
+print_room_id=*+1
+         lda   #SELF_MODIFIED_BYTE
+         asl
+         tay
+         lda   $6652, y
+         pha
+         lda   $6653, y
+         tay
+         pla
+         jsr   PrintPascalString
+print_slot_next
+         inc   save_slot_ascii
+         lda   save_slot_ascii
+         cmp   #$3A
+         bne   print_loop
+print_exit
+         lda   #$8D
+         jsr   ROM_COUT
+         pla
+         tay
+         pla
+         jmp   $6896
+
+PrintPascalString
+         sta   print_char_src
+         sty   print_char_src+1
+         ldy   #0
+print_char_loop
+print_char_src=*+1
+         lda   SELF_MODIFIED_WORD, y
+         cpy   #0
+         bne   print_char
+         sta   print_char_max
+         beq   print_char_next       ; always branches (Z still 1 from CPY)
+print_char
+         ora   #$80
+         jsr   ToUpper
+         jsr   ROM_COUT
+print_char_max=*+1
+         cpy   #SELF_MODIFIED_BYTE
+         beq   print_cr_before_next_slot
+print_char_next
+         iny
+         bne   print_char_loop       ; always branches
+print_cr_before_next_slot
+         rts
+
+print_slot_prefix
+         !byte 8
+         !text "SLOT "
+print_slot
+         !byte SELF_MODIFIED_BYTE
+         !text ": "
+
+print_read
+         !byte 4
+         !byte 1
+         !word print_room_id
+         !word 1
+print_read_actual
+         !word 0
+print_seek
+         !byte 2
+         !byte 1
+         !word $0024
+         !byte 0
+
 OpenSaveFile
 ; hooked from $775A (save) and $7798 (restore)
-; in:    A = lo-ASCII save slot ($41-$44)
-         sec
-         sbc   #$10                  ; 'A' -> '1'
+; in:    A = lo-ASCII save slot ($31-$39)
          sta   save_slot_ascii
          jsr   PRODOS_MLI
          !byte CMD_OPEN
