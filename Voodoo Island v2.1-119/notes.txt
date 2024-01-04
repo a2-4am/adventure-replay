@@ -1,0 +1,20 @@
+$152D save game entry point
+$1535 jsr PrintSavedGames hook (exit via $6896)
+$1541 save slot min
+$1545 save slot max
+$154F save prompt
+
+$74C2 restore game entry point
+$74C7 jsr PrintSavedGames hook (exit via $6896)
+$74D1 restore slot min
+$74D5 restore slot max
+
+$773F jsr OpenSaveFile hook
+$7759 jsr SavePart1 hook
+$777A jmp SavePart2 hook
+
+$777D jsr OpenSaveFile hook
+$7780 jsr RestorePart1 hook
+$7791 jsr RestorePart2 hook
+
+$7505 restore prompt

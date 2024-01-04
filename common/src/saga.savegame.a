@@ -1,0 +1,183 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+; common savegame routines for SAGA games
+;
+; caller must define
+; - SAVEGAME
+; - SAGA_LOCATION_ARRAY
+; - SAGA_IO_ERROR
+;
+
+move_savegame_start
+!pseudopc SAVEGAME {
+PrintSavedGames
+; in:    none
+; out:   all registers preserved
+;        exits via $6896
+         pha
+         tya
+         pha
+         lda   #$31
+         sta   save_slot_ascii
+print_loop
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         bcs   print_slot_next
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word print_seek
+         bcs   +
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word print_read
++        php
+         jsr   CloseAllFiles
+         plp
+         bcs   print_slot_next
+         lda   print_read_actual
+         beq   print_slot_next
+         lda   save_slot_ascii
+         sta   print_slot
+         bit   $c051
+         lda   #$8D
+         jsr   ROM_COUT
+         lda   #<print_slot_prefix
+         ldy   #>print_slot_prefix
+         jsr   PrintPascalString
+print_room_id=*+1
+         lda   #SELF_MODIFIED_BYTE
+         asl
+         tay
+         lda   SAGA_LOCATION_ARRAY, y
+         pha
+         lda   SAGA_LOCATION_ARRAY+1, y
+         tay
+         pla
+         jsr   PrintPascalString
+print_slot_next
+         inc   save_slot_ascii
+         lda   save_slot_ascii
+         cmp   #$3A
+         bne   print_loop
+print_exit
+         lda   #$8D
+         jsr   ROM_COUT
+         pla
+         tay
+         pla
+         jmp   $6896
+
+PrintPascalString
+         sta   print_char_src
+         sty   print_char_src+1
+         ldy   #0
+print_char_loop
+print_char_src=*+1
+         lda   SELF_MODIFIED_WORD, y
+         cpy   #0
+         bne   print_char
+         sta   print_char_max
+         beq   print_char_next       ; always branches (Z still 1 from CPY)
+print_char
+         ora   #$80
+         jsr   ToUpper
+         jsr   ROM_COUT
+print_char_max=*+1
+         cpy   #SELF_MODIFIED_BYTE
+         beq   print_cr_before_next_slot
+print_char_next
+         iny
+         bne   print_char_loop       ; always branches
+print_cr_before_next_slot
+         rts
+
+print_slot_prefix
+         !byte 8
+         !text "SLOT "
+print_slot
+         !byte SELF_MODIFIED_BYTE
+         !text ": "
+
+print_read
+         !byte 4
+         !byte 1
+         !word print_room_id
+         !word 1
+print_read_actual
+         !word 0
+print_seek
+         !byte 2
+         !byte 1
+         !word $0024
+         !byte 0
+
+OpenSaveFile
+; in:    A = lo-ASCII save slot ($31-$39)
+         sta   save_slot_ascii
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         rts
+
+RestorePart1
+         lda   #CMD_READ
+         !byte $2C
+SavePart1
+; in:    $4033 contains first $100 bytes of save data
+; out:   returns to caller on success
+;        jumps to SAGA_IO_ERROR on failure
+;        (original does this, it prints an error message and hangs)
+         lda   #CMD_WRITE
+         sta   save_op
+         jsr   PRODOS_MLI
+save_op  !byte SELF_MODIFIED_BYTE
+         !word save_rw
+         bcs   save_error
+         ldy   save_rw_actual
+         bne   save_error
+         ldy   save_rw_actual_hi
+         dey
+         bne   save_error
+         rts
+save_error
+         jsr   CloseAllFiles
+         jmp   SAGA_IO_ERROR
+
+RestorePart2
+         jsr   RestorePart1
+         jmp   CloseAllFiles
+
+SavePart2
+; in:    $4033 contains second $100 bytes of save data
+; out:   closes all open ProDOS files
+;        returns to caller on success
+;        jumps to SAGA_IO_ERROR on error
+         jsr   SavePart1
+         jmp   CloseAllFiles
+
+save_open
+         !byte 3
+         !word save_filename
+         !word PRODOS_BUFFER
+         !byte 0
+save_rw
+         !byte 4
+         !byte 1
+save_rw_addr
+         !word $4033
+save_rw_len
+         !word $0100
+save_rw_actual
+         !byte SELF_MODIFIED_BYTE
+save_rw_actual_hi
+         !byte SELF_MODIFIED_BYTE
+
+save_filename
+         !byte 6
+         !text "SAVE."
+save_slot_ascii
+         !text "0"
+}
+move_savegame_end
