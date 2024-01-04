@@ -40,3 +40,15 @@ $1548 calls $6920 which jumps to $7649 which jumps to $775A
   $7777-$7791 sets up second half of save data (again at $4033)
   $7792 increments sector number in RWTS parameter table
   $7795 exits via jump to $780D to write second half of save data (internally checks C flag)
+
+-=-=-
+
+print location name
+$41E9 contains room ID (not encrypted)
+  (this ends up in byte $24 of the save game file)
+$6652 contains array of addresses of location strings, indexed by room ID
+  (remember to ASL room ID since addresses are words)
+Location strings are length-prefixed strings (not encrypted)
+If first letter of location string is '*' then the location is a self-contained phrase
+  and is printed as-is, e.g. "I'm lying in a large brass bed"
+otherwise the location string is printed with the prefix "I'm in a "
