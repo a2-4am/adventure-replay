@@ -46,11 +46,7 @@ Stage1
          jsr   ROM_FINALIZE_RESET
 
          ; copy stage 2 loader code into place
-         ldx   #(move_stage2_end - move_stage2_start)
--        lda   move_stage2_start-1, x
-         sta   STAGE2-1, x
-         dex
-         bne   -
+         +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2
 
          lda   input_filename_start
          ; stage 2 (now in place) needs to know if we're using automation

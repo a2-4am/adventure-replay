@@ -36,21 +36,13 @@ Stage1
 
          ; copy reset code into place (game will set vector for us)
          ; note that QuitToProDOS is inside RWTS DOS shim (now in place)
-         ldx   #(QuitToProDOS_end - QuitToProDOS)
--        lda   QuitToProDOS-1, x
-         sta   RESET_VECTOR-1, x
-         dex
-         bne   -
+         +SHORT_COPY QuitToProDOS, QuitToProDOS_end, RESET_VECTOR
 
          ; copy savegame code into place
          +SHORT_COPY move_savegame_start, move_savegame_end, SAVEGAME
 
          ; copy stage 2 & 3 code into place
-         ldx   #(move_stage2_end - move_stage2_start)
--        lda   move_stage2_start-1, x
-         sta   STAGE2-1, x
-         dex
-         bne   -
+         +SHORT_COPY move_stage2_start, move_stage3_end, STAGE2
 
          lda   input_filename_start
          ; stage 2 (now in place) needs to know if we're using automation

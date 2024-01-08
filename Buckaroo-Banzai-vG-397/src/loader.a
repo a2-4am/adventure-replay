@@ -51,10 +51,7 @@ Stage1
          jsr   CloseAllFiles
 
          ; set up our custom reset vector
-         lda   #<QuitToProDOS
-         sta   $3F2
-         lda   #>QuitToProDOS
-         sta   $3F3
+         +STA_16 $3F2, QuitToProDOS
          jsr   ROM_FINALIZE_RESET
 
          ; shorten prompt
