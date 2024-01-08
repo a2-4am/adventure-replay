@@ -1,21 +1,19 @@
 ;license:MIT
 ;(c) 2023 by 4am
 ;
-
+; RWTS DOS 3.3 shim for games
+;
 ; Caller must define
 ; - RWTS (address for code)
 ; - PRODOS_BUFFER (address for file buffer)
 ; - RWTS_FILENAMES (array of filenames)
+;
 
-first_zp = $40
-last_zp  = $58
+         !src  "../common/src/constants.a"
+         !src  "../common/src/macros.a"
 
 !macro INSTALL_RWTS_DOS_SHIM {
-         ldx   #(move_rwts_end - move_rwts_start)
--        lda   move_rwts_start-1, x
-         sta   RWTS-1, x
-         dex
-         bne   -
+         +SHORT_COPY move_rwts_start, move_rwts_end, RWTS
 }
 
 ;------------------------------------------------------------------------------

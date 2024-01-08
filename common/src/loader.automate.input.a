@@ -2,20 +2,16 @@
 ;(c) 2023 by 4am
 ;
 
+         !src  "../common/src/constants.a"
+         !src  "../common/src/macros.a"
+
 ; exits with Z=1
 !macro INSTALL_AUTOMATE_INPUT {
          ; copy automate input routine into place
-         ldx   #(move_automate_end - move_automate_start)
--        lda   move_automate_start-1, x
-         sta   INPUT-1, x
-         dex
-         bne   -
+         +SHORT_COPY move_automate_start, move_automate_end, INPUT
+
          ; copy input filename into place
-         ldx   #(input_filename_end - input_filename_start)
--        lda   input_filename_start-1, x
-         sta   INPUT_FILENAME-1, x
-         dex
-         bne   -
+         +SHORT_COPY input_filename_start, input_filename_end, INPUT_FILENAME
 }
 
 ;------------------------------------------------------------------------------

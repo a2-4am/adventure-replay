@@ -1,0 +1,27 @@
+save game requires separate data disk which requires multi-disk support in RWTS shim
+
+type "SAVE GAME" -> eventually jumps to $B39F to switch to text mode and present menu
+
+1) INITIALIZE DATA DISK
+2) SAVE GAME
+3) EXIT
+
+want to replace this with going directly to "SAVE GAME" option #2
+BUT also need a way to get out of the loop once you're in it
+(original forces you to choose A-D to save, no cancel by then)
+
+choosing option #2 jumps to $B4C2 which displays prompt
+"ENTER YOUR DATA DISK AND PRESS 'Y'" which we also want to skip
+
+$B4D9 calls protection check (!) to distinguish data and program disk
+which we also want to skip even though we've neutered it
+
+$B4E3 calls $B747 to prompt "ENTER GAME SAVE AREA (A-D)" and require
+one of those (no way to cancel)
+
+lowest level save entry point is at $1744
+calls $BD00 with a custom RWTS parameter table at $1778
+
+setting $177A to #$02 ? but may need to set it back when it prompts
+to reinsert the program disk
+

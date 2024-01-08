@@ -1,0 +1,52 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+
+!ifndef _MACROS_ {
+
+         !src  "../common/src/constants.a"
+
+; clobbers A
+!macro STA_16 .addr, .value {
+         lda   #<.value
+         sta   .addr
+         lda   #>.value
+         sta   .addr+1
+}
+
+!macro MAKE_JSR .addr, .dest {
+         lda   #$20
+         sta   .addr
+         +STA_16 .addr+1, .dest
+}
+
+; clobbers A
+!macro MAKE_JMP .addr, .dest {
+         lda   #$4C
+         sta   .addr
+         +STA_16 .addr+1, .dest
+}
+
+; exits with Z=1 if machine can display lowercase
+; A clobbered
+!macro HAS_LOWERCASE {
+         lda   ROM_MACHINEID
+         cmp   #$A0                  ; Spectrum ED
+         beq   +
+         cmp   #$06                  ; Apple //e and later
++
+}
+
+; X=0, Z=1 on exit
+; A clobbered
+; Y preserved
+!macro SHORT_COPY .start, .end, .target {
+         ldx   #(.end-.start)
+-        lda   .start-1, x
+         sta   .target-1, x
+         dex
+         bne   -
+}
+
+_MACROS_=*
+}

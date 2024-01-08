@@ -1,0 +1,190 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+!cpu 6502
+!to "build/LOADER.SYSTEM#FF2000",plain
+*=$2000
+
+; application-specific macros
+!macro RWTS_FILENAMES {
+side_b
+         !byte 6
+         !text "SIDE.B"
+rwts_filenames
+         !word side_b
+}
+
+; application-specific addresses
+PRODOS_BUFFER             = $B800    ; $400 bytes
+PREFIX_BUFFER             = $BC00    ; $40 bytes
+AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
+SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persistent)
+RWTS                      = $BD00    ; max $100 bytes
+INPUT                     = $BE00    ; max $100 bytes
+SAGA_LOCATION_ARRAY       = $65EA
+SAGA_IO_ERROR             = $782C
+
+         !src  "../common/src/loader.init.a"               ; must be first
+                                                           ; exits via Stage1
+         !src  "../common/src/loader.rwts.dos.shim.a"
+         !src  "../common/src/loader.automate.input.a"
+         !src  "../common/src/loader.better.input.a"
+         !src  "../common/src/savegame.saga.a"
+
+Stage1
+         ; copy RWTS DOS shim into place
+         ; (includes CloseAllFiles routine, so must do this first)
+         +INSTALL_RWTS_DOS_SHIM
+         ; and set up redirect for DOS calls
+         +MAKE_JMP $B7B5, RWTS
+         ; and set up RWTS parameter table
+         lda   #$01
+         sta   $B7EA
+
+         ; 0800..1FFF
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word parm_open1
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_read1
+         jsr   CloseAllFiles
+
+         ; 4000..865C
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word parm_open2
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_read2
+         jsr   CloseAllFiles
+
+         ; set up our custom reset vector
+         lda   #<QuitToProDOS
+         sta   $3F2
+         lda   #>QuitToProDOS
+         sta   $3F3
+         jsr   ROM_FINALIZE_RESET
+
+         ; patch game to preserve our custom reset vector
+         ; TODO move this to OBJ file
+         lda   #$2C
+         sta   $6A54
+         sta   $6A57
+
+         ; shorten prompt
+         ; TODO move this to OBJ file
+         lda   #$3E
+         sta   $7359
+         lda   #$20
+         sta   $735A
+         lda   #$00
+         sta   $735B
+
+         ; always continue after returning from custom input routine
+         ; TODO move this to OBJ file
+         lda   #$00
+         sta   $6FD1
+
+         ; turn on lowercase display by default on machines that support it
+         +HAS_LOWERCASE
+         bne   +
+         lda   #$00
+         sta   $698C
++
+         lda   input_filename_start
+         beq   @no_auto
+         ; if we're using automation, install the AutomateInput hook
+         +INSTALL_AUTOMATE_INPUT
+         +MAKE_JSR $6FCD, AutomateInput
+         ; and bypass title screen / restore game / voice slot
+         +MAKE_JMP $6A99, $6ABE
+         ; and bypass text intro screen
+         lda   #$2C
+         sta   $6AC6
+         ; and de-randomize with monotonically increasing random values
+         ; (must be low enough so spells work, but can not be static)
+         lda   #$A9                  ; LDA #$00
+         sta   $0F9C
+         lda   #$00
+         sta   $0F9D
+         lda   #$EE                  ; INC $0F9D (value of LDA)
+         sta   $0F9E
+         lda   #$9D
+         sta   $0F9F
+         lda   #$0F
+         sta   $0FA0
+         jmp   @start_game
+
+@no_auto
+         ; if we're not using automation, install the BetterInput hook instead
+         +INSTALL_BETTER_INPUT
+         +MAKE_JSR $6FCD, BetterInput
+
+         ; copy savegame code into place
+         +INSTALL_SAGA_SAVEGAME
+
+         ; and change save prompt
+         ; TODO move this to OBJ file
+         ;X=0
+-        lda   new_save_prompt, x
+         sta   $154F, x
+         sta   $750D, x
+         beq   +
+         inx
+         bne   -                     ; always branches
++
+         ; and increase save slots
+         ; TODO move this to OBJ file
+         lda   #$31
+         sta   $1541
+         sta   $74D9
+         lda   #$3A
+         sta   $1545
+         sta   $74DD
+
+         ; and hook save and restore routines
+         +STA_16 $1536, PrintSavedGames
+         +STA_16 $74D0, PrintSavedGames
+         +STA_16 $775B, OpenSaveFile
+         +STA_16 $7799, OpenSaveFile
+         +STA_16 $7775, SavePart1
+         +STA_16 $7796, SavePart2
+         +STA_16 $779C, RestorePart1
+         +STA_16 $77AD, RestorePart2
+
+@start_game
+         jmp   $0800
+
+new_save_prompt
+         !text "GAME NUMBER (1-9)? ",0
+
+parm_open1
+         !byte 3
+         !word obj_filename1
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read1
+         !byte 4
+         !byte 1
+         !word $0800
+         !word $FFFF
+         !word 0
+obj_filename1
+         !byte 8
+         !text "OBJ.0800"
+
+parm_open2
+         !byte 3
+         !word obj_filename2
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read2
+         !byte 4
+         !byte 1
+         !word $4000
+         !word $FFFF
+         !word 0
+obj_filename2
+         !byte 8
+         !text "OBJ.4000"

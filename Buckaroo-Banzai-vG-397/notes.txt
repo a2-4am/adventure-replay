@@ -1,0 +1,18 @@
+prompt:
+
+JSR at $836B copies the string "Buckaroo Banzai" to $0800 as a length-prefixed string
+can not change the string because it is used elsewhere (in game intro text at least)
+but changing $836B to STA $0800 makes $800 an zero-length string instead
+
+JSR at $837E appends the string "," to the string at $800
+changing $837E to $2C bypasses the string append
+
+JSR at $83BA appends the string " I want you to " (stored at $839A, length-prefixed)
+to the string at $800
+it IS feasible to change the string at $839A to $02 $3E $20 ("> ")
+
+later code copies $800 to $200, then even later code prints it out from $200
+these are common routines for all game output and can't be modified
+
+engine seems flexible enough to handle shortened prompt, probably because different
+games use different prompts with different character names

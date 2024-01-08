@@ -9,6 +9,13 @@
 ; - SAGA_IO_ERROR
 ;
 
+         !src  "../common/src/constants.a"
+         !src  "../common/src/macros.a"
+
+!macro INSTALL_SAGA_SAVEGAME {
+         +SHORT_COPY move_savegame_start, move_savegame_end, SAVEGAME
+}
+
 move_savegame_start
 !pseudopc SAVEGAME {
 PrintSavedGames

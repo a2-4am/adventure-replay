@@ -2,13 +2,12 @@
 ;(c) 2023 by 4am
 ;
 
+         !src  "../common/src/constants.a"
+         !src  "../common/src/macros.a"
+
 ; exits with Z=1
 !macro INSTALL_BETTER_INPUT {
-         ldx   #(better_input_end - better_input_start)
--        lda   better_input_start-1, x
-         sta   INPUT-1, x
-         dex
-         bne   -
+         +SHORT_COPY better_input_start, better_input_end, INPUT
 }
 
 ;------------------------------------------------------------------------------

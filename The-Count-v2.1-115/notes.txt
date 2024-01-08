@@ -1,0 +1,54 @@
+disable random:
+$F9C: A9 01 EE 9D 0F
+
+sets up monotonically increasing "random" values starting at 1
+
+-=-=-
+
+bypass title screen/restore game:
+$6A99: 20AF74 -> 4CBE6A
+
+bypass text intro screen:
+$6AC6: 20 -> 2C
+
+-=-=-
+
+restore game @ $74CF
+only available at program startup
+after selecting slot ("A"-"D"), jumps to $6923 -> $765C -> $7798
+$7798 calls subroutine at $77CB that munges A (previously ASCII slot as input)
+  into a sector number and stores it in a temporary address,
+  and sets up RWTS address ($B7F0/1) to $4033
+$779B calls subroutine at $7811 that sets RWTS track and sector and reads
+$779E copies some of it to $41C7
+$77A9 increments sector number in temporary storage
+$77AC calls $7811 again for a second read (still into $4033)
+$77AF copies some of it to ($4026) which seems to be $56DC
+
+-=-=-
+
+save game @ $152D
+available at any time ("SAVE GAME" <return>)
+$1530 calls $68B4 to print prompt "GAME AREA (A/B/C/D) ?" (address of string is inline after JSR)
+then $4003 contains lo-ASCII of chosen slot
+$153B checks that it's between $41 and $44
+$1548 calls $6920 which jumps to $7649 which jumps to $775A
+  $775A calls $77CB which sets up address in RWTS parameter table ($4033) and starting sector
+  $775D-$7773 sets up first half of save data at $4033
+  $7774 calls $780D which writes save data to disk (internally checks C flag for error and
+  jumps to a routine that prints an error message and hangs, which seems unfriendly)
+  $7777-$7791 sets up second half of save data (again at $4033)
+  $7792 increments sector number in RWTS parameter table
+  $7795 exits via jump to $780D to write second half of save data (internally checks C flag)
+
+-=-=-
+
+print location name
+$41E9 contains room ID (not encrypted)
+  (this ends up in byte $24 of the save game file)
+$6652 contains array of addresses of location strings, indexed by room ID
+  (remember to ASL room ID since addresses are words)
+Location strings are length-prefixed strings (not encrypted)
+If first letter of location string is '*' then the location is a self-contained phrase
+  and is printed as-is, e.g. "I'm lying in a large brass bed"
+otherwise the location string is printed with the prefix "I'm in a "

@@ -2,70 +2,7 @@
 ;(c) 2023 by 4am
 ;
 
-; clobbers A
-!macro STA_16 .addr, .value {
-         lda   #<.value
-         sta   .addr
-         lda   #>.value
-         sta   .addr+1
-}
-
-!macro MAKE_JSR .addr, .dest {
-         lda   #$20
-         sta   .addr
-         +STA_16 .addr+1, .dest
-}
-
-; clobbers A
-!macro MAKE_JMP .addr, .dest {
-         lda   #$4C
-         sta   .addr
-         +STA_16 .addr+1, .dest
-}
-
-; exits with Z=1 if machine can display lowercase
-; clobbers A
-!macro HAS_LOWERCASE {
-         lda   ROM_MACHINEID
-         cmp   #$A0                  ; Spectrum ED
-         beq   +
-         cmp   #$06                  ; Apple //e and later
-+
-}
-
-
-; standard memory addresses
-CH                        = $24
-CV                        = $25
-BASL                      = $28
-RWTS_PTR                  = $48
-RNDL                      = $4E
-RNDH                      = $4F
-PRODOS_MLI                = $BF00
-PRODOS_BOOT_UNIT          = $BF30
-PRODOS_MEMORY_MAP         = $BF58
-KBD                       = $C000
-CLEARKBD                  = $C010
-ROM_TEXT                  = $FB2F
-ROM_FINALIZE_RESET        = $FB6F
-ROM_MACHINEID             = $FBB3
-ROM_HOME                  = $FC58
-ROM_WAIT                  = $FCA8
-ROM_KEYIN                 = $FD1B
-ROM_COUT                  = $FDED
-
-; ProDOS constants
-CMD_ONLINE                = $C5
-CMD_SETPREFIX             = $C6
-CMD_GETPREFIX             = $C7
-CMD_OPEN                  = $C8
-CMD_READ                  = $CA
-CMD_WRITE                 = $CB
-CMD_CLOSE                 = $CC
-CMD_SEEK                  = $CE
-
-SELF_MODIFIED_BYTE        = $FD
-SELF_MODIFIED_WORD        = $FDFD
+         !src  "../common/src/constants.a"         ; no code
 
 ;
 ; .SYSTEM code starts here

@@ -1,0 +1,45 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+
+!ifndef _CONSTANTS_ {
+
+SELF_MODIFIED_BYTE        = $FD
+SELF_MODIFIED_WORD        = $FDFD
+
+; standard memory addresses
+CH                        = $24
+CV                        = $25
+BASL                      = $28
+RWTS_PTR                  = $48
+RNDL                      = $4E
+RNDH                      = $4F
+PRODOS_MLI                = $BF00
+PRODOS_BOOT_UNIT          = $BF30
+PRODOS_MEMORY_MAP         = $BF58
+KBD                       = $C000
+CLEARKBD                  = $C010
+ROM_TEXT                  = $FB2F
+ROM_FINALIZE_RESET        = $FB6F
+ROM_MACHINEID             = $FBB3
+ROM_HOME                  = $FC58
+ROM_WAIT                  = $FCA8
+ROM_KEYIN                 = $FD1B
+ROM_COUT                  = $FDED
+
+; application-specific memory addresses
+first_zp                  = $40      ; used by RWTS DOS shim
+last_zp                   = $58      ; used by RWTS DOS shim
+
+; ProDOS constants
+CMD_ONLINE                = $C5
+CMD_SETPREFIX             = $C6
+CMD_GETPREFIX             = $C7
+CMD_OPEN                  = $C8
+CMD_READ                  = $CA
+CMD_WRITE                 = $CB
+CMD_CLOSE                 = $CC
+CMD_SEEK                  = $CE
+
+_CONSTANTS_=*
+}

@@ -1,0 +1,95 @@
+           BUCKAROO BANZAI /by Scott Adams - Adventure International/
+           ==========================================================
+
+This game is strictly deterministic, without important random elements, so it
+is possible to give exact step by step solution.
+
+                                 Solution:
+                                 ---------
+
+(You start in Yoyodyne office) MOVE TABLE (you find a safe), W, E, E, GO
+HOUSE, GET TOOLBOX, EXAMINE TOOLBOX (a sticker reads "Sam's Service Station"),
+S, W, W, GO STATION, DROP TOOLBOX, GO BOOTH, EXAMINE TRASH (you find old car
+battery), GET BATTERY, EXAMINE BATTERY (there is no water in it), N, E, N, N,
+W, GO CAR, EXAMINE DASHBOARD (the car is out of fuel), EXAMINE COMPARTMENT,
+INVENTORY (you find a formula and a jar of glowing fluid), READ FORMULA (how
+to made a fuel for the car), GET OUT (of the car), DROP FORMULA, N, GET SAND,
+GO SHACK, GET RADIO, EXAMINE RADIO (there is transmit switch but there's no
+battery and no antenna), E, N, FILL BATTERY (with the water from the lake), E,
+S, W, DROP BATTERY, E, S, S, W, GO SHED, DROP RADIO, CONNECT ANTENNA (to the
+radio), N, E, GO YOYODYNE, DROP SAND, DROP JAR, W, N, GO STORE, GET PICK, GET
+GET PUMP, EXAMINE PUMP (a hose is only 6 ft. long), GET HYDROMETER, GET
+CABLES, E, N, W, CHECK BATTERY (using the hydrometer - aha, the battery is
+dead), DROP HYDROMETER, E, S, S, S, E, DIG (using the pick - you dig a hole),
+EXAMINE HOLE (you see an underground phone line), CUT LINE, GET LINE (it is
+still attached), DIG (again - you din an another hole), CUT LINE, GET LINE
+(this time you succeed), W, N, N, N, N, EXAMINE MOUNTAIN (you see a ledge 15
+ft. up with a small peak), DROP PUMP, DROP CABLE, THROW LINE (now you have the
+problem: your hands must be empty to climb the line but you will need the pick
+later; so you must use a trick), TIE LINE, TO PICK, CLIMB LINE (you climb on
+small mountain ledge), PULL LINE (now you have the pick), GET QUARTZ (using
+the pick), D, DROP PICK, DROP LINE, GET PUMP, GET CABLE, S, W, GET BATTERY,
+EXAMINE CAR (you see power terminals, fuel tank and a jet engine connected by
+a hose), CONNECT CABLES, TO BATTERY (preparing for recharging, you will
+recharge it later), GET HOSE (now you can make the hand pump hose longer), E,
+S, S, GO STATION, OPEN TOOLBOX (something is inside), INVENTORY (you now have
+a key, a roll of duct tape and a flashlight), EXAMINE PIPE (locked), UNLOCK
+PIPE (with the key), DROP KEY, CONNECT HOSE (to the hand pump using the tape),
+DROP TAPE, E, GO YOYODYNE, GET SAND, GET JAR (the glowing fluid in it is the
+required catalyst), LIGHT FLASHLIGHT, GO STAIRCASE, DROP QUARTZ, DROP JAR,
+DROP SAND, EXAMINE STAIRCASE, INVENTORY (you find an empty chemical jug), GO
+STAIRCASE, UNLIGHT FLASHLIGHT, W, GO STATION, PUT HOSE (now, it can reach deep
+enough to get the gasoline), PUMP GAS (into the jug, using the hand pump),
+DISCONNECT HOSE, DROP PUMP, E, N, N, W, GET FORMULA, DROP HOSE, E, S, S, GO
+YOYODYNE, GO STAIRCASE, LIGHT FLASHLIGHT, DROP JUG, MAKE FUEL, DROP FORMULA,
+GO STAIRCASE, UNLIGHT FLASHLIGHT, W, N, N, W, CONNECT CABLES, TO TERMINALS
+(now the battery is ready for the recharging, but the recharging is possible
+only when the car engine is on), REFUEL CAR, DROP JUG, GET HOSE, N, N, WASH
+HOSE (very important), S, S, REPLACE HOSE (must be washed first, else the car
+engine will explode due to dirty fuel), GO CAR, EXAMINE DASHBOARD (fuel gauge
+now reads full), PRESS BUTTON (engine is idling), GET OUT, GET BATTERY (now
+recharged), GO CAR, CLOSE COCKPIT (you must close it if you want to drive the
+car, else the engine will only idle), PRESS BUTTON (you drive to Main Street),
+PRESS BUTTON (you drive inside the mountain), LIGHT FLASHLIGHT, OPEN COCKPIT,
+GET OUT, EXAMINE BOMB (you can see a light marked "RFI shield" is on, a switch
+and an envelope), PRESS SWITCH (something happened), EXAMINE BOMB (RFI shield
+is now off - the bomb now can get commands using radio waves), GET ENVELOPE,
+N, OPEN DOOR (you go through and it closes behind you), UNLIGHT FLASHLIGHT,
+DROP FLASHLIGHT, W, N, W, GET CABLES, E, S, S, GO YOYODYNE, OPEN ENVELOPE
+(something is inside), INVENTORY (you find a key), DROP ENVELOPE, OPEN SAFE
+(with the key from the envelope), INVENTORY (you find a sheet of paper), W, W,
+GO SHED, DROP BATTERY, DROP CABLE, CONNECT BATTERY (to the radio), READ PAPER
+(how to deactivate the bomb), EXAMINE RADIO (there is a transmit switch),
+PRESS SWITCH, TRANSMIT WARFIN, TRANSMIT YOYODYNE (The Earth is again safe, the
+adventure is over).
+
+                                  Hints:
+                                  ------
+
+- To save the game type SAVE GAME. Typing only SAVE will not be enough.
+- Use flashlight only when necessary, else you will run out of light very
+  soon.
+- Avoid going to the freeway; there is no way to go back from there, although
+  going there gives you a hint what is your task in the game.
+
+                                 Comment:
+                                 --------
+
+Classic Scott Adams game, not so hard. The parser is simple verb-noun parser.
+Written using ScottFree interpreter, so this game is avaliable for nearly all
+computers (including PC), and a source file of the game is also fully
+avaliable.
+
+-------------------------------------------------------------------------------
+
+Game solution by Zeljko Juric
+
+If something is not clear, ask me using E-mail:
+zjuric@utic.net.ba
+
+Or, if this address is outdated, search for E-mail at my home page:
+http://www.void.demon.nl/warajevo/index.html
+
+*****************************************************
+Displayed on the Classic Adventures Solution Archive:
+http://solutionarchive.com
