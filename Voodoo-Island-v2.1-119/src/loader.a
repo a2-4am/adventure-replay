@@ -46,22 +46,10 @@ Stage1
          jsr   ROM_FINALIZE_RESET
 
          ; 0800..1FFF
-         jsr   PRODOS_MLI
-         !byte CMD_OPEN
-         !word parm_open1
-         jsr   PRODOS_MLI
-         !byte CMD_READ
-         !word parm_read1
-         jsr   CloseAllFiles
+         +READ_ENTIRE_FILE parm_open1, parm_read1
 
          ; 4000..8617
-         jsr   PRODOS_MLI
-         !byte CMD_OPEN
-         !word parm_open2
-         jsr   PRODOS_MLI
-         !byte CMD_READ
-         !word parm_read2
-         jsr   CloseAllFiles
+         +READ_ENTIRE_FILE parm_open2, parm_read2
 
          ; shorten prompt
          ; TODO move this to OBJ file

@@ -68,25 +68,13 @@ Stage1
 move_stage2_start
 !pseudopc STAGE2 {
          ; 0800..266F
-         jsr   PRODOS_MLI
-         !byte CMD_OPEN
-         !word parm_open1
-         jsr   PRODOS_MLI
-         !byte CMD_READ
-         !word parm_read1
-         jsr   CloseAllFiles
+         +READ_ENTIRE_FILE parm_open1, parm_read1
 
          ; 4000..B7FF
          ; This OBJ file includes DOS, minus RWTS, plus patches. Routines
          ; at $BFDC, $BFE6, and $BFED have been moved down
          ; to $B6DC, $B6E6, and $B6ED, and callers have been patched.
-         jsr   PRODOS_MLI
-         !byte CMD_OPEN
-         !word parm_open2
-         jsr   PRODOS_MLI
-         !byte CMD_READ
-         !word parm_read2
-         jsr   CloseAllFiles
+         +READ_ENTIRE_FILE parm_open2, parm_read2
 
          ; set up DOS I/O vectors (like calling $3EA, except we're not
          ; setting up the page 3 DOS vectors because we don't need to)

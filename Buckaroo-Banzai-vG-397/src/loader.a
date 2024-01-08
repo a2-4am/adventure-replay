@@ -33,22 +33,10 @@ Stage1
          +INSTALL_RWTS_DOS_SHIM
 
          ; 0800..1950
-         jsr   PRODOS_MLI
-         !byte CMD_OPEN
-         !word parm_open1
-         jsr   PRODOS_MLI
-         !byte CMD_READ
-         !word parm_read1
-         jsr   CloseAllFiles
+         +READ_ENTIRE_FILE parm_open1, parm_read1
 
          ; 4000..B7FF
-         jsr   PRODOS_MLI
-         !byte CMD_OPEN
-         !word parm_open2
-         jsr   PRODOS_MLI
-         !byte CMD_READ
-         !word parm_read2
-         jsr   CloseAllFiles
+         +READ_ENTIRE_FILE parm_open2, parm_read2
 
          ; set up our custom reset vector
          +STA_16 $3F2, QuitToProDOS

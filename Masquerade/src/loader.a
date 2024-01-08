@@ -59,13 +59,7 @@ Stage1
 move_stage2_start
 !pseudopc STAGE2 {
          ; 0800..6027
-         jsr   PRODOS_MLI
-         !byte CMD_OPEN
-         !word parm_open1
-         jsr   PRODOS_MLI
-         !byte CMD_READ
-         !word parm_read1
-         jsr   CloseAllFiles
+         +READ_ENTIRE_FILE parm_open1, parm_read1
 
 HasAutomationFile1=*+1
          lda   #SELF_MODIFIED_BYTE
@@ -112,13 +106,7 @@ Stage3   ; copied up to $61xx then copied back down to $2000
          ; then finally executed from $2000
 
          ; 4000..B7FF
-         jsr   PRODOS_MLI
-         !byte CMD_OPEN
-         !word parm_open2
-         jsr   PRODOS_MLI
-         !byte CMD_READ
-         !word parm_read2
-         jsr   CloseAllFiles
+         +READ_ENTIRE_FILE parm_open2, parm_read2
 
 ; these changes have been made in the OBJ files directly
 !if 0 {

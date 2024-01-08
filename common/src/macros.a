@@ -48,5 +48,17 @@
          bne   -
 }
 
+!macro READ_ENTIRE_FILE .parm_open, .parm_read {
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word .parm_open
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word .parm_read
+         php
+         jsr   CloseAllFiles
+         plp
+}
+
 _MACROS_=*
 }
