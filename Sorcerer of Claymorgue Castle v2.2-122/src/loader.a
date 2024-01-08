@@ -29,7 +29,8 @@ SAGA_IO_ERROR             = $782C
          !src  "../common/src/loader.rwts.dos.shim.a"
          !src  "../common/src/loader.automate.input.a"
          !src  "../common/src/loader.better.input.a"
-         !src  "../common/src/saga.savegame.a"
+         !src  "../common/src/savegame.a"
+         !src  "../common/src/savegame.saga.a"
 
 Stage1
          ; copy RWTS DOS shim into place
@@ -121,12 +122,8 @@ Stage1
          +INSTALL_BETTER_INPUT
          +MAKE_JSR $6FCD, BetterInput
 
-         ; and copy savegame code into place
-         ldx   #(move_savegame_end - move_savegame_start)
--        lda   move_savegame_start-1, x
-         sta   SAVEGAME-1, x
-         dex
-         bne   -
+         ; copy savegame code into place
+         +INSTALL_SAVEGAME
 
          ; and change save prompt
          ; TODO move this to OBJ file

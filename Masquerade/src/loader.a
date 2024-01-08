@@ -43,11 +43,7 @@ Stage1
          bne   -
 
          ; copy savegame code into place
-         ldx   #(move_savegame_end - move_savegame_start)
--        lda   move_savegame_start-1, x
-         sta   SAVEGAME-1, x
-         dex
-         bne   -
+         +INSTALL_SAVEGAME
 
          ; copy stage 2 & 3 code into place
          ldx   #(move_stage2_end - move_stage2_start)
