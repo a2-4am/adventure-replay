@@ -4,7 +4,7 @@ Pirate Adventure          ❌
 Mission Impossible        ✅          ✅         ✅               ✅          ✅                 ✅               ❌
 Voodoo Island             ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 The Count                 ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-Strange Odyssey           ✅          ✅         ✅               ✅          ✅                 ✅               ❌
+Strange Odyssey           ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 Claymorgue Castle         ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 Curse of Crowley Manor    ❌
 Escape from Traam         ❌
