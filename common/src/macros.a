@@ -6,6 +6,16 @@
 
          !src  "../common/src/constants.a"
 
+!macro LDADDR .addr {
+         lda   #<.addr
+         ldy   #>.addr
+}
+
+!macro STAY .addr {
+         sta   .addr
+         sty   .addr+1
+}
+
 ; clobbers A
 !macro STA_16 .addr, .value {
          lda   #<.value

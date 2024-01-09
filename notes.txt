@@ -1,7 +1,7 @@
                           ported? --- reset? --- walkthrough? --- prompt? --- AutomateInput? --- BetterInput? --- save to file?
 Adventureland             ❌
 Pirate Adventure          ❌
-Mission Impossible        ✅          ✅         ✅               ✅          ✅                 ✅               ❌
+Mission Impossible        ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 Voodoo Island             ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 The Count                 ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 Strange Odyssey           ✅          ✅         ✅               ✅          ✅                 ✅               ✅

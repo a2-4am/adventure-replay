@@ -18,21 +18,37 @@ rwts_filenames
 PRODOS_BUFFER             = $B800    ; $400 bytes
 STAGE2                    = $2670
 PREFIX_BUFFER             = $BC00    ; $40 bytes
-AUTO_BUFFER               = $BC00    ; $100 bytes
+AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
+MI_SAVEGAME               = $BC00
+SAVEGAME                  = $BC07    ; max $100 bytes (if interactive, persistent)
 RWTS                      = $BD00    ; max $100 bytes
 INPUT                     = $BE00    ; max $100 bytes
+SAGA_LOCATION_ARRAY       = $64E7
+SAGA_IO_ERROR             = $74FC    ; TODO
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
          !src  "../common/src/loader.rwts.dos.shim.a"
          !src  "../common/src/loader.automate.input.a"
          !src  "../common/src/loader.better.input.a"
+         !src  "../common/src/savegame.saga.a"
+move_mi_savegame_start
+!pseudopc MI_SAVEGAME {
+MI_OpenSaveFile
+         jsr   OpenSaveFile
+         lda   $4157
+         rts
+}
+move_mi_savegame_end
 
 Stage1
          ; copy RWTS DOS shim into place
          ; (includes CloseAllFiles routine, so must do this first)
          +INSTALL_RWTS_DOS_SHIM
-         ; and set up redirect for DOS calls
+
+         ; copy savegame code into place
+         +INSTALL_SAGA_SAVEGAME
+         +SHORT_COPY move_mi_savegame_start, move_mi_savegame_end, MI_SAVEGAME
 
          ; set up zero page (in the original game, these are set by calling
          ; HGR earlier in the boot process)
@@ -80,8 +96,9 @@ move_stage2_start
          ; setting up the page 3 DOS vectors because we don't need to)
          jsr   $A851
 
+; these changes have been made in the OBJ files directly
+!if 0 {
          ; shorten prompt
-         ; TODO move this to OBJ file
          lda   #$3E
          sta   $7357
          lda   #$20
@@ -90,9 +107,34 @@ move_stage2_start
          sta   $7359
 
           ; always continue after returning from custom input routine
-          ; TODO move this to OBJ file
           lda   #$00
           sta   $6FDF
+
+         ; and change save prompt
+         ldx   #0
+-        lda   new_save_prompt, x
+         sta   $15C3, x
+         beq   +
+         inx
+         bne   -                     ; always branches
++
+         ; and increase save slots
+         lda   #$31
+         sta   $15E9
+         lda   #$D2
+         sta   $15F0
+
+         ; savegame hooks change some JSRs to direct calls
+         ; instead of routines that take parameters on the stack,
+         ; so NOP out the parameters
+         ; (putting this in OBJ file because they're not dependent
+         ; on source addresses, and stage 2 code is getting too big)
+         lda   #$EA
+         sta   $74CE
+         sta   $74CF
+         sta   $7515
+         sta   $7516
+}
 
           ; turn on lowercase display by default on machines that support it
           +HAS_LOWERCASE
@@ -112,24 +154,59 @@ HasAutomationFile=*+1
          lda   #$2C
          sta   $6AD2
          ; and de-randomize with monotonically increasing random values
-         lda   #$A9                  ; LDA #$00
-         sta   $0F9C
-         lda   #$00
-         sta   $0F9D
-         lda   #$EE                  ; INC $0F9D (value of LDA)
-         sta   $0F9E
-         lda   #$9D
-         sta   $0F9F
-         lda   #$0F
-         sta   $0FA0
-         bne   @start_game           ; always branches
+         +SHORT_COPY move_derandom_start, move_derandom_end, $0F9C
+         jmp   @start_game
 
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead
          +MAKE_JSR $6FDB, BetterInput
 
+         ; and hook save and restore routines
+         +LDADDR PrintSavedGames
+         ;+STAY $1536
+         +STAY $15E0
+
+         ldx   #$20
+         stx   $153B
+         lda   #<MI_OpenSaveFile
+         +STAY $153C
+
+         stx   $74CB
+         lda   #<OpenSaveFile
+         +STAY $74CC
+
+         lda   #<SavePart1
+         +STAY $156F
+
+         lda   #<SavePart2
+         +STAY $1590
+
+         lda   #<RestorePart1
+         +STAY $74E8
+
+         lda   #<RestorePart2
+         +STAY $7513
+         ; +STA_16 $1536, PrintSavedGames
+         ; +STA_16 $15E0, PrintSavedGames
+         ; +MAKE_JSR $153B, MI_OpenSaveFile
+         ; +MAKE_JSR $74CB, OpenSaveFile
+         ; +STA_16 $156F, SavePart1
+         ; +STA_16 $1590, SavePart2
+         ; +STA_16 $74E8, RestorePart1
+         ; +STA_16 $7513, RestorePart2
+
 @start_game
          jmp   $0800
+
+!if 0 {
+new_save_prompt
+         !text "GAME NUMBER (1-9)? ",0
+}
+
+move_derandom_start
+         lda   #$00
+         inc   $0F9D
+move_derandom_end
 
 parm_open1
          !byte 3
