@@ -16,3 +16,21 @@ these are common routines for all game output and can't be modified
 
 engine seems flexible enough to handle shortened prompt, probably because different
 games use different prompts with different character names
+
+-=-=-
+
+secondary input routine:
+
+many locations require pressing RETURN after reading the description
+this is handled by a separate routine at $8580
+for automation, this will either need to be bypassed or hooked
+maybe change $8587 from $FB to $07 to bypass
+or change $8583 from LDA $C000 / BPL -$FB to JSR BetterInput / BPL +$00
+
+-=-=-
+
+tertiary input routine:
+
+there is a THIRD input routine at $B7A9 that just straight up calls JSR $FD0C
+(for example when you look under the table in the first room, or when you dig with the pickaxe later)
+change $B7A9 from JSR $FD0C to JSR BetterInput
