@@ -24,7 +24,7 @@ SAVEGAME                  = $BC07    ; max $100 bytes (if interactive, persisten
 RWTS                      = $BD00    ; max $100 bytes
 INPUT                     = $BE00    ; max $100 bytes
 SAGA_LOCATION_ARRAY       = $653B
-SAGA_IO_ERROR             = $782C    ; TODO
+SAGA_IO_ERROR             = $FF58
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
