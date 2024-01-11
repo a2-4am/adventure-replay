@@ -1,5 +1,6 @@
 targets := \
 	Masquerade \
+	Pirate-Adventure-v2.1-408 \
 	Mission-Impossible-v2.1-306 \
 	Voodoo-Island-v2.1-119 \
 	The-Count-v2.1-115 \
