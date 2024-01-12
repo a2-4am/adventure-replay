@@ -19,11 +19,11 @@ PRODOS_BUFFER             = $B800    ; $400 bytes
 STAGE2                    = $3000
 PREFIX_BUFFER             = $BC00    ; $40 bytes
 AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
-WRAP_SAVEGAME               = $BC00
+WRAP_SAVEGAME             = $BC00
 SAVEGAME                  = $BC07    ; max $100 bytes (if interactive, persistent)
 RWTS                      = $BD00    ; max $100 bytes
 INPUT                     = $BE00    ; max $100 bytes
-SAGA_LOCATION_ARRAY       = $6546
+SAGA_LOCATION_ARRAY       = $65A5
 SAGA_IO_ERROR             = $FF58
 
          !src  "../common/src/loader.init.a"               ; must be first
@@ -50,7 +50,7 @@ Stage1
          +INSTALL_SAGA_SAVEGAME
          +SHORT_COPY move_wrap_savegame_start, move_wrap_savegame_end, WRAP_SAVEGAME
 
-         ; 4000..7B2F
+         ; 4000..764F
          +READ_ENTIRE_FILE parm_open1, parm_read1
 
          ; 8E00..B7FF
@@ -126,31 +126,31 @@ obj_filename2
 ;------------------------------------------------------------------------------
 move_stage2_start
 !pseudopc STAGE2 {
-         ; 0800..21E9
+         ; 0800..23D7
          +READ_ENTIRE_FILE parm_open3, parm_read3
 
 ; these changes have been made in the OBJ files directly
 !if 0 {
          ; shorten prompt
          lda   #$3E
-         sta   $7357
+         sta   $7370
          lda   #$20
-         sta   $7358
+         sta   $7371
          lda   #$00
-         sta   $7359
+         sta   $7372
 
          ; always continue after returning from custom input routine
          lda   #$00
-         sta   $6FDF
+         sta   $7005
 
          ; and change save prompt
-         ldx   #0
--        lda   new_save_prompt, x
-         sta   $15C3, x
-         beq   +
-         inx
-         bne   -                     ; always branches
-+
+          ldx   #0
+ -        lda   new_save_prompt, x
+          sta   $15C3, x
+          beq   +
+          inx
+          bne   -                     ; always branches
+ +
          ; and increase save slots
          lda   #$31
          sta   $15E9
@@ -160,32 +160,30 @@ move_stage2_start
          ; savegame hooks change some JSRs to direct calls
          ; instead of routines that take parameters on the stack,
          ; so NOP out the parameters
-         ; (putting this in OBJ file because they're not dependent
-         ; on source addresses, and stage 2 code is getting too big)
          lda   #$EA
-         sta   $74CE
-         sta   $74CF
-         sta   $7515
-         sta   $7516
+         sta   $74EB
+         sta   $74EC
+         sta   $7532
+         sta   $7533
 }
 
          ; turn on lowercase display by default on machines that support it
          +HAS_LOWERCASE
          bne   +
          lda   #$00
-         sta   $698C
+         sta   $6A9C
 +
 HasAutomationFile=*+1
          lda   #SELF_MODIFIED_BYTE
          beq   @no_auto
 
          ; if we're using automation, install the AutomateInput hook
-         +MAKE_JSR $6FDB, AutomateInput
+         +MAKE_JSR $7001, AutomateInput
          ; and bypass title screen / restore game / voice slot
-         +MAKE_JMP $6AA7, $6ACA
+         +MAKE_JMP $6ADA, $6AF8
          ; and bypass text intro screen
          lda   #$2C
-         sta   $6AD2
+         sta   $6B00
          ; and de-randomize with monotonically increasing random values
          lda   #$A9                  ; LDA #$00
          sta   $0F9C
@@ -201,17 +199,17 @@ HasAutomationFile=*+1
 
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead
-         +MAKE_JSR $6FDB, BetterInput
+         +MAKE_JSR $7001, BetterInput
 
-         ; and hook save and restore routines
+         ; ; and hook save and restore routines
          +STA_16 $1536, PrintSavedGames
          +STA_16 $15E0, PrintSavedGames
          +MAKE_JSR $153B, WrapOpenSaveFile
-         +STA_16 $74CC, OpenSaveFile
+         +STA_16 $74E9, OpenSaveFile
          +STA_16 $156F, SavePart1
          +STA_16 $1590, SavePart2
-         +STA_16 $74E8, RestorePart1
-         +STA_16 $7513, RestorePart2
+         +STA_16 $7505, RestorePart1
+         +STA_16 $7530, RestorePart2
 
 @start_game
          jmp   $0800
