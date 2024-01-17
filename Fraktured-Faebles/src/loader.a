@@ -208,9 +208,16 @@ HasAutomationFile=*+1
          dex
          bpl   -
 
-;          ; disable unconditional keypress on quit
-;          lda   #$00
-;          sta   $1880
+         ; quit instead of hanging
+         lda   #$2C
+         sta   $1831
+         sta   $1836
+         lda   #$6C
+         sta   $1839
+         lda   #$F2
+         sta   $183A
+         lda   #$03
+         sta   $183B
 
          ; retain our custom reset vector
          lda   #$2C
