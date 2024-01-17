@@ -19,10 +19,10 @@ PRODOS_BUFFER             = $B800    ; $400 bytes
 STAGE2                    = $2670
 PREFIX_BUFFER             = $BC00    ; $40 bytes
 AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
-MI_SAVEGAME               = $BC00
+WRAP_SAVEGAME             = $BC00
 SAVEGAME                  = $BC07    ; max $100 bytes (if interactive, persistent)
-RWTS                      = $BD00    ; max $100 bytes
-INPUT                     = $BE00    ; max $100 bytes
+RWTS                      = $BD00    ; max $100 bytes (persistent)
+INPUT                     = $BE00    ; max $100 bytes (persistent)
 SAGA_LOCATION_ARRAY       = $64E7
 SAGA_IO_ERROR             = $FF58
 
@@ -32,14 +32,14 @@ SAGA_IO_ERROR             = $FF58
          !src  "../common/src/loader.automate.input.a"
          !src  "../common/src/loader.better.input.a"
          !src  "../common/src/savegame.saga.a"
-move_mi_savegame_start
-!pseudopc MI_SAVEGAME {
-MI_OpenSaveFile
+move_wrap_savegame_start
+!pseudopc WRAP_SAVEGAME {
+WrapOpenSaveFile
          jsr   OpenSaveFile
          lda   $4157
          rts
 }
-move_mi_savegame_end
+move_wrap_savegame_end
 
 Stage1
          ; copy RWTS DOS shim into place
@@ -48,7 +48,7 @@ Stage1
 
          ; copy savegame code into place
          +INSTALL_SAGA_SAVEGAME
-         +SHORT_COPY move_mi_savegame_start, move_mi_savegame_end, MI_SAVEGAME
+         +SHORT_COPY move_wrap_savegame_start, move_wrap_savegame_end, WRAP_SAVEGAME
 
          ; set up zero page (in the original game, these are set by calling
          ; HGR earlier in the boot process)
@@ -159,7 +159,7 @@ HasAutomationFile=*+1
 
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead
-         +MAKE_JSR $6FDB, BetterInput
+         +MAKE_JSR $6FDB, BlockingBetterInput
 
          ; and hook save and restore routines
          +LDADDR PrintSavedGames
@@ -168,7 +168,7 @@ HasAutomationFile=*+1
 
          ldx   #$20
          stx   $153B
-         lda   #<MI_OpenSaveFile
+         lda   #<WrapOpenSaveFile
          +STAY $153C
 
          stx   $74CB
@@ -188,7 +188,7 @@ HasAutomationFile=*+1
          +STAY $7513
          ; +STA_16 $1536, PrintSavedGames
          ; +STA_16 $15E0, PrintSavedGames
-         ; +MAKE_JSR $153B, MI_OpenSaveFile
+         ; +MAKE_JSR $153B, WrapOpenSaveFile
          ; +MAKE_JSR $74CB, OpenSaveFile
          ; +STA_16 $156F, SavePart1
          ; +STA_16 $1590, SavePart2

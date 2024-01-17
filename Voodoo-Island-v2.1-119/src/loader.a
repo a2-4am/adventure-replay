@@ -19,8 +19,8 @@ PRODOS_BUFFER             = $B800    ; $400 bytes
 PREFIX_BUFFER             = $BC00    ; $40 bytes
 AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
 SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persistent)
-RWTS                      = $BD00    ; max $100 bytes
-INPUT                     = $BE00    ; max $100 bytes
+RWTS                      = $BD00    ; max $100 bytes (persistent)
+INPUT                     = $BE00    ; max $100 bytes (persistent)
 SAGA_LOCATION_ARRAY       = $65F3
 SAGA_IO_ERROR             = $7811
 
@@ -103,7 +103,7 @@ Stage1
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead
          +INSTALL_BETTER_INPUT
-         +MAKE_JSR $6FD8, BetterInput
+         +MAKE_JSR $6FD8, BlockingBetterInput
 
          ; copy savegame code into place
          +INSTALL_SAGA_SAVEGAME

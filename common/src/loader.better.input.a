@@ -17,7 +17,28 @@
 ;------------------------------------------------------------------------------
 better_input_start
 !pseudopc INPUT {
-InputMode1
+BeginBetterInput
+         ldy   CH
+         cpy   min_ch
+         bcs   @checkInputMode
+         sty   min_ch
+@checkInputMode
+         lda   input_mode
+         bmi   +
+         lda   #$20
+         sta   (BASL), y
++        rts
+
+PendingBetterInput
+input_mode=*+1
+         lda   #$00                  ; self-modified
+         bmi   @pendingNonInteractive
+         lda   KBD
+         rts
+
+@pendingNonInteractive
+         lsr
+         bcc   @pendingInputMode2
          cpy   min_ch
          beq   @beginRetypingLastCommand
          ; return left arrow until we're back at the beginning of the input line
@@ -25,78 +46,101 @@ InputMode1
          rts
 
 @beginRetypingLastCommand
-         inc   input_mode
+         dec   input_mode
          ; /!\ execution falls through here
 
-InputMode2
+@pendingInputMode2
          ; return the next character from the saved input buffer
-         ldy   input_offset
+input_offset=*+1
+         ldy   #$00                  ; self-modified
          lda   last_input, y
-         beq   GoToInputMode0
-         inc   input_offset
+         beq   @goToInputMode0
          ldy   CH
+         cmp   #0
          rts
 
-GoToInputMode0
+@goToInputMode0
+         ;A=0
          sta   input_mode
          sta   input_offset
-         ; /!\ execution falls through here
+         rts
 
-BetterInput                          ; main entry point
-         ldy   CH
-         cpy   min_ch
-         bcs   @checkInputMode
-         sty   min_ch
-@checkInputMode
-         lda   input_mode
-         cmp   #$01
-         beq   InputMode1
-         cmp   #$02
-         beq   InputMode2
+NonBlockingBetterInput
+         jsr   BeginBetterInput
+         jsr   PendingBetterInput
+         bpl   @exit
+         jsr   AcceptableBetterInput
+         bcc   @accept
+         lda   #0
+@accept  adc   #0                    ; sets N flag for caller
+@exit    rts
 
-         lda   #$20
-         sta   (BASL), y
-@incRandom
-         inc   RNDL
-         bne   @checkKey
-         inc   RNDH
-@checkKey
-         lda   KBD
-         bpl   @incRandom
+BlockingBetterInput
+         jsr   BeginBetterInput
+         jsr   PendingBetterInput
+         bpl   BlockingBetterInput
          bit   CLEARKBD
+         jsr   AcceptableBetterInput
+         bcs   BlockingBetterInput
+         ; /!\ execution falls through here to CommitBetterInput
+
+CommitBetterInput
+; in:    A=key to commit
+; out:   A/X preserved
+;        Y=CH
+;        N=0
+;        Z=0
+;        C clobbered
+         ldy   CH
+         sta   (BASL), y
+         lda   input_mode
+         cmp   #$FE
+         bne   +
+         inc   input_offset
++        bit   CLEARKBD
+         lda   (BASL), y
+         rts
+
+AcceptableBetterInput
+; in:    A=key pressed
+;        Y=CH
+; out:   C=0 if key should be accepted
+;        C=1 if key should be rejected
+;        A=(possibly altered) key
+;        Y preserved
+;        X preserved
 
          ; convert backspace to left arrow
          cmp   #$FF
          bne   @checkUpArrow
          lda   #$88                  ; left arrow
-
 @checkUpArrow
          ; up arrow = retype last command
          cmp   #$8B                  ; up arrow
          bne   @checkOtherArrows
          lda   last_input
-         beq   BetterInput           ; ignore if no previous command
-         inc   input_mode
-         bne   BetterInput           ; always branches
-
+         beq   RejectInput           ; ignore if no previous command
+         dec   input_mode
+         bne   RejectInput           ; always branches
 @checkOtherArrows
          ; ignore other arrows
          cmp   #$8A                  ; down arrow
-         beq   BetterInput
+         beq   RejectInput
          cmp   #$95                  ; right arrow
-         beq   BetterInput
+         beq   RejectInput
 
          ; convert lowercase to uppercase
          jsr   ToUpper
 
          ; if no input yet, we're done (don't check for <return>)
          cpy   min_ch
-         beq   @exit
+         beq   @accept
 
          cmp   #$8D
          bne   @checkMax
          ; on <return> after non-empty input, save input in internal buffer
-         ldy   min_ch
+min_ch=*+1
+         ldy   #$28                  ; self-modified
          pha
          txa
          pha
@@ -123,13 +167,14 @@ BetterInput                          ; main entry point
 @checkMax
          ; check if input line is at max length
          cpy   #$27
-         bcc   @exit
+         bcc   @accept
 
          ; maxed out! only accept left arrow (or <return>, already handled)
          cmp   #$88
-         bne   BetterInput
+         bne   RejectInput
 
-@exit    rts
+@accept  clc
+         rts
 
 ToUpper
          cmp   #$E1
@@ -137,14 +182,10 @@ ToUpper
          cmp   #$FB
          bcs   +
          and   #$DF
+RejectInput
+         sec
 +        rts
 
-input_mode
-         !byte $00
-input_offset
-         !byte $00
-min_ch
-         !byte $28
 last_input
          !fill $28
 }

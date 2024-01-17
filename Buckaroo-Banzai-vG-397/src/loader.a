@@ -18,8 +18,8 @@ rwts_filenames
 PRODOS_BUFFER             = $B800    ; $400 bytes
 PREFIX_BUFFER             = $BC00    ; $40 bytes
 AUTO_BUFFER               = $BC00    ; $100 bytes
-RWTS                      = $BD00    ; max $100 bytes
-INPUT                     = $BE00    ; max $100 bytes
+RWTS                      = $BD00    ; max $100 bytes (persistent)
+INPUT                     = $BE00    ; max $100 bytes (persistent)
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
@@ -91,7 +91,7 @@ Stage1
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead
          +INSTALL_BETTER_INPUT
-         +MAKE_JSR $1688, BetterInput
+         +MAKE_JSR $1688, BlockingBetterInput
 
          ; TODO move these into OBJ file
          lda   #$10

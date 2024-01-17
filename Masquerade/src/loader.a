@@ -146,7 +146,7 @@ HasAutomationFile2=*+1
 
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead
-         +STA_16 $94E, BetterInput
+         +STA_16 $94E, BlockingBetterInput
          ; and hook savegame
          +MAKE_JSR $4C10, PrintSavedGames
          +MAKE_JSR $4C4D, ForceGraphics
