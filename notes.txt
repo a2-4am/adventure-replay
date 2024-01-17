@@ -16,9 +16,9 @@ QuestProbe/Hulk           ❌
 QuestProbe/Thing          ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Masquerade                ✅          ✅         ✅               ✅          ✅                 ✅               ✅
+FrakTured FaebLes         ✅          ✅         ✅               ✅          ❌                 ✅               ❌
 The Institute             ❌          ❌         ✅               ❌          ❌                 ❌               ❌
 Lucifer's Realm           ❌
-FrakTured FaebLes         ❌
 Sherwood Forest           ❌
 The Queen of Phobos       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯

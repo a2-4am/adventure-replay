@@ -1,0 +1,63 @@
+title notes:
+
+CATALOG DISK                                                     SLOT 6  DRIVE 1
+DISK VOLUME 254
+
+
+   B 058 LO                                   A2048, L14336  (A$0800, L$3800)
+   B 090 HI                                   A16384, L22528  (A$4000, L$5800)
+   B 003 AREC1                               A12083, L256  (A$2F33, L$0100)
+   B 002 MADLOADER                            A2048, L192  (A$0800, L$00C0)
+   A 005 HELLO                                L817  (L$0331)
+   B 003 AREC2                               A12083, L256  (A$2F33, L$0100)
+   B 034 PI.TITLE                             A8192, L8192  (A$2000, L$2000)
+   B 033 PI.RETURN                            A16384, L8184  (A$4000, L$1FF8)
+   B 034 PI.CREDITS                           A16384, L8184  (A$4000, L$1FF8)
+   B 034 PI.DALE                              A16384, L8184  (A$4000, L$1FF8)
+   B 033 PI.RICKY                             A16384, L8184  (A$4000, L$1FF8)
+  *B 002 DISSOLVE                             A768, L72  (A$0300, L$0048)
+  *B 004 SCROLL                               A39165, L608  (A$98FD, L$0260)
+
+SECTORS FREE:134  USED:426   TOTAL:560
+
+PRESS [RETURN]
+
+
+
+1  POKE 214,255: POKE 1014,18: POKE 1015,217: POKE 214,0: POKE 1010,102: POKE 1011,213
+5 D$ =  CHR$ (4)
+8  PRINT  CHR$ (4);"BLOAD SCROLL"
+9  PRINT  CHR$ (4);"BLOAD DISSOLVE"
+10  PRINT  CHR$ (4);"BLOAD PI.TITLE,A$4000": PRINT  CHR$ (4);"BLOAD PI.TITLE,A$2000"
+15  ONERR  GOTO 2000
+20  POKE 49232,1: POKE 49239,1: POKE 49236,1: POKE  - 16302,0: CALL 39165: FOR PA = 1 TO 2: NEXT PA
+30  PRINT  CHR$ (4);"BLOAD PI.RETURN,A$4000"
+35  CALL 768
+40  POKE  - 16368,0
+50  IF  PEEK ( - 16384) <  > 141 THEN  GOTO 50
+57  POKE  - 16302,0
+60  PRINT  CHR$ (4)"BLOAD PI.CREDITS,A$4000"
+67  POKE 49232,1: POKE 49239,1: POKE 49237,1
+68  FOR I = 1 TO 300: NEXT I
+70  PRINT  CHR$ (4);"BLOAD PI.DALE,A$2000"
+73  POKE 49232,1: POKE 49239,1: POKE 49236,1
+75  FOR I = 1 TO 100: NEXT I
+80  PRINT  CHR$ (4);"BLOAD PI.RICKY,A$4000"
+83  CALL 768
+100  FOR I = 1 TO 1750: NEXT I
+108  POKE 16299,0
+109  POKE  - 16368,0
+200  HOME : TEXT 
+205  VTAB 1: HTAB 12: INVERSE : PRINT "FRAKTURED FAEBLES": NORMAL 
+210  VTAB 12: FLASH : PRINT "PLEASE WAIT WHILE FRAKTURING THE FAEBLES": NORMAL 
+220  VTAB 20: PRINT "(C) 1985  AMERICAN EAGLE SOFTWARE, INC.."
+700  PRINT D$;"MAXFILES 1"
+900  PRINT D$;"BRUN MADLOADER,A$0300"
+999  END 
+
+-=-=-
+
+input notes:
+
+many screens have animation while waiting for input
+which means we need a non-blocking version of BetterInput

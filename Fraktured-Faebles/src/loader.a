@@ -1,0 +1,432 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+!cpu 6502
+!to "build/LOADER.SYSTEM#FF2000",plain
+*=$2000
+
+; application-specific macros
+!macro RWTS_FILENAMES {
+side_b
+         !byte 6
+         !text "SIDE.B"
+rwts_filenames
+         !word side_b
+}
+
+; application-specific addresses
+PRODOS_BUFFER             = $B800    ; $400 bytes
+STAGE2                    = $B700
+TITLE_STAGE               = $6000
+PREFIX_BUFFER             = $BC00    ; $40 bytes during init
+AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
+SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persistent)
+RWTS                      = $BD00    ; max $100 bytes (persistent)
+INPUT                     = $BE00    ; max $100 bytes (persistent)
+
+         !src  "../common/src/loader.init.a"               ; must be first
+                                                           ; exits via Stage1
+         !src  "../common/src/loader.rwts.dos.shim.a"
+         !src  "../common/src/loader.automate.input.a"
+         !src  "../common/src/loader.better.input.a"
+
+Stage1
+         ; copy RWTS DOS shim into place
+         +INSTALL_RWTS_DOS_SHIM
+
+         ; set up our custom reset vector
+         +STA_16 $3F2, QuitToProDOS
+         jsr   ROM_FINALIZE_RESET
+
+         ; copy stage 2 code into place
+         +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2
+
+         lda   input_filename_start
+         ; stage 2 (now in place) needs to know if we're using automation
+         sta   HasAutomationFile
+         beq   @no_auto
+         +INSTALL_AUTOMATE_INPUT
+         beq   @goto_stage2          ; always branches
+@no_auto
+         +INSTALL_BETTER_INPUT
+
+         ; copy savegame code into place
+         +SHORT_COPY move_savegame_start, move_savegame_end, SAVEGAME
+
+         ; copy title code into place
+         +SHORT_COPY move_title_start, move_title_end, TITLE_STAGE
+
+         ; 0300..0347
+         +READ_ENTIRE_FILE parm_open_dissolve, parm_read_dissolve
+
+         ; 98D0..9BFC
+         +READ_ENTIRE_FILE parm_open_scroll, parm_read_scroll
+
+@goto_stage2
+         ; continue from relocated stage 2
+         jmp   STAGE2
+
+parm_open_scroll
+         !byte 3
+         !word obj_filename_scroll
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read_scroll
+         !byte 4
+         !byte 1
+         !word $98FD
+         !word $FFFF
+         !word 0
+obj_filename_scroll
+         !byte 6
+         !text "SCROLL"
+
+parm_open_dissolve
+         !byte 3
+         !word obj_filename_dissolve
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read_dissolve
+         !byte 4
+         !byte 1
+         !word $0300
+         !word $FFFF
+         !word 0
+obj_filename_dissolve
+         !byte 8
+         !text "DISSOLVE"
+
+move_title_start
+!pseudopc TITLE_STAGE {
+ShowTitleAndCredits
+         ; 4000..5FFF
+         jsr   read_title
+
+         ldx   #$20
+         ldy   #$00
+@src     lda   $4000, y
+@dst     sta   $2000, y
+         iny
+         bne   @src
+         inc   @src+2
+         inc   @dst+2
+         dex
+         bne   @src
+         bit   $c050
+         bit   $c054
+         bit   $c052
+         bit   $c057
+         jsr   $98FD                 ; call scroll transition effect
+
+         ; 4000..5FFF
+         jsr   read_next_title
+
+         jsr   $0300                 ; call dissolve transition effect
+
+         bit   CLEARKBD
+-        bit   KBD
+         bpl   -
+         bit   CLEARKBD
+
+         ; 4000..5FFF
+         jsr   read_next_title
+
+         bit   $c055
+         lda   #$20
+         ; 2000..3FFF
+         jsr   set_addr_and_read_next_title
+         ldx   #$18
+         jsr   LongWaitForKeyWithTimeout
+         bit   $c054
+         lda   #$40
+         ; 4000..5FFF
+         jsr   set_addr_and_read_next_title
+         ldx   #$10
+         jsr   LongWaitForKeyWithTimeout
+         jsr   $0300                 ; call dissolve transition effect
+         ldx   #$20
+         jmp   LongWaitForKeyWithTimeout
+
+set_addr_and_read_next_title
+         sta   parm_read_title_hi
+read_next_title
+         inc   obj_filename_title_suffix
+read_title
+         +READ_ENTIRE_FILE parm_open_title, parm_read_title
+         rts
+
+LongWaitForKeyWithTimeout
+         lda   #0
+-        bit   KBD
+         bmi   +
+         jsr   ROM_WAIT
+         dex
+         bne   -
++        rts
+
+parm_open_title
+         !byte 3
+         !word obj_filename_title
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read_title
+         !byte 4
+         !byte 1
+         !byte 0
+parm_read_title_hi
+         !word $40
+         !word $FFFF
+         !word 0
+obj_filename_title
+         !byte 6
+         !text "TITLE"
+obj_filename_title_suffix
+         !text "1"
+}
+move_title_end
+
+move_stage2_start
+!pseudopc STAGE2 {
+HasAutomationFile=*+1
+         lda   #SELF_MODIFIED_BYTE
+         bne   @load_game            ; if a filename was passed in, we'll
+                                     ; use it for automation, so skip the
+                                     ; title screen and credits
+         jsr   ShowTitleAndCredits
+
+@load_game
+         bit   $c051
+         ; 0800..97FF
+         +READ_ENTIRE_FILE parm_open_game, parm_read_game
+
+; these changes have been made in the OBJ files directly
+!if 0 {
+         ; erase 'FLIP TO OTHER SIDE' text
+         ldx   #$16
+         lda   #$F5
+-        sta   $4F3C, x
+         dex
+         bpl   -
+
+;          ; disable unconditional keypress on quit
+;          lda   #$00
+;          sta   $1880
+
+         ; retain our custom reset vector
+         lda   #$2C
+         sta   $16B3
+         sta   $16B8
+         sta   $16BD
+
+         ; normalize prompt
+         lda   #$BE
+         sta   $1705
+         lda   #$A0
+         sta   $1706
+}
+
+         lda   HasAutomationFile
+         beq   @no_auto
+
+         ; ; if we're using automation, install the AutomateInput hook
+         ; +STA_16 $94E, AutomateInput
+         ; ; and disable intro text screen
+         ; lda   #$2C
+         ; sta   $16C8
+         ; sta   $16CB
+         ; ; and disable output beeps
+         ; sta   $161E
+         ; sta   $1628
+         ; sta   $4DA0
+         bne   @start_game           ; always branches
+
+@no_auto
+         ; if we're not using automation, install the BetterInput hook instead
+         +MAKE_JSR $5F39, NonBlockingBetterInput
+         lda   #$2C
+         sta   $5F3E
+         +STA_16 $5F48, CommitBetterInput
+         +MAKE_JSR $5FF3, PendingBetterInput
+         +MAKE_JSR $6000, PendingBetterInput
+         +MAKE_JSR $612B, PendingBetterInput
+         ; ; and hook savegame
+         ; +MAKE_JSR $4C10, PrintSavedGames
+         ; +MAKE_JSR $4C4D, ForceGraphics
+         ; +MAKE_JMP $4C5A, SaveOrRestoreGame
+
+@start_game
+         jmp   $0800
+
+parm_open_game
+         !byte 3
+         !word obj_filename_game
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read_game
+         !byte 4
+         !byte 1
+         !word $0800
+         !word $FFFF
+         !word 0
+obj_filename_game
+         !byte 8
+         !text "OBJ.0800"
+}
+
+move_stage2_end
+
+move_savegame_start
+!pseudopc SAVEGAME {
+PrintSavedGames
+; in:    A contains 1 (read) or 2 (write)
+; out:   $4CF2 set to A on entry
+;        all registers preserved
+;        exits to caller
+         pha
+         tya
+         pha
+         lda   #$31
+         sta   save_slot_ascii
+print_loop
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         bcs   print_next
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word print_seek
+         bcs   +
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word print_read
++        php
+         jsr   CloseAllFiles
+         plp
+         bcs   print_next
+         lda   print_read_actual
+         beq   print_next
+         lda   save_slot_ascii
+         sta   print_slot
+         bit   $c051
+         jsr   $0806
+         !text "SLOT "
+print_slot
+         !byte SELF_MODIFIED_BYTE
+         !text ": ",0
+print_room_id=*+1
+         lda   #SELF_MODIFIED_BYTE
+         eor   #$13
+         asl
+         tay
+         lda   $6C40, y
+         sta   print_src+1
+         lda   $6C41, y
+         sta   print_src+2
+         ldy   #15
+print_src
+         lda   SELF_MODIFIED_WORD, y
+         beq   print_next
+         eor   #$55
+         ora   #$80
+         jsr   ROM_COUT
+         iny
+         bne   print_src             ; always branches
+print_next
+         inc   save_slot_ascii
+         lda   save_slot_ascii
+         cmp   #$38
+         bne   print_loop
+print_exit
+         pla
+         tay
+         pla
+         sta   $4CF2
+         rts
+
+ForceGraphics
+; if you 'RESTORE GAME' *and* there is at least one saved game *and*
+; restoring the game fails (perhaps because you pressed <return> instead
+; of 1-7, or there is no game in the slot you selected, or cosmic rays),
+; SaveOrRestoreGame will never be called so we need an additional
+; hook to force graphics mode back on after PrintSavedGames went to
+; full text mode
+         bit   $c050
+         lda   $0300
+         rts
+
+SaveOrRestoreGame
+; in:    $4CF2 = 1 for restore, 2 for save
+;        A = save slot (#$01..#$07)
+; out:   exits to $4C73 on success
+;        or $4CC1 on failure
+;        (note game says 'GAME NOT SAVED!' on failure, even when restoring)
+         ora   #$30
+         sta   save_slot_ascii
+         bit   $c050
+         lda   $4CEF
+         sta   save_read_addr_hi
+         lda   $4CF2                 ; 1=read or 2=write
+         lsr                         ; 0=read or 1=write
+         ora   #CMD_READ             ; -> CMD_READ or CMD_WRITE
+         sta   save_op
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         bcs   save_error
+         jsr   PRODOS_MLI
+save_op  !byte SELF_MODIFIED_BYTE
+         !word save_read
+         php
+         jsr   CloseAllFiles
+         plp
+         bcs   save_error
+         lda   save_read_actual
+         bne   save_error
+         lda   save_read_actual_hi
+         cmp   #$02
+         bne   save_error
+         jmp   $4C73
+save_error
+         jmp   $4CC1
+
+save_open
+         !byte 3
+         !word save_filename
+         !word PRODOS_BUFFER
+         !byte 0
+save_read
+         !byte 4
+         !byte 1
+save_read_addr
+         !byte 0
+save_read_addr_hi
+         !byte SELF_MODIFIED_BYTE
+save_read_len
+         !byte 0
+save_read_len_hi
+         !byte 2
+save_read_actual
+         !byte SELF_MODIFIED_BYTE
+save_read_actual_hi
+         !byte SELF_MODIFIED_BYTE
+
+print_read
+         !byte 4
+         !byte 1
+         !word print_room_id
+         !word 1
+print_read_actual
+         !word 0
+print_seek
+         !byte 2
+         !byte 1
+         !word $1F0
+         !byte 0
+
+save_filename
+         !byte 6
+         !text "SAVE."
+save_slot_ascii
+         !text "0"
+}
+move_savegame_end
