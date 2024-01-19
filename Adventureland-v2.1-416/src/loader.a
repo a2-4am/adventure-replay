@@ -133,15 +133,15 @@ move_stage2_start
 !if 0 {
          ; shorten prompt
          lda   #$3E
-         sta   $7370
+         sta   $7357
          lda   #$20
-         sta   $7371
+         sta   $7358
          lda   #$00
-         sta   $7372
+         sta   $7359
 
          ; always continue after returning from custom input routine
          lda   #$00
-         sta   $7005
+         sta   $6FDF
 
          ; and change save prompt
           ldx   #0
@@ -171,25 +171,25 @@ move_stage2_start
          +HAS_LOWERCASE
          bne   +
          lda   #$00
-         sta   $6A9C
+         sta   $698C
 +
 HasAutomationFile=*+1
          lda   #SELF_MODIFIED_BYTE
          beq   @no_auto
 
          ; if we're using automation, install the AutomateInput hook
-         +MAKE_JSR $7001, AutomateInput
+         +MAKE_JSR $6FDB, AutomateInput
          ; and bypass title screen / restore game / voice slot
-         +MAKE_JMP $6ADA, $6AF8
+         +MAKE_JMP $6AA7, $6ACA
          ; and bypass text intro screen
          lda   #$2C
-         sta   $6B00
+         sta   $6AD2
          ; and de-randomize with monotonically increasing random values
          lda   #$A9                  ; LDA #$00
          sta   $0F9C
-         lda   #$00
+         lda   #$3C
          sta   $0F9D
-         lda   #$EE                  ; INC $0F9D (value of LDA)
+         lda   #$8D                  ; INC $0F9D (value of LDA)
          sta   $0F9E
          lda   #$9D
          sta   $0F9F
@@ -199,17 +199,17 @@ HasAutomationFile=*+1
 
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead
-         +MAKE_JSR $7001, BlockingBetterInput
+         +MAKE_JSR $6FDB, BlockingBetterInput
 
-         ; ; and hook save and restore routines
+         ; and hook save and restore routines
          +STA_16 $1536, PrintSavedGames
          +STA_16 $15E0, PrintSavedGames
          +MAKE_JSR $153B, WrapOpenSaveFile
-         +STA_16 $74E9, OpenSaveFile
+         +MAKE_JSR $74CB, OpenSaveFile
          +STA_16 $156F, SavePart1
          +STA_16 $1590, SavePart2
-         +STA_16 $7505, RestorePart1
-         +STA_16 $7530, RestorePart2
+         +STA_16 $74E8, RestorePart1
+         +STA_16 $7513, RestorePart2
 
 @start_game
          jmp   $0800

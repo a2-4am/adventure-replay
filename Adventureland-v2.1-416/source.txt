@@ -1,0 +1,4 @@
+https://archive.org/download/a2r_4am/Adventureland%20-%20Graphic%20Adventure%20%231%20v2.1-416%20%28Adventure%20International%29/
+
+.woz -> .dsk by Passport
+repatched to bypass all disk access during protection check
