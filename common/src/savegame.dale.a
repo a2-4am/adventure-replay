@@ -1,0 +1,173 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+; common savegame routines for Dale Johnson games
+; (Masquerade, Fraktured Faebles)
+;
+; caller must define
+; - SAVEGAME
+; - DALE_LOCATION_ARRAY
+;
+
+         !src  "../common/src/constants.a"
+         !src  "../common/src/macros.a"
+
+!macro INSTALL_DALE_SAVEGAME {
+         +SHORT_COPY move_savegame_start, move_savegame_end, SAVEGAME
+}
+
+move_savegame_start
+!pseudopc SAVEGAME {
+PrintSavedGames
+; in:    A contains 1 (read) or 2 (write)
+; out:   $4CF2 set to A on entry
+;        all registers preserved
+;        exits to caller
+         pha
+         tya
+         pha
+         lda   #$31
+         sta   save_slot_ascii
+print_loop
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         bcs   print_next
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word print_seek
+         bcs   +
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word print_read
++        php
+         jsr   CloseAllFiles
+         plp
+         bcs   print_next
+         lda   print_read_actual
+         beq   print_next
+         lda   save_slot_ascii
+         sta   print_slot
+         bit   $c051
+         jsr   $0806
+         !text "SLOT "
+print_slot
+         !byte SELF_MODIFIED_BYTE
+         !text ": ",0
+print_room_id=*+1
+         lda   #SELF_MODIFIED_BYTE
+         eor   #$13
+         asl
+         tay
+         lda   DALE_LOCATION_ARRAY, y
+         sta   print_src+1
+         lda   DALE_LOCATION_ARRAY+1, y
+         sta   print_src+2
+         ldy   #15
+print_src
+         lda   SELF_MODIFIED_WORD, y
+         beq   print_next
+         eor   #$55
+         ora   #$80
+         jsr   ROM_COUT
+         iny
+         bne   print_src             ; always branches
+print_next
+         inc   save_slot_ascii
+         lda   save_slot_ascii
+         cmp   #$38
+         bne   print_loop
+print_exit
+         pla
+         tay
+         pla
+         sta   $4CF2
+         rts
+
+ForceGraphics
+; if you 'RESTORE GAME' *and* there is at least one saved game *and*
+; restoring the game fails (perhaps because you pressed <return> instead
+; of 1-9, or there is no game in the slot you selected, or cosmic rays),
+; SaveOrRestoreGame will never be called so we need an additional
+; hook to force graphics mode back on after PrintSavedGames went to
+; full text mode
+         bit   $c050
+         lda   $0300
+         rts
+
+SaveOrRestoreGame
+; in:    $4CF2 = 1 for restore, 2 for save
+;        A = save slot (#$01..#$09)
+; out:   exits to $4C73 on success
+;        or $4CC1 on failure
+;        (note game says 'GAME NOT SAVED!' on failure, even when restoring)
+         ora   #$30
+         sta   save_slot_ascii
+         bit   $c050
+         lda   $4CEF
+         sta   save_read_addr_hi
+         lda   $4CF2                 ; 1=read or 2=write
+         lsr                         ; 0=read or 1=write
+         ora   #CMD_READ             ; -> CMD_READ or CMD_WRITE
+         sta   save_op
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         bcs   save_error
+         jsr   PRODOS_MLI
+save_op  !byte SELF_MODIFIED_BYTE
+         !word save_read
+         php
+         jsr   CloseAllFiles
+         plp
+         bcs   save_error
+         lda   save_read_actual
+         bne   save_error
+         lda   save_read_actual_hi
+         cmp   #$02
+         bne   save_error
+         jmp   $4C73
+save_error
+         jmp   $4CC1
+
+save_open
+         !byte 3
+         !word save_filename
+         !word PRODOS_BUFFER
+         !byte 0
+save_read
+         !byte 4
+         !byte 1
+save_read_addr
+         !byte 0
+save_read_addr_hi
+         !byte SELF_MODIFIED_BYTE
+save_read_len
+         !byte 0
+save_read_len_hi
+         !byte 2
+save_read_actual
+         !byte SELF_MODIFIED_BYTE
+save_read_actual_hi
+         !byte SELF_MODIFIED_BYTE
+
+print_read
+         !byte 4
+         !byte 1
+         !word print_room_id
+         !word 1
+print_read_actual
+         !word 0
+print_seek
+         !byte 2
+         !byte 1
+         !word $1F0
+         !byte 0
+
+save_filename
+         !byte 6
+         !text "SAVE."
+save_slot_ascii
+         !text "0"
+}
+move_savegame_end
