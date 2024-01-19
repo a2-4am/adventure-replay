@@ -235,16 +235,18 @@ HasAutomationFile=*+1
          lda   HasAutomationFile
          beq   @no_auto
 
-         ; ; if we're using automation, install the AutomateInput hook
-         ; +STA_16 $94E, AutomateInput
+         ; if we're using automation, install the AutomateInput hook
+         lda   #$00
+         sta   $5F3D
+         +STA_16 $5F48, AutomateInput
          ; ; and disable intro text screen
-         ; lda   #$2C
-         ; sta   $16C8
-         ; sta   $16CB
-         ; ; and disable output beeps
-         ; sta   $161E
-         ; sta   $1628
-         ; sta   $4DA0
+         lda   #$2C
+         sta   $16C8
+         sta   $16CB
+         ; and disable output beeps
+         sta   $1612
+         sta   $161C
+         sta   $4DA0
          bne   @start_game           ; always branches
 
 @no_auto
