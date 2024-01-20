@@ -1,7 +1,7 @@
 targets := \
 	Masquerade \
 	Fraktured-Faebles \
-	Adventureland-v2.0-416 \
+	Adventureland-v2.1-416 \
 	Pirate-Adventure-v2.1-408 \
 	Mission-Impossible-v2.1-306 \
 	Voodoo-Island-v2.1-119 \
