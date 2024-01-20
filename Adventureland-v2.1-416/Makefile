@@ -17,11 +17,11 @@ $(BUILDDISK): $(EXE) $(DATA)
 
 $(EXE): $(SOURCES) | $(BUILDDIR)
 	$(ACME) -r build/loader.lst src/loader.a
-	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)"
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
 	@touch "$@"
 
 $(DATA): $(BUILDDIR)
-	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@"
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@" -C
 	@touch "$@"
 
 mount: $(BUILDDISK)
@@ -32,7 +32,7 @@ clean:
 
 $(BUILDDIR):
 	mkdir -p "$@"
-	$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 800KB
+	$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 800KB -C
 
 all: clean mount
 

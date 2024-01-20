@@ -11,18 +11,51 @@ targets := \
 	Questprobe-Spider-Man-vF-261 \
 	Buckaroo-Banzai-vG-397
 
-.PHONY: dsk all $(targets) package
+# https://github.com/mach-kernel/cadius
+CADIUS=cadius
 
-dsk: $(targets)
+BUILDDIR=build
+SOURCES=
+EXE=
+DATA=
+DISKVOLUME=ADVENTUREREPLAY
+BUILDDISK=$(BUILDDIR)/adventure-replay.hdv
+
+.PHONY: all $(targets)
+
+$(BUILDDISK): $(EXE) $(DATA) | $(targets) $(BUILDDIR)
+	@for dir in $(targets); do \
+	  $(CADIUS) EXTRACTVOLUME $$dir/build/*.po "$(BUILDDIR)/X/"; \
+	done
+	rm -f $(BUILDDIR)/X/**/PRODOS*
+	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "$(DISKVOLUME)" "$(BUILDDIR)/X/" -C
 
 # Build all targets
 $(targets):
 	@$(MAKE) -C $@
 
+$(EXE): $(SOURCES) | $(BUILDDIR)
+#	$(ACME) -r build/loader.lst src/loader.a
+#	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
+#	@touch "$@"
+
+$(DATA): $(BUILDDIR)
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@" -C
+	@touch "$@"
+
+mount: $(BUILDDISK)
+	@open "$(BUILDDISK)"
+
 # Clean all temporary/target files
 clean:
+	rm -rf "$(BUILDDIR)"
 	@for dir in $(targets); do \
 	  $(MAKE) -C $$dir clean; \
 	done
+
+$(BUILDDIR):
+	mkdir -p "$@"/X
+	$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 32MB -C
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/PRODOS" common/res/PRODOS#FF2000 -C
 
 all: clean $(targets)
