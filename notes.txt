@@ -1,5 +1,5 @@
                           ported? --- reset? --- walkthrough? --- prompt? --- AutomateInput? --- BetterInput? --- save to file?
-Adventureland             ✅          ✅         ❌               ✅          untested           ✅               ✅
+Adventureland             ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 Pirate Adventure          ✅          ✅         ❌               ✅          untested           ✅               ✅
 Mission Impossible        ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 Voodoo Island             ✅          ✅         ✅               ✅          ✅                 ✅               ✅

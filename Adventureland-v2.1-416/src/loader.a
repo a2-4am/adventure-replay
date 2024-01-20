@@ -184,17 +184,12 @@ HasAutomationFile=*+1
          ; and bypass text intro screen
          lda   #$2C
          sta   $6AD2
-         ; and de-randomize with monotonically increasing random values
-         lda   #$A9                  ; LDA #$00
+         ; and de-randomize with constant value specifically chosen
+         ; for this game
+         lda   #$A9                  ; LDA #$3C
          sta   $0F9C
          lda   #$3C
          sta   $0F9D
-         lda   #$8D                  ; INC $0F9D (value of LDA)
-         sta   $0F9E
-         lda   #$9D
-         sta   $0F9F
-         lda   #$0F
-         sta   $0FA0
          jmp   @start_game
 
 @no_auto
@@ -202,7 +197,6 @@ HasAutomationFile=*+1
          +MAKE_JSR $6FDB, BlockingBetterInput
 
          ; and hook save and restore routines
-         +STA_16 $1536, PrintSavedGames
          +STA_16 $15E0, PrintSavedGames
          +MAKE_JSR $153B, WrapOpenSaveFile
          +MAKE_JSR $74CB, OpenSaveFile
