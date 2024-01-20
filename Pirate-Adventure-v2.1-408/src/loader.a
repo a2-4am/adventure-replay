@@ -23,7 +23,7 @@ WRAP_SAVEGAME             = $BC00
 SAVEGAME                  = $BC07    ; max $100 bytes (if interactive, persistent)
 RWTS                      = $BD00    ; max $100 bytes (persistent)
 INPUT                     = $BE00    ; max $100 bytes (persistent)
-SAGA_LOCATION_ARRAY       = $6546;TODO seems wrong
+SAGA_LOCATION_ARRAY       = $6546
 SAGA_IO_ERROR             = $FF58
 
          !src  "../common/src/loader.init.a"               ; must be first
