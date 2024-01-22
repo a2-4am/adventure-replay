@@ -1,6 +1,7 @@
 targets := \
 	Masquerade \
 	Fraktured-Faebles \
+	Death-in-the-Caribbean \
 	Adventureland-v2.1-416 \
 	Pirate-Adventure-v2.1-408 \
 	Mission-Impossible-v2.1-306 \

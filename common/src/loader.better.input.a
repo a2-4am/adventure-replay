@@ -26,7 +26,7 @@ BeginBetterInput
          lda   input_mode
          bmi   +
          iny
-         jsr   $fc9e
+         jsr   ROM_CLREOL_FROM_Y
          ldy   CH
          lda   #$20
          sta   (BASL), y

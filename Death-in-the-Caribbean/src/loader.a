@@ -1,0 +1,150 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+!cpu 6502
+!to "build/LOADER.SYSTEM#FF2000",plain
+*=$2000
+
+; application-specific macros
+!macro RWTS_FILENAMES {
+side_a
+         !byte 6
+         !text "SIDE."
+image_filename_suffix
+         !text "A"
+rwts_filenames
+         !word side_a
+}
+
+; application-specific addresses
+PRODOS_BUFFER             = $B800    ; $400 bytes
+PREFIX_BUFFER             = $BC00    ; $40 bytes
+AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
+LINE_INPUT                = $BC00    ; max $100 bytes (if interactive, persistent)
+RWTS_VOL_PATCH            = $BD00
+RWTS                      = $BD14    ; max $100 bytes (persistent)
+INPUT                     = $BE00    ; max $100 bytes (persistent)
+
+         !src  "../common/src/loader.init.a"               ; must be first
+                                                           ; exits via Stage1
+         !src  "../common/src/loader.rwts.dos.shim.a"
+         !src  "../common/src/loader.automate.input.a"
+         !src  "../common/src/loader.better.input.a"
+move_rwts_vol_patch_start
+!pseudopc RWTS_VOL_PATCH {
+         pha
+         lda   $702D                 ; game keeps expected disk volume here
+         sta   $B7F6
+         cmp   #$FE
+         bne   +
+         lda   #"A"                  ; $FE -> read from side A
+         !byte $2C
++        lda   #"B"                  ; $DE -> read from side B
+         sta   image_filename_suffix
+         pla
+}
+move_rwts_vol_patch_end
+
+move_rwts_get_addr_start
+         lda   #$B7
+         ldy   #$E8
+         rts
+move_rwts_get_addr_end
+
+move_wrap_input_start
+!pseudopc LINE_INPUT {
+BetterLineInput
+         lda   #$BE
+         jsr   ROM_COUT
+         lda   #$A0
+         jsr   ROM_COUT
+line_input_reset
+         ldx   #$00
+line_input_loop
+         jsr   BlockingBetterInput
+         cmp   #$88
+         bne   line_input_commit
+         dex
+         bmi   line_input_reset
+         dec   CH
+         bpl   line_input_loop       ; always branches
+line_input_commit
+         sta   $200, x               ; game expects input stored here
+         inx
+         inc   CH
+         cmp   #$8D
+         bne   line_input_loop
+         jsr   ROM_CLREOL_FROM_Y
+         dex
+         lda   #$8D
+         jmp   ROM_COUT
+}
+move_wrap_input_end
+
+Stage1
+         ; copy RWTS DOS shim into place
+         ; (includes CloseAllFiles routine, so must do this first)
+         +INSTALL_RWTS_DOS_SHIM
+         ; and set up redirect for DOS calls
+         +MAKE_JMP $3D9, RWTS
+         +SHORT_COPY move_rwts_get_addr_start, move_rwts_get_addr_end, $3E3
+         +SHORT_COPY move_rwts_vol_patch_start, move_rwts_vol_patch_end, RWTS_VOL_PATCH
+
+         ; SIDE.A includes a patch at $4110 to call $9BF0 (custom code in
+         ; next file) instead of $5256 (sector read) to copy code into $0060.
+         ; You might think that this patch should be included in the file
+         ; loaded at $4000, but you would be mistaken, because $4110
+         ; is clobbered by the previous sector read at $4107.
+
+         ; 4000..71FF
+         +READ_ENTIRE_FILE parm_open1, parm_read1
+
+         ; 9BF0..B7FF
+         +READ_ENTIRE_FILE parm_open2, parm_read2
+
+         lda   input_filename_start
+         beq   @no_auto
+         ; if we're using automation, install the AutomateInput hook
+         ; TODO
+         ; +INSTALL_AUTOMATE_INPUT
+         ; +MAKE_JSR $6FCD, AutomateInput
+         jmp   @start_game
+
+@no_auto
+         ; if we're not using automation, install the BetterInput hook instead
+         +INSTALL_BETTER_INPUT
+         +SHORT_COPY move_wrap_input_start, move_wrap_input_end, LINE_INPUT
+         ; SIDE.A contains patch for $1967 to call BetterLineInput @ $BC00
+
+@start_game
+         jmp   $4000
+
+parm_open1
+         !byte 3
+         !word obj_filename1
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read1
+         !byte 4
+         !byte 1
+         !word $4000
+         !word $FFFF
+         !word 0
+obj_filename1
+         !byte 8
+         !text "OBJ.4000"
+
+parm_open2
+         !byte 3
+         !word obj_filename2
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read2
+         !byte 4
+         !byte 1
+         !word $9BF0
+         !word $FFFF
+         !word 0
+obj_filename2
+         !byte 8
+         !text "OBJ.9BF0"

@@ -23,6 +23,7 @@ ROM_TEXT                  = $FB2F
 ROM_FINALIZE_RESET        = $FB6F
 ROM_MACHINEID             = $FBB3
 ROM_HOME                  = $FC58
+ROM_CLREOL_FROM_Y         = $FC9E
 ROM_WAIT                  = $FCA8
 ROM_KEYIN                 = $FD1B
 ROM_COUT                  = $FDED

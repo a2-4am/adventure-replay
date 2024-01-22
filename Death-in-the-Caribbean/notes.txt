@@ -1,0 +1,75 @@
+multi-disk:
+
+Good: game boots DOS 3.3 but only uses it to load one
+initial file, then uses raw RWTS calls thereafter.
+
+Bad: game checks disk volume ($B7F6) after every sector
+read to determine if it's on the correct side of the disk.
+Side A is $FE (default), side B is $DE.
+
+$702D contains the expected volume number. Initially $FE
+but changed explicitly at $7617 (LDA #$DE / STA $702D)
+when you get to the point in the game where you need to
+flip the disk (crossing the river). NB this range of
+memory changes by location. There may be other location-
+specific code that changes it too.
+
+Also unconditionally set to value of $B7F6 at $1E6D (??)
+
+Also toggled (LDA / EOR #$20 / STA) at $41D7 (??)
+
+Also reset (LDA #$FE / STA) at $746E (called after you
+die and restart)
+
+$B7EB is always set to $00 so a generic RWTS shim would
+not have enough information to know what the expected
+disk volume should be. It would need to look at the
+(game-specific) address $702D.
+
+Could potentially head-patch a generic RWTS shim to
+look at $702D, unconditionally set $B7F6 to match, then
+change the filename of the disk image based on the value...
+before every sector read. The disk image file is reopened
+on every sector read so it should work. The caller would
+think it always read from the correct disk (which would be
+true, in a way) and would never prompt to flip the disk.
+
+-=-=-
+
+shenanigans:
+
+Apropos of nothing, at $4110 it calls $5256 with
+A=$00 and Y=$60, which (successfully) reads a sector
+directly into zero page $60 and continuing into the
+bottom of the stack. This will not work under ProDOS,
+which (quite sensibly) refuses to read into anything
+directly into zero page.
+
+Also $4110 is executed again after you die in-game,
+so any solution needs to be persistent.
+
+-=-=-
+
+input:
+
+$1963 stores #$BC in zero page $33 then calls $FD6A which
+acts prints the prompt (#$BC = "<") and handles an entire
+line of input and stores it at $200+ with hi bits on.
+So we need a handle-entire-line-of-input routine.
+
+  (display prompt)
+reset
+  ldx #$00
+loop
+  jsr BlockingBetterInput
+  cmp #$88
+  bne commit
+  dex
+  bmi reset
+  dec CH
+  bne loop
+commit
+  sta $200,x
+  inx
+  cmp #$8d
+  bne loop
