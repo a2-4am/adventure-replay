@@ -51,7 +51,7 @@
 ; A clobbered
 ; Y preserved
 !macro SHORT_COPY .start, .end, .target {
-         ldx   #(.end-.start)
+         ldx   #<(.end-.start)
 -        lda   .start-1, x
          sta   .target-1, x
          dex

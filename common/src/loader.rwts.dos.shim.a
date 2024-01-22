@@ -132,6 +132,7 @@ rwts_close
 
          +RWTS_FILENAMES
 
+*=$100*(*/$100)+$F9
 QuitToProDOS
          jsr   PRODOS_MLI
          !byte $65
