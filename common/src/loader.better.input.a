@@ -25,16 +25,19 @@ BeginBetterInput
 @checkInputMode
          lda   input_mode
          bmi   +
+         iny
+         jsr   $fc9e
+         ldy   CH
          lda   #$20
          sta   (BASL), y
-+        rts
+;+        rts
 
 PendingBetterInput
 input_mode=*+1
          lda   #$00                  ; self-modified
          bmi   @pendingNonInteractive
          lda   KBD
-         rts
++        rts
 
 @pendingNonInteractive
          lsr
@@ -163,6 +166,8 @@ min_ch=*+1
          pla
          tax
          pla
+         clc
+         rts
 
 @checkMax
          ; check if input line is at max length
@@ -187,7 +192,7 @@ RejectInput
 +        rts
 
 last_input
-         !fill $28
+         !fill $26
 }
 better_input_end
 
