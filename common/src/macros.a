@@ -58,6 +58,17 @@
          bne   -
 }
 
+; X=0, Z=1 on exit
+; A clobbered
+; Y preserved
+!macro PAGE_COPY .start, .target {
+         ldx   #$00
+-        lda   .start, x
+         sta   .target, x
+         dex
+         bne   -
+}
+
 !macro READ_ENTIRE_FILE .parm_open, .parm_read {
          jsr   PRODOS_MLI
          !byte CMD_OPEN

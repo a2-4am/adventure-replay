@@ -13,7 +13,7 @@
          !src  "../common/src/macros.a"
 
 !macro INSTALL_RWTS_DOS_SHIM {
-         +SHORT_COPY move_rwts_start, move_rwts_end, RWTS
+         +PAGE_COPY move_rwts_start, RWTS
 }
 
 ;------------------------------------------------------------------------------
