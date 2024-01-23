@@ -90,3 +90,35 @@ after so it just returns ($1E92: 01 -> 00).
 Naturally this code is clobbered by a sector read
 during game initialization (what isn't?) so some
 persistent re-patcher will be required.
+
+-=-=-
+
+save/restore:
+
+Looks like save and restore share most of the code,
+with a different entry point that sets the RWTS
+operation (1=read,2=write) at $B7F4.
+
+$1CC5 restore game
+$1CCA save game
+
+prompts to insert save disk and press 1-9 for save slot
+(should shorten this to just the standard prompt, no
+mention of disks of course)
+
+$1D04 calls a routine at $5342 that normalizes the RWTS
+$1D51 calls the same routine again to swap it back
+(shouldn't do either of these)
+
+saves to track=save-slot, sectors 0 and 1
+
+first sector is $100 bytes starting at $403C
+second sector is $100 bytes starting at $7000 after
+copying part of zero page into $7030
+
+afterwards there is a prompt to re-insert the
+adventure disk, which we should also skip
+(there are separate prompts for save and restore)
+
+note save command is "SAVE" not "SAVE GAME"
+and restore command is "LOAD" not anything else
