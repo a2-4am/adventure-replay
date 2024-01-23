@@ -73,3 +73,20 @@ commit
   inx
   cmp #$8d
   bne loop
+
+-=-=-
+
+de-random:
+
+Ghost will randomly steal random inventory items and
+store them in the graveyard. Logic for this starts
+at $1E76 to see if you've been to the graveyard yet
+and whether you have the amulet yet (which prevents
+it) and some other conditions. There is also a
+random condition that checks zero page $4E to see
+if it's less than #$19. So we can either ensure
+that's always true, or we can change the branch
+after so it just returns ($1E92: 01 -> 00).
+Naturally this code is clobbered by a sector read
+during game initialization (what isn't?) so some
+persistent re-patcher will be required.

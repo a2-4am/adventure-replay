@@ -90,6 +90,11 @@ Stage1
          ; 9BE0..B7FF
          +READ_ENTIRE_FILE parm_open2, parm_read2
 
+         ; activate patch that prevents ghost from randomly stealing inventory
+         ; TODO this should be under automation only
+         lda   #$8C
+         sta   $9BFB
+
          lda   input_filename_start
          beq   @no_auto
          ; if we're using automation, install the AutomateInput hook
