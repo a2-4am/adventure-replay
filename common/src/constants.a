@@ -30,7 +30,7 @@ ROM_COUT                  = $FDED
 
 ; application-specific memory addresses
 first_zp                  = $40      ; used by RWTS DOS shim
-last_zp                   = $58      ; used by RWTS DOS shim
+last_zp                   = $4F      ; used by RWTS DOS shim
 
 ; ProDOS constants
 CMD_ONLINE                = $C5
