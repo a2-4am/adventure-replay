@@ -43,8 +43,6 @@ line_input_commit
          jmp   ROM_COUT
 
          !src  "../common/src/shared.betterinput.blocking.a"
-         ; /!\ execution falls through here to CommitBetterInput
-         !src  "../common/src/shared.betterinput.commit.a"
          !src  "../common/src/shared.betterinput.a"
 }
 better_input_end

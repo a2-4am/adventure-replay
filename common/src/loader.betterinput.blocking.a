@@ -18,8 +18,6 @@
 better_input_start
 !pseudopc INPUT {
          !src  "../common/src/shared.betterinput.blocking.a"
-         ; /!\ execution falls through here to CommitBetterInput
-         !src  "../common/src/shared.betterinput.commit.a"
          !src  "../common/src/shared.betterinput.a"
 
 SAVE_INPUT_BUFFER

@@ -1,3 +1,6 @@
+;license:MIT
+;(c) 2023 by 4am
+;
 BlockingBetterInput
          inc   RNDL
          bne   +
@@ -8,3 +11,6 @@ BlockingBetterInput
          bit   CLEARKBD
          jsr   AcceptableBetterInput
          bcs   BlockingBetterInput
+         ; /!\ execution falls through here to CommitBetterInput
+
+         !src  "../common/src/shared.betterinput.commit.a"

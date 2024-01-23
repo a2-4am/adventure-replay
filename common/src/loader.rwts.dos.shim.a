@@ -140,10 +140,3 @@ QuitToProDOS
 +        !byte 4
 QuitToProDOS_end
 }
-move_rwts_end
-
-!if (move_rwts_end-move_rwts_start) > $100 {
-         !serious "RWTS routine is too long, ", move_rwts_end-move_rwts_start, " bytes"
-;} else {
-;         !warn "RWTS routine is ", move_rwts_end-move_rwts_start, " bytes"
-}

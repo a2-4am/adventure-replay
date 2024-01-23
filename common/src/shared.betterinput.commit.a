@@ -1,3 +1,6 @@
+;license:MIT
+;(c) 2023 by 4am
+;
 CommitBetterInput
 ; in:    A=key to commit
 ; out:   A/X preserved
