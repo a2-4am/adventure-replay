@@ -1,22 +1,27 @@
 ;license:MIT
 ;(c) 2023 by 4am
 ;
+; shared routines used by different BetterInput variants
+; (better.input, nonblocking.better.input, line.better.input)
+;
 
-         !src  "../common/src/constants.a"
-         !src  "../common/src/macros.a"
+CommitBetterInput                    ; must be first
+; in:    A=key to commit
+; out:   A/X preserved
+;        Y=CH
+;        N=0
+;        Z=0
+;        C clobbered
+         ldy   CH
+         sta   (BASL), y
+         lda   input_mode
+         cmp   #$FE
+         bne   +
+         inc   input_offset
++        bit   CLEARKBD
+         lda   (BASL), y
+         rts
 
-; exits with Z=1
-!macro INSTALL_BETTER_INPUT {
-         +SHORT_COPY better_input_start, better_input_end, INPUT
-}
-
-;------------------------------------------------------------------------------
-; BetterInput routine
-; hook in interactive game mode to provide a better user experience when
-; typing
-;------------------------------------------------------------------------------
-better_input_start
-!pseudopc INPUT {
 BeginBetterInput
          ldy   CH
          cpy   min_ch
@@ -30,14 +35,14 @@ BeginBetterInput
          ldy   CH
          lda   #$20
          sta   (BASL), y
-;+        rts
++        rts
 
 PendingBetterInput
 input_mode=*+1
          lda   #$00                  ; self-modified
          bmi   @pendingNonInteractive
          lda   KBD
-+        rts
+         rts
 
 @pendingNonInteractive
          lsr
@@ -66,42 +71,6 @@ input_offset=*+1
          ;A=0
          sta   input_mode
          sta   input_offset
-         rts
-
-NonBlockingBetterInput
-         jsr   BeginBetterInput
-         jsr   PendingBetterInput
-         bpl   @exit
-         jsr   AcceptableBetterInput
-         bcc   @accept
-         lda   #0
-@accept  adc   #0                    ; sets N flag for caller
-@exit    rts
-
-BlockingBetterInput
-         jsr   BeginBetterInput
-         jsr   PendingBetterInput
-         bpl   BlockingBetterInput
-         bit   CLEARKBD
-         jsr   AcceptableBetterInput
-         bcs   BlockingBetterInput
-         ; /!\ execution falls through here to CommitBetterInput
-
-CommitBetterInput
-; in:    A=key to commit
-; out:   A/X preserved
-;        Y=CH
-;        N=0
-;        Z=0
-;        C clobbered
-         ldy   CH
-         sta   (BASL), y
-         lda   input_mode
-         cmp   #$FE
-         bne   +
-         inc   input_offset
-+        bit   CLEARKBD
-         lda   (BASL), y
          rts
 
 AcceptableBetterInput
@@ -193,9 +162,3 @@ RejectInput
 
 last_input
          !fill $26
-}
-better_input_end
-
-!if (better_input_end-better_input_start) > $100 {
-         !serious "BetterInput routine is too long, ", better_input_end-better_input_start, " bytes"
-}

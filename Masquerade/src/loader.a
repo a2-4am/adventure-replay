@@ -28,8 +28,8 @@ DALE_LOCATION_ARRAY       = $6C40
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
          !src  "../common/src/loader.rwts.dos.shim.a"
-         !src  "../common/src/loader.automate.input.a"
-         !src  "../common/src/loader.better.input.a"
+         !src  "../common/src/loader.automateinput.a"
+         !src  "../common/src/loader.betterinput.blocking.a"
          !src  "../common/src/savegame.dale.a"
 
 Stage1

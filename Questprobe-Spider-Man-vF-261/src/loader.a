@@ -24,8 +24,8 @@ INPUT                     = $BE00    ; max $100 bytes
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
          !src  "../common/src/loader.rwts.dos.shim.a"
-         !src  "../common/src/loader.automate.input.a"
-         !src  "../common/src/loader.better.input.a"
+         !src  "../common/src/loader.automateinput.a"
+         !src  "../common/src/loader.betterinput.blocking.a"
 
 Stage1
          ; copy RWTS DOS shim into place

@@ -1,0 +1,36 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+
+         !src  "../common/src/constants.a"
+         !src  "../common/src/macros.a"
+
+; exits with Z=1
+!macro INSTALL_BETTER_INPUT {
+         +SHORT_COPY better_input_start, better_input_end, INPUT
+}
+
+;------------------------------------------------------------------------------
+; NonBlockingBetterInput routine
+; hook in interactive game mode to provide a better user experience when
+; typing
+;------------------------------------------------------------------------------
+better_input_start
+!pseudopc INPUT {
+NonBlockingBetterInput
+         jsr   BeginBetterInput
+         jsr   PendingBetterInput
+         bpl   @exit
+         jsr   AcceptableBetterInput
+         bcc   @accept
+         lda   #0
+@accept  adc   #0                    ; sets N flag for caller
+@exit    rts
+
+         !src  "../common/src/loader.betterinput.common.a"
+}
+better_input_end
+
+!if (better_input_end-better_input_start) > $100 {
+         !serious "BetterInput routine is too long, ", better_input_end-better_input_start, " bytes"
+}
