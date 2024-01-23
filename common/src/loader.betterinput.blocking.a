@@ -17,16 +17,13 @@
 ;------------------------------------------------------------------------------
 better_input_start
 !pseudopc INPUT {
-BlockingBetterInput
-         jsr   BeginBetterInput
-         jsr   PendingBetterInput
-         bpl   BlockingBetterInput
-         bit   CLEARKBD
-         jsr   AcceptableBetterInput
-         bcs   BlockingBetterInput
+         !src  "../common/src/shared.betterinput.blocking.a"
          ; /!\ execution falls through here to CommitBetterInput
+         !src  "../common/src/shared.betterinput.commit.a"
+         !src  "../common/src/shared.betterinput.a"
 
-         !src  "../common/src/loader.betterinput.common.a"
+SAVE_INPUT_BUFFER
+         !fill $26
 }
 better_input_end
 

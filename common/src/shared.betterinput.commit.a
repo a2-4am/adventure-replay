@@ -1,0 +1,16 @@
+CommitBetterInput
+; in:    A=key to commit
+; out:   A/X preserved
+;        Y=CH
+;        N=0
+;        Z=0
+;        C clobbered
+         ldy   CH
+         sta   (BASL), y
+         lda   input_mode
+         cmp   #$FE
+         bne   +
+         inc   input_offset
++        bit   CLEARKBD
+         lda   (BASL), y
+         rts

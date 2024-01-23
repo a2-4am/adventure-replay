@@ -1,37 +1,51 @@
 ;license:MIT
 ;(c) 2023 by 4am
 ;
+; caller must define
+; - SAVE_INPUT_BUFFER ($26 bytes)
+;
 
          !src  "../common/src/constants.a"
          !src  "../common/src/macros.a"
 
 ; exits with Z=1
-!macro INSTALL_BETTER_INPUT {
+!macro INSTALL_BETTER_LINE_INPUT {
          +SHORT_COPY better_input_start, better_input_end, INPUT
 }
 
 ;------------------------------------------------------------------------------
-; NonBlockingBetterInput routine
+; BetterLineInput routine
 ; hook in interactive game mode to provide a better user experience when
 ; typing
 ;------------------------------------------------------------------------------
 better_input_start
 !pseudopc INPUT {
-NonBlockingBetterInput
-         jsr   BeginBetterInput
-         jsr   PendingBetterInput
-         bpl   @exit
-         jsr   AcceptableBetterInput
-         bcc   @accept
-         lda   #0
-@accept  adc   #0                    ; sets N flag for caller
-@exit    rts
+BetterLineInput
+line_input_reset
+         ldx   #$00
+line_input_loop
+         jsr   BlockingBetterInput
+         cmp   #$88
+         bne   line_input_commit
+         dex
+         bmi   line_input_reset
+         dec   CH
+         bpl   line_input_loop       ; always branches
+line_input_commit
+         sta   $200, x
+         inx
+         inc   CH
+         cmp   #$8D
+         bne   line_input_loop
+         jsr   ROM_CLREOL_FROM_Y
+         dex
+         lda   #$8D
+         jmp   ROM_COUT
 
+         !src  "../common/src/shared.betterinput.blocking.a"
+         ; /!\ execution falls through here to CommitBetterInput
          !src  "../common/src/shared.betterinput.commit.a"
          !src  "../common/src/shared.betterinput.a"
-
-SAVE_INPUT_BUFFER
-         !fill $26
 }
 better_input_end
 

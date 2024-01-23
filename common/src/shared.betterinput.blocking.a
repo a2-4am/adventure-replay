@@ -1,0 +1,10 @@
+BlockingBetterInput
+         inc   RNDL
+         bne   +
+         inc   RNDH
++        jsr   BeginBetterInput
+         jsr   PendingBetterInput
+         bpl   BlockingBetterInput
+         bit   CLEARKBD
+         jsr   AcceptableBetterInput
+         bcs   BlockingBetterInput

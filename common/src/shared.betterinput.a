@@ -1,26 +1,11 @@
 ;license:MIT
 ;(c) 2023 by 4am
 ;
-; shared routines used by different BetterInput variants
-; (better.input, nonblocking.better.input, line.better.input)
+; shared routines used by all BetterInput variants
+; (betterinput.blocking, betterinput.nonblocking, betterinput.line)
 ;
-
-CommitBetterInput                    ; must be first
-; in:    A=key to commit
-; out:   A/X preserved
-;        Y=CH
-;        N=0
-;        Z=0
-;        C clobbered
-         ldy   CH
-         sta   (BASL), y
-         lda   input_mode
-         cmp   #$FE
-         bne   +
-         inc   input_offset
-+        bit   CLEARKBD
-         lda   (BASL), y
-         rts
+; you should include exactly one of those files, and not this file
+;
 
 BeginBetterInput
          ldy   CH
@@ -61,7 +46,7 @@ input_mode=*+1
          ; return the next character from the saved input buffer
 input_offset=*+1
          ldy   #$00                  ; self-modified
-         lda   last_input, y
+         lda   SAVE_INPUT_BUFFER, y
          beq   @goToInputMode0
          ldy   CH
          cmp   #0
@@ -90,7 +75,7 @@ AcceptableBetterInput
          ; up arrow = retype last command
          cmp   #$8B                  ; up arrow
          bne   @checkOtherArrows
-         lda   last_input
+         lda   SAVE_INPUT_BUFFER
          beq   RejectInput           ; ignore if no previous command
          dec   input_mode
          bne   RejectInput           ; always branches
@@ -122,7 +107,7 @@ min_ch=*+1
                                      ; uppercase input while simultaneously
                                      ; auto-lowercasing it for display, so we
                                      ; need to re-convert to uppercase here
-         sta   last_input, x
+         sta   SAVE_INPUT_BUFFER, x
          inx
          iny
          cpy   CH
@@ -131,7 +116,7 @@ min_ch=*+1
          lda   #$28
          sta   min_ch
          lda   #$00
-         sta   last_input, x
+         sta   SAVE_INPUT_BUFFER, x
          pla
          tax
          pla
@@ -159,6 +144,3 @@ ToUpper
 RejectInput
          sec
 +        rts
-
-last_input
-         !fill $26
