@@ -1,0 +1,30 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+
+         !src  "../common/src/constants.a"
+         !src  "../common/src/macros.a"
+
+; exits with Z=1
+!macro INSTALL_AUTOMATE_INPUT {
+         ; copy automate input routine into place
+         +SHORT_COPY move_automate_start, move_automate_end, INPUT
+
+         ; copy input filename into place
+         +SHORT_COPY input_filename_start, input_filename_end, INPUT_FILENAME
+}
+
+;------------------------------------------------------------------------------
+; AutomateInput routine
+; hook in non-interactive game mode to feed a sequence of commands to the
+; game parser from a text file
+;------------------------------------------------------------------------------
+move_automate_start
+!pseudopc INPUT {
+         !src  "../common/src/shared.automateinput.a"
+}
+move_automate_end
+
+!if (move_automate_end-move_automate_start) > $100 {
+         !serious "AutomateInput routine is too long, ", move_automate_end-move_automate_start, " bytes"
+}

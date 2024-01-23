@@ -27,7 +27,7 @@ SAGA_IO_ERROR             = $7811
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
          !src  "../common/src/loader.rwts.dos.shim.a"
-         !src  "../common/src/loader.automateinput.a"
+         !src  "../common/src/loader.automateinput.blocking.a"
          !src  "../common/src/loader.betterinput.blocking.a"
          !src  "../common/src/savegame.saga.a"
 

@@ -1,26 +1,12 @@
 ;license:MIT
 ;(c) 2023 by 4am
 ;
+; shared routines used by all AutomateInput variants
+; (automateinput, automateinput.line)
+;
+; you should include exactly one of those files, and not this file
+;
 
-         !src  "../common/src/constants.a"
-         !src  "../common/src/macros.a"
-
-; exits with Z=1
-!macro INSTALL_AUTOMATE_INPUT {
-         ; copy automate input routine into place
-         +SHORT_COPY move_automate_start, move_automate_end, INPUT
-
-         ; copy input filename into place
-         +SHORT_COPY input_filename_start, input_filename_end, INPUT_FILENAME
-}
-
-;------------------------------------------------------------------------------
-; AutomateInput routine
-; hook in non-interactive game mode to feed a sequence of commands to the
-; game parser from a text file
-;------------------------------------------------------------------------------
-move_automate_start
-!pseudopc INPUT {
 AutomateInput
          stx   @x+1
          sty   @y+1
@@ -36,6 +22,8 @@ AutomateInput
 -        sta   AUTO_BUFFER, y
          iny
          bne   -
+         lda   $200
+         pha
 
          jsr   PRODOS_MLI            ; open automation file
          !byte CMD_OPEN
@@ -51,6 +39,8 @@ AutomateInput
 
          jsr   CloseAllFiles
 
+         pla
+         sta   $200
          inc   parm_auto_seek_hi
          ldy   #$00
 +
@@ -99,9 +89,3 @@ parm_auto_read
 
 INPUT_FILENAME
          !fill $41
-}
-move_automate_end
-
-!if (move_automate_end-move_automate_start) > $100 {
-         !serious "AutomateInput routine is too long, ", move_automate_end-move_automate_start, " bytes"
-}

@@ -23,12 +23,12 @@ AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persisten
 RWTS_VOL_PATCH            = $BD00
 RWTS                      = $BD14    ; max $100 bytes (persistent)
 INPUT                     = $BE00    ; max $100 bytes (persistent)
-SAVE_INPUT_BUFFER         = $0228    ; $26 bytes
+SAVE_INPUT_BUFFER         = $0228    ; $26 bytes (persistent, used by BetterLineInput)
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
          !src  "../common/src/loader.rwts.dos.shim.a"
-         !src  "../common/src/loader.automateinput.a"
+         !src  "../common/src/loader.automateinput.line.a"
          !src  "../common/src/loader.betterinput.line.a"
 move_rwts_vol_patch_start
 !pseudopc RWTS_VOL_PATCH {
@@ -51,24 +51,6 @@ move_rwts_get_addr_start
          rts
 move_rwts_get_addr_end
 
-; move_wrap_automate_input_start
-; !pseudopc AUTOMATE_LINE_INPUT {
-; aline_input_reset
-;          ldx   #$00
-; aline_input_loop
-;          jsr   AutomateInput
-;          sta   $200, x               ; game expects input stored here
-;          inx
-;          inc   CH
-;          cmp   #$8D
-;          bne   aline_input_loop
-;          jsr   ROM_CLREOL_FROM_Y
-;          dex
-;          lda   #$8D
-;          jmp   ROM_COUT
-; }
-; move_wrap_automate_input_end
-
 Stage1
          ; copy RWTS DOS shim into place
          ; (includes CloseAllFiles routine, so must do this first)
@@ -90,26 +72,31 @@ Stage1
          ; 9BE0..B7FF
          +READ_ENTIRE_FILE parm_open2, parm_read2
 
-         ; activate patch that prevents ghost from randomly stealing inventory
-         ; TODO this should be under automation only
+         lda   input_filename_start
+         beq   @no_auto
+         ; if we're using automation, install the AutomateLineInput hook
+         +INSTALL_AUTOMATE_LINE_INPUT
+         ; object files are already patched to call this (see notes below)
+
+         ; activate patch that prevents ghost from randomly stealing
+         ; items from your inventory
          lda   #$8C
          sta   $9BFB
 
-         lda   input_filename_start
-         beq   @no_auto
-         ; if we're using automation, install the AutomateInput hook
-         ; TODO
-         ; +INSTALL_AUTOMATE_INPUT
-         ; +MAKE_JSR $6FCD, AutomateInput
-         ;+SHORT_COPY move_wrap_automate_input_start, move_wrap_automate_input_end, AUTOMATE_LINE_INPUT
+         ; SIDE.B contains patch at $765A to jump to custom code @ $9BEA
+         ; that waits for a key before jumping to the reset vector
+         ; (original game would just hang in an infinite loop which
+         ; messed up the automation)
+
          jmp   @start_game
 
 @no_auto
          ; if we're not using automation, install the BetterLineInput hook instead
          +INSTALL_BETTER_LINE_INPUT
-         ; SIDE.A contains patch at $1963 to call custom code @ $96E0
-         ; to draw our standard input prompt ('> ')
-         ; SIDE.A contains patch at $1967 to call BetterLineInput @ $BE00
+         ; object files are already patched to call this
+         ; - SIDE.A contains patch at $1963 to call custom code @ $96E0
+         ;   to draw our standard input prompt ('> ')
+         ; - SIDE.A contains patch at $1967 to call BetterLineInput @ $BE00
 
 @start_game
          jmp   $4000
