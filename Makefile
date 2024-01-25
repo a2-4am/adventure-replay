@@ -45,7 +45,9 @@ $(EXE): $(SOURCES) | $(BUILDDIR)
 #	@touch "$@"
 
 $(RES): $(BUILDDIR)
-	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(DISKVOLUME)/$(notdir $@)" "$@" -C
+	for f in "$@"/*; do \
+	  $(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/$(notdir $@)" "$$f" -C; \
+	done;
 	@touch "$@"
 
 mount: $(BUILDDISK)
