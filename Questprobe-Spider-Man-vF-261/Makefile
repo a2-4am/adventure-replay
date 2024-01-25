@@ -8,8 +8,8 @@ BUILDDIR=build
 SOURCES=$(wildcard src/*.a) $(wildcard ../common/src/*.a)
 EXE=$(BUILDDIR)/LOADER.SYSTEM\#FF2000
 DATA=$(wildcard ../common/res/*) $(wildcard res/*)
-DISKVOLUME=QP.SP
-BUILDDISK=$(BUILDDIR)/qp.sp.po
+DISKVOLUME=QPSP
+BUILDDISK=$(BUILDDIR)/$(DISKVOLUME).po
 
 .PHONY: clean mount all
 
