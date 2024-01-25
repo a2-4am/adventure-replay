@@ -29,11 +29,14 @@ $(BUILDDISK): $(EXE) $(RES) | $(targets) $(BUILDDIR)
 	  $(CADIUS) EXTRACTVOLUME $$dir/build/*.po "$(BUILDDIR)/X/"; \
 	done
 	rm -f $(BUILDDIR)/X/**/PRODOS* $(BUILDDIR)/X/**/_FileInformation.txt
+# I refuse to use cadius ADDFOLDER command because it adds files in random order
+# and I want them added in alphabetical order
 	for dir in "$(BUILDDIR)/X/"*; do \
 	  for f in "$$dir/"*; do \
 	    $(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/X/$$(basename $$dir)/" "$$f" -C; \
-	    done; \
+	  done \
         done
+	@touch "$@"
 
 # Build all targets
 $(targets):
@@ -47,7 +50,7 @@ $(EXE): $(SOURCES) | $(BUILDDIR)
 $(RES): $(BUILDDIR)
 	for f in "$@"/*; do \
 	  $(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/$(notdir $@)" "$$f" -C; \
-	done;
+	done
 	@touch "$@"
 
 mount: $(BUILDDISK)
