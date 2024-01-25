@@ -18,18 +18,22 @@ CADIUS=cadius
 BUILDDIR=build
 SOURCES=
 EXE=
-DATA=
+RES=$(wildcard res/*)
 DISKVOLUME=ADVENTUREREPLAY
-BUILDDISK=$(BUILDDIR)/adventure-replay.hdv
+BUILDDISK=$(BUILDDIR)/$(DISKVOLUME).hdv
 
 .PHONY: all $(targets)
 
-$(BUILDDISK): $(EXE) $(DATA) | $(targets) $(BUILDDIR)
+$(BUILDDISK): $(EXE) $(RES) | $(targets) $(BUILDDIR)
 	@for dir in $(targets); do \
 	  $(CADIUS) EXTRACTVOLUME $$dir/build/*.po "$(BUILDDIR)/X/"; \
 	done
-	rm -f $(BUILDDIR)/X/**/PRODOS*
-	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "$(DISKVOLUME)" "$(BUILDDIR)/X/" -C
+	rm -f $(BUILDDIR)/X/**/PRODOS* $(BUILDDIR)/X/**/_FileInformation.txt
+	for dir in "$(BUILDDIR)/X/"*; do \
+	  for f in "$$dir/"*; do \
+	    $(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/X/$$(basename $$dir)/" "$$f" -C; \
+	    done; \
+        done
 
 # Build all targets
 $(targets):
@@ -40,8 +44,8 @@ $(EXE): $(SOURCES) | $(BUILDDIR)
 #	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
 #	@touch "$@"
 
-$(DATA): $(BUILDDIR)
-	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@" -C
+$(RES): $(BUILDDIR)
+	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(DISKVOLUME)/$(notdir $@)" "$@" -C
 	@touch "$@"
 
 mount: $(BUILDDISK)
@@ -57,6 +61,6 @@ clean:
 $(BUILDDIR):
 	mkdir -p "$@"/X
 	$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 32MB -C
-	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/PRODOS" common/res/PRODOS#FF2000 -C
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" common/res/PRODOS#FF2000 -C
 
 all: clean $(targets)

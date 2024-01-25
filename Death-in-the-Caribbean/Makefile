@@ -9,7 +9,7 @@ SOURCES=$(wildcard src/*.a) $(wildcard ../common/src/*.a)
 EXE=$(BUILDDIR)/LOADER.SYSTEM\#FF2000
 DATA=$(wildcard ../common/res/*) $(wildcard res/*)
 DISKVOLUME=CARIBBEAN
-BUILDDISK=$(BUILDDIR)/death-in-the-caribbean.po
+BUILDDISK=$(BUILDDIR)/$(DISKVOLUME).po
 
 .PHONY: clean mount all
 
