@@ -1,0 +1,22 @@
+General ideas for improvement (beyond porting to ProDOS):
+
+- patch in a better input routine
+  * auto-uppercase for games that need it (i.e. Sierra)
+  * up arrow to retype last command
+  * standardized prompt
+  - command fixup (i.e. Scott Adams games that support TAKE but not GET)
+  - tab completion of commands/directions/objects (game-specific)
+    - Scott Adams games only store/check the first 3 letters of verbs and nouns
+    - Sherwood Forest only stores/checks the first 5
+  - hotkey to game help and other commands
+
+- accelerate during drawing, decelerate for input
+  (1 MHz during input is important for games that have short real-time components)
+  - e.g. "The Quest v1.0" drawing routine starts at $A30 and ends at $A79
+
+0123456789012345678901234567890123456789
+> _                       [Esc] for menu
+                   (disappears on first keypress)
+
+0123456789012345678901234567890123456789
+[S]ave  [R]estore  [H]elp  [Q]uit  [Esc]
