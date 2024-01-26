@@ -20,6 +20,7 @@ rwts_filenames
 PRODOS_BUFFER             = $B800    ; $400 bytes
 PREFIX_BUFFER             = $BC00    ; $40 bytes
 AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
+SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persistent)
 RWTS_VOL_PATCH            = $BD00
 RWTS                      = $BD14    ; max $100 bytes (persistent)
 INPUT                     = $BE00    ; max $100 bytes (persistent)
@@ -97,6 +98,16 @@ Stage1
          ; - SIDE.A contains patch at $1963 to call custom code @ $96E0
          ;   to draw our standard input prompt ('> ')
          ; - SIDE.A contains patch at $1967 to call BetterLineInput @ $BE00
+         +STA_16 $1CD9, BetterLineInput
+
+         ; and copy savegame routines into place
+         ; SIDE.A includes patches to call them
+         ; $1CD8:         JSR $BE00 to hook input for slot selection
+         ; $1C0B:         JSR $BC00 to call SaveOrRestorePart1
+         ; $1D04:         BIT       to bypass RWTS swapper
+         ; $1D48:         JSR $BC03 to call SaveOrRestorePart2
+         ; $1D51:         BIT       to bypass RWTS swapper
+         +SHORT_COPY move_savegame_start, move_savegame_end, SAVEGAME
 
 @start_game
          jmp   $4000
@@ -130,3 +141,100 @@ parm_read2
 obj_filename2
          !byte 8
          !text "OBJ.9BE0"
+
+move_savegame_start
+!pseudopc SAVEGAME {
+         jmp   SaveOrRestorePart1    ; BC00
+         jmp   SaveOrRestorePart2    ; BC03
+PrintSavedGames                      ; BC06
+         brk                         ;TODO
+
+SaveOrRestorePart1
+; in:    $B7EC = selected save slot
+;        $B7F4 = 1 for restore, 2 for save
+;        ($B7F0) -> $100-byte buffer
+; out:   C=0 if success
+;        C=1 if failure
+;        caller does not check error code in RWTS parameter table
+         jsr   set_save_addr_internal
+         lda   $B7EC
+         ora   #$30
+         sta   save_slot_ascii
+         lda   $B7F4
+         lsr
+         ora   #CMD_READ
+         sta   save_op
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         bcs   save_error
+         jsr   read_or_write_internal
+         bcs   save_error
+         rts
+save_error
+         jsr   CloseAllFiles
+         sec
+         rts
+
+SaveOrRestorePart2
+; in:    SaveOrRestorePart1 was called and returned with C=0
+;        so all MLI parameters have been filled in, save file
+;        is still open, and its file position is $100
+; out:   C=0 if success
+;        C=1 if failure
+;        caller does not check error code in RWTS parameter table
+;        save file is closed either way
+         jsr   set_save_addr_internal
+         jsr   read_or_write_internal
+         php
+         jsr   CloseAllFiles
+         plp
+         rts
+
+set_save_addr_internal
+         lda   $B7F0
+         sta   save_read_addr_lo
+         lda   $B7F1
+         sta   save_read_addr_hi
+         rts
+
+read_or_write_internal
+         jsr   PRODOS_MLI
+save_op  !byte SELF_MODIFIED_BYTE
+         !word save_read
+         bcs   @error
+         lda   save_read_actual_lo
+         bne   @error
+         lda   save_read_actual_hi
+         cmp   #$01
+         bne   @error
+         clc
+         rts
+@error   sec
+         rts
+
+save_open
+         !byte 3
+         !word save_filename
+         !word PRODOS_BUFFER
+         !byte 0
+save_read
+         !byte 4
+         !byte 1
+save_read_addr_lo
+         !byte SELF_MODIFIED_BYTE
+save_read_addr_hi
+         !byte SELF_MODIFIED_BYTE
+;save_read_len
+         !word $0100                 ; called twice, $100 bytes each
+save_read_actual_lo
+         !byte SELF_MODIFIED_BYTE
+save_read_actual_hi
+         !byte SELF_MODIFIED_BYTE
+save_filename
+         !byte 6
+         !text "SAVE."
+save_slot_ascii
+         !text "0"                   ; self-modified
+}
+move_savegame_end
