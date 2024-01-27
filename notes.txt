@@ -10,10 +10,10 @@ Curse of Crowley Manor    ❌
 Escape from Traam         ❌
 Earthquake: SF 1906       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-Buckaroo Banzai           ✅          ✅         ❌               ✅          ❌                 ✅               ❌
-QuestProbe/Spider-Man     ✅          ✅         ❌               ❌          ❌                 ❌               ❌
-QuestProbe/Hulk           ❌
-QuestProbe/Thing          ❌
+Buckaroo Banzai (SAGA+)   ✅          ✅         ❌               ✅          ❌                 ✅               ❌
+QP/Hulk (SAGA)            ❌
+QP/Spider-Man (SAGA+)     ✅          ✅         ❌               ❌          ❌                 ❌               ❌
+QP/Thing (SAGA+)          ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Masquerade                ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 FrakTured FaebLes         ✅          ✅         ✅               ✅          ✅                 ✅               ✅
@@ -26,7 +26,7 @@ Transylvania v1           ❌
 The Quest v1              ❌
 The Coveted Mirror v1     ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-Death in the Caribbean    ✅          ✅         ✅               ✅          ✅                 ✅               ❌
+Death in the Caribbean    ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 ✅
