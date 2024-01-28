@@ -80,6 +80,7 @@ SwapZP
          pha
          tya
          pha
+         ; save/restore chunk of zero page
          ldx   #(last_zp - first_zp)
 -        lda   first_zp, x
          ldy   zp_array, x
@@ -87,6 +88,15 @@ SwapZP
          sty   first_zp, x
          dex
          bpl   -
+         ; save/restore $200 (only) which is clobbered by ProDOS
+         ; but some games expect buffer at $200 to persist
+         ; (e.g. Mystery House)
+         lda   $200
+         pha
+         lda   save_200
+         sta   $200
+         pla
+         sta   save_200
          pla
          tay
          pla
@@ -94,6 +104,8 @@ SwapZP
          pla
          clc
          rts
+save_200
+         !byte 0
 zp_array
          !fill (last_zp - first_zp + 1)
 

@@ -11,6 +11,7 @@ targets := \
 	Sorcerer-of-Claymorgue-Castle-v2.2-122 \
 	Questprobe-Spider-Man-vF-261 \
 	Buckaroo-Banzai-vG-397 \
+	Mystery-House \
 	Cranston-Manor
 
 # https://github.com/mach-kernel/cadius

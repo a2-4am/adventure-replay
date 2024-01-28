@@ -22,8 +22,7 @@ AutomateInput
 -        sta   AUTO_BUFFER, y
          iny
          bne   -
-         lda   $200
-         pha
+         jsr   SwapZP
 
          jsr   PRODOS_MLI            ; open automation file
          !byte CMD_OPEN
@@ -39,8 +38,7 @@ AutomateInput
 
          jsr   CloseAllFiles
 
-         pla
-         sta   $200
+         jsr   SwapZP
          inc   parm_auto_seek_hi
          ldy   #$00
 +
