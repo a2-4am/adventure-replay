@@ -10,7 +10,8 @@ targets := \
 	Strange-Odyssey-v2.1-119 \
 	Sorcerer-of-Claymorgue-Castle-v2.2-122 \
 	Questprobe-Spider-Man-vF-261 \
-	Buckaroo-Banzai-vG-397
+	Buckaroo-Banzai-vG-397 \
+	Cranston-Manor
 
 # https://github.com/mach-kernel/cadius
 CADIUS=cadius
