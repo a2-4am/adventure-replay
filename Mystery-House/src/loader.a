@@ -15,6 +15,7 @@ rwts_filenames
 }
 
 ; application-specific addresses
+STAGE2                    = $9C00
 PRODOS_BUFFER             = $B800    ; $400 bytes
 PREFIX_BUFFER             = $BC00    ; $40 bytes
 AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
@@ -34,8 +35,28 @@ Stage1
          ; (includes CloseAllFiles routine, so must do this first)
          +INSTALL_RWTS_DOS_SHIM
 
-         ; B600..B7FF
-         +READ_ENTIRE_FILE parm_boot_open, parm_boot_read
+         ; B600..B7FF from T00,S00..T00,S01
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word parm_boot_open
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_boot_read
+         ; 9D00..B4FF from T00,S0A..T02,S01
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word parm_boot_seek
+         lda   #$9D
+         sta   parm_boot_read_addr_hi
+         lda   #$17
+         sta   parm_boot_read_len_hi
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_boot_read
+         jsr   CloseAllFiles
+
+         ; copy stage 2 loader code into place
+         +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2
 
          lda   input_filename_start
          beq   @no_auto
@@ -43,17 +64,40 @@ Stage1
          ; SIDE.A contains patch to call $BE00 instead of $FD6B for input
          +INSTALL_AUTOMATE_LINE_INPUT
 
-         jmp   @start_game
+         jmp   @goto_stage2
 
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead.
          ; SIDE.A contains patch to call $BE00 instead of $FD6B for input
          +INSTALL_BETTER_LINE_INPUT
 
-@start_game
+@goto_stage2
+         jmp   STAGE2
+
+move_stage2_start
+!pseudopc STAGE2 {
+         +READ_ENTIRE_FILE parm_open2, parm_read2
+
          ldx   #$60
          stx   $2B
          jmp   $B700
+
+parm_open2
+         !byte 3
+         !word obj_filename2
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read2
+         !byte 4
+         !byte 1
+         !word $0800
+         !word $FFFF
+         !word 0
+obj_filename2
+         !byte 9
+         !text "ADVENTURE"
+}
+move_stage2_end
 
 parm_boot_open
          !byte 3
@@ -63,6 +107,18 @@ parm_boot_open
 parm_boot_read
          !byte 4
          !byte 1
-         !word $B600
-         !word $0200
+         !byte 0
+parm_boot_read_addr_hi
+         !byte $B6
+         !byte 0
+parm_boot_read_len_hi
+         !byte $02
          !word 0
+parm_boot_seek
+         !byte 2
+         !byte 1                     ; refnum (always 1)
+         !byte 0                     ; seek offset lo (always 0)
+parm_boot_seek_hi
+         !byte $0A
+parm_boot_seek_very_hi
+         !byte 0
