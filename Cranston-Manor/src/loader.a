@@ -61,8 +61,6 @@ Stage1
 @start_game
          ldx   #$60
          stx   $2B
-         ;TODO need to completely bypass protection check -- currently turns on
-         ;and off S6D1 drive motor
          jmp   $B700
 
 parm_boot_open
