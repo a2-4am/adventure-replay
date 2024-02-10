@@ -1,0 +1,106 @@
+;license:MIT
+;(c) 2023 by 4am
+;
+!cpu 6502
+!to "build/LOADER.SYSTEM#FF2000",plain
+*=$2000
+
+; application-specific addresses
+PRODOS_BUFFER             = $BB00    ; $400 bytes (also used by original game)
+PREFIX_BUFFER             = $1F00    ; $40 bytes during init
+STAGE2_CALLBACK           = $1F00    ; $100 bytes during initial game load
+AUTO_BUFFER               = $1F00    ; $100 bytes (if non-interactive, persistent)
+AUTO_FILENAME             = $02BF    ; $41 bytes (if non-interactive, persistent)
+UTILS                     = $0300
+
+         !src  "../common/src/loader.init.a"               ; must be first
+                                                           ; exits via Stage1
+move_utils_start
+!pseudopc UTILS {
+         !src  "../common/src/shared.quit.a"
+         !src  "../common/src/shared.closeallfiles.a"
+         !src  "../common/src/shared.swapzp.a"
+}
+move_utils_end
+INPUT = UTILS + move_utils_end - move_utils_start
+
+         !src  "../common/src/loader.automateinput.polarware.a"
+
+Stage1
+         lda   #$00                  ; game bug: uninitialized address used
+         sta   $26                   ; to clear part of screen during title
+
+         lda   #$60                  ; game bug: clock driver interferes
+         sta   $BF06                 ; with game input by clobbering $200+
+
+         +SHORT_COPY move_utils_start, move_utils_end, UTILS
+
+         ; set up our custom reset vector (inside UTILS)
+         +STA_16 $3F2, QuitToProDOS
+         jsr   ROM_FINALIZE_RESET
+
+         ; 1A00..1EAB
+         +READ_ENTIRE_FILE parm_open1, parm_read1
+
+         ; copy stage 2 callback into place
+         +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2_CALLBACK
+
+         ; install hook to call stage 2 once game loads its assets
+         +STA_16 $1B9F, STAGE2_CALLBACK
+
+         lda   input_filename_start
+         ; stage 2 (now in place) needs to know if we're using automation
+         sta   HasAutomationFile
+         beq   @no_auto
+
+         ; if we're using automation, install the AutomateInput code
+         ; (will install hook later, in stage 2)
+         +INSTALL_AUTOMATE_INPUT
+         jmp   @start_game
+
+@no_auto
+         ;TODO
+         ;+INSTALL_BETTER_INPUT
+
+@start_game
+         jmp   $1A00
+
+parm_open1
+         !byte 3
+         !word obj_filename1
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read1
+         !byte 4
+         !byte 1
+         !word $1A00
+         !word $FFFF
+         !word 0
+obj_filename1
+         !byte 2
+         !text "T3"
+
+move_stage2_start
+!pseudopc STAGE2_CALLBACK {
+HasAutomationFile=*+1
+         lda   #SELF_MODIFIED_BYTE
+         beq   @no_auto
+
+         ; if we're using automation, install the AutomateInput hook
+         +MAKE_JSR $4410, INPUT
+         lda   #$00
+         sta   $4414
+
+         ; don't pause after printing 4 lines
+         lda   #$AD
+         sta   $4452
+
+         jmp   @start_game
+
+@no_auto
+         ;TODO
+
+@start_game
+         jmp   $4032
+}
+move_stage2_end

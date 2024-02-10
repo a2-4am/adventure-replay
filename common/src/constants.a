@@ -22,6 +22,7 @@ CLEARKBD                  = $C010
 ROM_TEXT                  = $FB2F
 ROM_FINALIZE_RESET        = $FB6F
 ROM_MACHINEID             = $FBB3
+ROM_BASCALC               = $FBC1
 ROM_HOME                  = $FC58
 ROM_CLREOL_FROM_Y         = $FC9E
 ROM_WAIT                  = $FCA8
@@ -29,8 +30,8 @@ ROM_KEYIN                 = $FD1B
 ROM_COUT                  = $FDED
 
 ; application-specific memory addresses
-first_zp                  = $40      ; used by RWTS DOS shim
-last_zp                   = $4F      ; used by RWTS DOS shim
+first_zp                  = $40      ; used by SwapZP for RWTS DOS shim and elsewhere
+last_zp                   = $4F      ; used by SwapZP for RWTS DOS shim and elsewhere
 
 ; ProDOS constants
 CMD_ONLINE                = $C5

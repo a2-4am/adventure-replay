@@ -23,6 +23,7 @@ WRAP_SAVEGAME             = $BC00
 SAVEGAME                  = $BC07    ; max $100 bytes (if interactive, persistent)
 RWTS                      = $BD00    ; max $100 bytes (persistent)
 INPUT                     = $BE00    ; max $100 bytes (persistent)
+AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 SAGA_LOCATION_ARRAY       = $6546
 SAGA_IO_ERROR             = $FF58
 

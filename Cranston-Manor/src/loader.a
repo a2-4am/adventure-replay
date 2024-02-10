@@ -21,6 +21,7 @@ AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persisten
 SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persistent)
 RWTS                      = $BD00    ; max $100 bytes (persistent)
 INPUT                     = $BE00    ; max $100 bytes (persistent)
+AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 SAVE_INPUT_BUFFER         = $0228    ; $26 bytes (persistent, used by BetterLineInput)
 
          !src  "../common/src/loader.init.a"               ; must be first

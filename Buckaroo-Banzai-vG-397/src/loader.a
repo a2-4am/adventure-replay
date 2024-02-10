@@ -20,6 +20,7 @@ PREFIX_BUFFER             = $BC00    ; $40 bytes
 AUTO_BUFFER               = $BC00    ; $100 bytes
 RWTS                      = $BD00    ; max $100 bytes (persistent)
 INPUT                     = $BE00    ; max $100 bytes (persistent)
+AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1

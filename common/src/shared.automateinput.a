@@ -7,12 +7,18 @@
 ; you should include exactly one of those files, and not this file
 ;
 
+!ifndef AUTOMATE_DRAW_CURSOR {
+AUTOMATE_DRAW_CURSOR = 1
+}
+
 AutomateInput
          stx   @x+1
          sty   @y+1
+!if AUTOMATE_DRAW_CURSOR = 1 {
          ldy   CH
          lda   #$20
          sta   (BASL), y
+}
 @automate_offset=*+1
          ldy   #$00                  ; self-modified
          bne   +
@@ -68,7 +74,7 @@ AutomateInput
 
 parm_auto_open
          !byte 3
-         !word INPUT_FILENAME
+         !word AUTO_FILENAME
          !word PRODOS_BUFFER
          !byte 0
 parm_auto_seek
@@ -84,6 +90,3 @@ parm_auto_read
          !word AUTO_BUFFER
          !word $0100                 ; read length (always $100)
          !word 0                     ; actual length
-
-INPUT_FILENAME
-         !fill $41

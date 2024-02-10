@@ -1,0 +1,15 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+; shared routine to close all files via ProDOS MLI
+;
+
+         !src  "../common/src/constants.a"
+
+CloseAllFiles
+         jsr   PRODOS_MLI
+         !byte CMD_CLOSE
+         !word +
+         rts
++        !byte 1
+         !byte 0

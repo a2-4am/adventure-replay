@@ -74,46 +74,8 @@ op_rwts  !byte SELF_MODIFIED_BYTE
          jsr   CloseAllFiles
 
          ; /!\ execution falls through here
-SwapZP
-         pha
-         txa
-         pha
-         tya
-         pha
-         ; save/restore chunk of zero page
-         ldx   #(last_zp - first_zp)
--        lda   first_zp, x
-         ldy   zp_array, x
-         sta   zp_array, x
-         sty   first_zp, x
-         dex
-         bpl   -
-         ; save/restore $200 (only) which is clobbered by ProDOS
-         ; but some games expect buffer at $200 to persist
-         ; (e.g. Mystery House)
-         lda   $200
-         pha
-         lda   save_200
-         sta   $200
-         pla
-         sta   save_200
-         pla
-         tay
-         pla
-         tax
-         pla
-         clc
-         rts
-save_200
-         !byte 0
-zp_array
-         !fill (last_zp - first_zp + 1)
-
-CloseAllFiles
-         jsr   PRODOS_MLI            ; close
-         !byte CMD_CLOSE
-         !word rwts_close
-         rts
+         !src  "../common/src/shared.swapzp.a"
+         !src  "../common/src/shared.closeallfiles.a"
 
 rwts_open
          !byte 3
@@ -138,17 +100,9 @@ rwts_read_hi
          !byte 0
          !word $0100                 ; read length (always $100)
          !word 0                     ; actual length
-rwts_close
-         !byte 1
-         !byte 0
 
          +RWTS_FILENAMES
 
 *=$100*(*/$100)+$F9
-QuitToProDOS
-         jsr   PRODOS_MLI
-         !byte $65
-         !word +
-+        !byte 4
-QuitToProDOS_end
+         !src  "../common/src/shared.quit.a"
 }

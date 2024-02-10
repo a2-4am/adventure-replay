@@ -3,6 +3,7 @@
 ;
 
          !src  "../common/src/constants.a"         ; no code
+         !src  "../common/src/macros.a"            ; no code
 
 ;
 ; .SYSTEM code starts here

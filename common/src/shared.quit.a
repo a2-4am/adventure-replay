@@ -1,0 +1,14 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+; shared routine to quit to ProDOS
+;
+
+         !src  "../common/src/constants.a"
+
+QuitToProDOS
+         jsr   PRODOS_MLI
+         !byte $65
+         !word +
++        !byte 4
+QuitToProDOS_end

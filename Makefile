@@ -12,7 +12,8 @@ targets := \
 	Questprobe-Spider-Man-vF-261 \
 	Buckaroo-Banzai-vG-397 \
 	Mystery-House \
-	Cranston-Manor
+	Cranston-Manor \
+	The-Coveted-Mirror-v2.0
 
 # https://github.com/mach-kernel/cadius
 CADIUS=cadius
@@ -42,7 +43,7 @@ $(BUILDDISK): $(EXE) $(RES) | $(targets) $(BUILDDIR)
 
 # Build all targets
 $(targets):
-	@$(MAKE) -C $@
+	cd "$@" && $(MAKE)
 
 $(EXE): $(SOURCES) | $(BUILDDIR)
 #	$(ACME) -r build/loader.lst src/loader.a

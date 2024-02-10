@@ -1,0 +1,7 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+AUTOMATE_DRAW_CURSOR = 0
+
+         !src  "../common/src/loader.automateinput.blocking.a"

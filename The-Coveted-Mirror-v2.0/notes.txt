@@ -1,0 +1,22 @@
+scattered free space in main memory
+$0100..$01D0 more or less
+$0228..$02FF with some effort
+  NOTE: original game's input routine allows 256-byte
+  input which will clobber all of page 2
+  so this would have to be restricted if we want to
+  use any space at all on page 2
+$0300..$03CF is unused
+$1C45..$1CFE is unused loader text (part of T3)
+$1E79..$1EFF is unused loader text (part of T3)
+$1F00..$1FFF is unused
+game uses text screen
+game uses screen holes
+game uses actual ProDOS
+game uses $BB00..$BEFF as 1K ProDOS file buffer
+  but always closes files after use
+  so theoretically could reuse for automation file access
+  or scratch space for other things, but no persistence
+must disable clock driver ($BF06:60)
+  otherwise in-game ProDOS file access will clobber $200
+  when game expects it to persist, game input will fail,
+  and hilarity may or may not ensue

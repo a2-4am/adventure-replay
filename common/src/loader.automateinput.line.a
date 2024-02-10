@@ -11,7 +11,7 @@
          +SHORT_COPY move_automate_start, move_automate_end, INPUT
 
          ; copy input filename into place
-         +SHORT_COPY input_filename_start, input_filename_end, INPUT_FILENAME
+         +SHORT_COPY input_filename_start, input_filename_end, AUTO_FILENAME
 }
 
 ;------------------------------------------------------------------------------
@@ -40,6 +40,6 @@ aline_input_loop
 }
 move_automate_end
 
-!if (move_automate_end-move_automate_start) > $100 {
+!if (move_automate_end-move_automate_start) > $BF {
          !serious "AutomateInput routine is too long, ", move_automate_end-move_automate_start, " bytes"
 }

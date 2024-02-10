@@ -7,7 +7,7 @@ The Count                 ✅          ✅         ✅               ✅        
 Strange Odyssey           ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 Claymorgue Castle         ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 Curse of Crowley Manor    ❌
-Escape from Traam         ❌
+Escape from Traam         ❌          ❌         ✅
 Earthquake: SF 1906       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Buckaroo Banzai (SAGA+)   ✅          ✅         ❌               ✅          ❌                 ✅               ❌
@@ -22,9 +22,12 @@ Lucifer's Realm           ❌
 Sherwood Forest           ❌
 The Queen of Phobos       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-Transylvania v1           ❌
-The Quest v1              ❌
-The Coveted Mirror v1     ❌
+The Coveted Mirror        ✅          ✅         ✅               ✅          ✅                 ❌               ✅
+Transylvania              ❌
+The Crimson Crown         ❌
+The Quest                 ❌
+Oo-Topos                  ❌
+Talisman                  ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Death in the Caribbean    ✅          ✅         ✅               ✅          ✅                 ✅               ✅
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
