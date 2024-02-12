@@ -20,3 +20,40 @@ must disable clock driver ($BF06:60)
   otherwise in-game ProDOS file access will clobber $200
   when game expects it to persist, game input will fail,
   and hilarity may or may not ensue
+
+-----
+
+game text is stored compressed similar to ZSCII
+5 bits per value, $00..$1D are index into table 1 (lowercase letters)
+$1E & $1F shift to table 2 & 3 then use next 5-bit value as index
+
+save:
+
+|--6F--| |--E5--| |--F5--| |--80--| |--00--|
+01101111 11100101 11110101 10000000 00000000
+
+01101 11111 10010 11111 01011 00000
+.$0D. .$1F. .$12. .$1F. .$0B. .$00.
+
+"3" -> "9" change $12 to $18
+
+01101 11111 11000 11111 01011 00000
+.$0D. .$1F. .$18. .$1F. .$0B. .$00.
+
+01101111 11110001 11110101 10000000
+
+-----
+
+restore:
+
+FC 3E DF CB EB 00
+11111 10000 11111 01101 11111 10010 11111 010110 000...
+.1F    10    1F    0D    1F    12    1F    0B
+
+"3" -> "9" change $12 to $18
+
+11111 10000 11111 01101 11111 11000 11111 010110 000...
+.1F    10    1F    0D    1F    18    1F    0B
+
+11111100 00111110 11011111 11100011 11101011 0
+FC       3E       DF       E3       EB
