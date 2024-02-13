@@ -8,7 +8,7 @@
 ; exits with Z=1
 !macro INSTALL_AUTOMATE_INPUT {
          ; copy automate input routine into place
-         +SHORT_COPY move_automate_start, move_automate_end, INPUT
+         +SHORT_COPY move_automate_start, move_automate_end, AUTO_INPUT
 
          ; copy input filename into place
          +SHORT_COPY input_filename_start, input_filename_end, AUTO_FILENAME
@@ -20,7 +20,7 @@
 ; game parser from a text file
 ;------------------------------------------------------------------------------
 move_automate_start
-!pseudopc INPUT {
+!pseudopc AUTO_INPUT {
          !src  "../common/src/shared.automateinput.a"
 }
 move_automate_end

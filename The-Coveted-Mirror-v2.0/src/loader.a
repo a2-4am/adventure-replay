@@ -7,11 +7,14 @@
 
 ; application-specific addresses
 PRODOS_BUFFER             = $BB00    ; $400 bytes (also used by original game)
+STAGE2_CALLBACK           = $1900    ; $100 bytes during initial game load
 PREFIX_BUFFER             = $1F00    ; $40 bytes during init
-STAGE2_CALLBACK           = $1F00    ; $100 bytes during initial game load
 AUTO_BUFFER               = $1F00    ; $100 bytes (if non-interactive, persistent)
 AUTO_FILENAME             = $02BF    ; $41 bytes (if non-interactive, persistent)
 UTILS                     = $0300
+
+; application-specific flags
+AUTO_DRAW_CURSOR          = 0        ; used by automate.input
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
@@ -22,9 +25,9 @@ move_utils_start
          !src  "../common/src/shared.swapzp.a"
 }
 move_utils_end
-INPUT = UTILS + move_utils_end - move_utils_start
+AUTO_INPUT = UTILS + move_utils_end - move_utils_start
 
-         !src  "../common/src/loader.automateinput.polarware.a"
+         !src  "../common/src/loader.automateinput.blocking.a"
 
 Stage1
          lda   #$00                  ; game bug: uninitialized address used
@@ -87,7 +90,7 @@ HasAutomationFile=*+1
          beq   @no_auto
 
          ; if we're using automation, install the AutomateInput hook
-         +MAKE_JSR $4410, INPUT
+         +MAKE_JSR $4410, AutomateInput
          lda   #$00
          sta   $4414
 

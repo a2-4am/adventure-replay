@@ -24,6 +24,7 @@ SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persisten
 RWTS_VOL_PATCH            = $BD00
 RWTS                      = $BD14    ; max $100 bytes (persistent)
 INPUT                     = $BE00    ; max $100 bytes (persistent)
+AUTO_INPUT                = INPUT
 AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 SAVE_INPUT_BUFFER         = $0228    ; $26 bytes (persistent, used by BetterLineInput)
 
