@@ -9,6 +9,7 @@
 PRODOS_BUFFER             = $BB00    ; $400 bytes (also used by original game)
 STAGE2_CALLBACK           = $1900    ; $100 bytes during initial game load
 PREFIX_BUFFER             = $1F00    ; $40 bytes during init
+INPUT                     = $1F00    ; $100 bytes (if interactive, persistent)
 AUTO_BUFFER               = $1F00    ; $100 bytes (if non-interactive, persistent)
 AUTO_FILENAME             = $02BF    ; $41 bytes (if non-interactive, persistent)
 UTILS                     = $0300
@@ -28,6 +29,19 @@ move_utils_end
 AUTO_INPUT = UTILS + move_utils_end - move_utils_start
 
          !src  "../common/src/loader.automateinput.blocking.a"
+         !src  "../common/src/loader.betterinput.blocking.a"
+
+WRAP_INPUT = AUTO_INPUT
+move_wrap_input_start
+!pseudopc WRAP_INPUT {
+         lda   CV
+         jsr   ROM_BASCALC
+         dec   CH
+         jsr   BlockingBetterInput
+         inc   CH
+         rts
+}
+move_wrap_input_end
 
 Stage1
          lda   #$00                  ; game bug: uninitialized address used
@@ -62,8 +76,8 @@ Stage1
          jmp   @start_game
 
 @no_auto
-         ;TODO
-         ;+INSTALL_BETTER_INPUT
+         +INSTALL_BETTER_INPUT
+         +SHORT_COPY move_wrap_input_start, move_wrap_input_end, WRAP_INPUT
 
 @start_game
          jmp   $1A00
@@ -91,8 +105,6 @@ HasAutomationFile=*+1
 
          ; if we're using automation, install the AutomateInput hook
          +MAKE_JSR $4410, AutomateInput
-         lda   #$00
-         sta   $4414
 
          ; don't pause after printing 4 lines
          lda   #$AD
@@ -101,7 +113,7 @@ HasAutomationFile=*+1
          jmp   @start_game
 
 @no_auto
-         ;TODO
+         +MAKE_JSR $4410, WRAP_INPUT
 
 @start_game
          jmp   $4032
