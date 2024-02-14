@@ -1,13 +1,13 @@
                           ported? --- reset? --- walkthrough? --- prompt? --- AutomateInput? --- BetterInput? --- save to file?
-Adventureland             ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-Pirate Adventure          ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-Mission Impossible        ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-Voodoo Island             ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-The Count                 ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-Strange Odyssey           ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-Claymorgue Castle         ✅          ✅         ✅               ✅          ✅                 ✅               ✅
+Adventureland             ✅          ✅         ✅ 169           ✅          ✅                 ✅               ✅
+Pirate Adventure          ✅          ✅         ✅ 281           ✅          ✅                 ✅               ✅
+Mission Impossible        ✅          ✅         ✅  98           ✅          ✅                 ✅               ✅
+Voodoo Castle             ✅          ✅         ✅ 129           ✅          ✅                 ✅               ✅
+The Count                 ✅          ✅         ✅ 163           ✅          ✅                 ✅               ✅
+Strange Odyssey           ✅          ✅         ✅ 172           ✅          ✅                 ✅               ✅
+Claymorgue Castle         ✅          ✅         ✅ 159           ✅          ✅                 ✅               ✅
 Curse of Crowley Manor    ❌
-Escape from Traam         ❌          ❌         ✅
+Escape from Traam         ❌          ❌         ✅ 178
 Earthquake: SF 1906       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Buckaroo Banzai (SAGA+)   ✅          ✅         ❌               ✅          ❌                 ✅               ❌
@@ -15,24 +15,24 @@ QP/Hulk (SAGA)            ❌
 QP/Spider-Man (SAGA+)     ✅          ✅         ❌               ❌          ❌                 ❌               ❌
 QP/Thing (SAGA+)          ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-Masquerade                ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-FrakTured FaebLes         ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-The Institute             ❌          ❌         ✅               ❌          ❌                 ❌               ❌
+Masquerade                ✅          ✅         ✅ 211           ✅          ✅                 ✅               ✅
+FrakTured FaebLes         ✅          ✅         ✅ 143           ✅          ✅                 ✅               ✅
+The Institute             ❌          ❌         ✅ 293           ❌          ❌                 ❌               ❌
 Lucifer's Realm           ❌
 Sherwood Forest           ❌
 The Queen of Phobos       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-The Coveted Mirror        ✅          ✅         ✅               ✅          ✅                 ✅               ✅
-Transylvania              ✅          ✅         ✅               ✅          ✅                 ✅               ❌
+The Coveted Mirror        ✅          ✅         ✅ 367           ✅          ✅                 ✅               ✅
+Transylvania              ✅          ✅         ✅ 171           ✅          ✅                 ✅               ❌
 The Crimson Crown         ❌
 The Quest                 ❌
 Oo-Topos                  ❌
 Talisman                  ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-Death in the Caribbean    ✅          ✅         ✅               ✅          ✅                 ✅               ✅
+Death in the Caribbean    ✅          ✅         ✅ 163           ✅          ✅                 ✅               ✅
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-Mystery House             ✅          ✅         ✅               ✅          ✅                 ✅               ❌
-Cranston Manor            ✅          ✅         ✅               ✅          ✅                 ✅               ❌
+Mystery House             ✅          ✅         ✅  73           ✅          ✅                 ✅               ❌
+Cranston Manor            ✅          ✅         ✅ 214           ✅          ✅                 ✅               ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 ✅
