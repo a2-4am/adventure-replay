@@ -15,8 +15,52 @@ General ideas for improvement (beyond porting to ProDOS):
   - e.g. "The Quest v1.0" drawing routine starts at $A30 and ends at $A79
 
 0123456789012345678901234567890123456789
+Welcome to Adventure Replay!    12 games
+
+    [S]earch    [B]rowse    [O]ptions
+    [A]bout     [H]elp      [Q]uit
+
+0123456789012345678901234567890123456789
 > _                       [Esc] for menu
                    (disappears on first keypress)
 
 0123456789012345678901234567890123456789
 [S]ave  [R]estore  [H]elp  [Q]uit  [Esc]
+
+0123456789012345678901234567890123456789
+The Adventures of Buckaroo Banzai vG-397
+(c) 1984 Adventure International
+Length: xxxxx                     [P]lay
+Rating: xxxxx                     [B]ack
+
+0123456789012345678901234567890123456789
+Sierra: Mystery House              Sort
+Micro-Fun: Death in the Caribbean 1-name
+Phoenix: Masquerade               2-year
+American Eagle: Fraktured Faebles 3-pub
+
+0123456789012345678901234567890123456789
+Browse  Sierra    Mystery House
+1-name  Micro-Fun Death in the Caribbean
+2-year  Phoenix   Masquerade
+3-pub   AmerEagle Fraktured Faebles
+        Polarware The Coveted Mirror
+        Adv Intl  Buckaroo Banzai
+
+AI: Buckaroo Banzai
+AI: Spider-Man
+AI: The Hulk
+AI: The Human Torch
+Sierra: Cranston Manor
+Sierra: The Dark Crystal
+Polarware: Crimson Crown
+Polarware: Transylvania
+Polarware: The Coveted Mirror
+Polarware: The Quest
+
+by year:
+0123456789012345678901234567890123456789
+1980: Mystery House                Sort
+1982: Death in the Caribbean      1-name
+1983: Masquerade                  2-year
+1985: Fraktured Faebles           3-pub
