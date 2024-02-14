@@ -5,7 +5,7 @@ targets := \
 	Adventureland-v2.1-416 \
 	Pirate-Adventure-v2.1-408 \
 	Mission-Impossible-v2.1-306 \
-	Voodoo-Island-v2.1-119 \
+	Voodoo-Castle-v2.1-119 \
 	The-Count-v2.1-115 \
 	Strange-Odyssey-v2.1-119 \
 	Sorcerer-of-Claymorgue-Castle-v2.2-122 \
@@ -13,7 +13,7 @@ targets := \
 	Buckaroo-Banzai-vG-397 \
 	Mystery-House \
 	Cranston-Manor \
-	The-Coveted-Mirror-v2.0 \
+	The-Coveted-Mirror-1986 \
 	Transylvania-1985
 
 # https://github.com/mach-kernel/cadius
