@@ -13,7 +13,8 @@ targets := \
 	Buckaroo-Banzai-vG-397 \
 	Mystery-House \
 	Cranston-Manor \
-	The-Coveted-Mirror-v2.0
+	The-Coveted-Mirror-v2.0 \
+	Transylvania-1985
 
 # https://github.com/mach-kernel/cadius
 CADIUS=cadius

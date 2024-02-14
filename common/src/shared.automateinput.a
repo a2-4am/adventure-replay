@@ -11,6 +11,10 @@
 AUTO_DRAW_CURSOR = 1
 }
 
+!ifndef AUTO_TEMP_BUFFER {
+AUTO_TEMP_BUFFER = 0
+}
+
 AutomateInput
          stx   @x+1
          sty   @y+1
@@ -28,6 +32,9 @@ AutomateInput
 -        sta   AUTO_BUFFER, y
          iny
          bne   -
+!if AUTO_TEMP_BUFFER > 0 {
+         jsr   AutoSwapBuffer
+}
          jsr   SwapZP
 
          jsr   PRODOS_MLI            ; open automation file
@@ -47,6 +54,9 @@ AutomateInput
          jsr   SwapZP
          inc   parm_auto_seek_hi
          ldy   #$00
+!if AUTO_TEMP_BUFFER > 0 {
+         jsr   AutoSwapBuffer
+}
 +
          inc   @automate_offset
 @wait_time=*+1
@@ -72,6 +82,21 @@ AutomateInput
          rts
 @done    jmp   ($3F2)
 
+!if AUTO_TEMP_BUFFER > 0 {
+AutoSwapBuffer
+;in:     Y=0
+;out:    Y=0
+-        lda   AUTO_BUFFER, y
+         pha
+         lda   AUTO_TEMP_BUFFER, y
+         sta   AUTO_BUFFER, y
+         pla
+         sta   AUTO_TEMP_BUFFER, y
+         iny
+         bne   -
+         rts
+}
+
 parm_auto_open
          !byte 3
          !word AUTO_FILENAME
@@ -87,6 +112,10 @@ parm_auto_seek_hi
 parm_auto_read
          !byte 4
          !byte 1
+!if AUTO_TEMP_BUFFER > 0 {
+         !word AUTO_TEMP_BUFFER
+} else {
          !word AUTO_BUFFER
+}
          !word $0100                 ; read length (always $100)
          !word 0                     ; actual length

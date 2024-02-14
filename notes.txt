@@ -22,8 +22,8 @@ Lucifer's Realm           ❌
 Sherwood Forest           ❌
 The Queen of Phobos       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-The Coveted Mirror        ✅          ✅         ✅               ✅          ✅                 ❌               ✅
-Transylvania              ❌
+The Coveted Mirror        ✅          ✅         ✅               ✅          ✅                 ✅               ✅
+Transylvania              ✅          ✅         ✅               ✅          ✅                 ✅               ❌
 The Crimson Crown         ❌
 The Quest                 ❌
 Oo-Topos                  ❌

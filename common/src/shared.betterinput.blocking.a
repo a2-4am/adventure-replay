@@ -1,11 +1,19 @@
 ;license:MIT
 ;(c) 2024 by 4am
 ;
+
+!ifndef BETTER_INC_RANDOM {
+BETTER_INC_RANDOM = 1
+}
+
 BlockingBetterInput
+!if BETTER_INC_RANDOM = 1 {
          inc   RNDL
          bne   +
          inc   RNDH
-+        jsr   BeginBetterInput
++
+}
+         jsr   BeginBetterInput
          jsr   PendingBetterInput
          bpl   BlockingBetterInput
          bit   CLEARKBD
