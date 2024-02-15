@@ -1,4 +1,4 @@
-targets := \
+subtargets := \
 	Masquerade \
 	Fraktured-Faebles \
 	Death-in-the-Caribbean \
@@ -25,11 +25,14 @@ EXE=
 RES=$(wildcard res/*)
 DISKVOLUME=ADVENTUREREPLAY
 BUILDDISK=$(BUILDDIR)/$(DISKVOLUME).hdv
+targets := \
+	$(EXE) \
+	$(RES)
 
-.PHONY: all $(targets)
+.PHONY: all $(subtargets)
 
-$(BUILDDISK): $(EXE) $(RES) | $(targets) $(BUILDDIR)
-	@for dir in $(targets); do \
+$(BUILDDISK): $(targets) | $(subtargets) $(BUILDDIR)
+	@for dir in $(subtargets); do \
 	  $(CADIUS) EXTRACTVOLUME $$dir/build/*.po "$(BUILDDIR)/X/"; \
 	done
 	rm -f $(BUILDDIR)/X/**/PRODOS* $(BUILDDIR)/X/**/_FileInformation.txt
@@ -42,9 +45,9 @@ $(BUILDDISK): $(EXE) $(RES) | $(targets) $(BUILDDIR)
         done
 	@touch "$@"
 
-# Build all targets
-$(targets):
-	cd "$@" && $(MAKE)
+# Build all subtargets
+$(subtargets):
+	cd "$@" && make
 
 $(EXE): $(SOURCES) | $(BUILDDIR)
 #	$(ACME) -r build/loader.lst src/loader.a
@@ -63,7 +66,7 @@ mount: $(BUILDDISK)
 # Clean all temporary/target files
 clean:
 	rm -rf "$(BUILDDIR)"
-	@for dir in $(targets); do \
+	@for dir in $(subtargets); do \
 	  $(MAKE) -C $$dir clean; \
 	done
 
@@ -72,4 +75,4 @@ $(BUILDDIR):
 	$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 32MB -C
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" common/res/PRODOS#FF2000 -C
 
-all: clean $(targets)
+all: clean $(subtargets)
