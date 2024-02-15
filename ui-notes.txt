@@ -15,7 +15,7 @@ General ideas for improvement (beyond porting to ProDOS):
   - e.g. "The Quest v1.0" drawing routine starts at $A30 and ends at $A79
 
 0123456789012345678901234567890123456789
-Welcome to Adventure Replay!    12 games
+Welcome to Adventure Replay!   999 games
 
     [S]earch    [B]rowse    [O]ptions
     [A]bout     [H]elp      [Q]uit
@@ -27,18 +27,21 @@ Welcome to Adventure Replay!    12 games
 0123456789012345678901234567890123456789
 [S]ave  [R]estore  [H]elp  [Q]uit  [Esc]
 
+game info screen:
 0123456789012345678901234567890123456789
 The Adventures of Buckaroo Banzai vG-397
-(c) 1984 Adventure International
-Length: xxxxx                     [P]lay
-Rating: xxxxx                     [B]ack
+Difficulty: xxxxx          Length: xxxxx
 
+[P]lay     [D]emo     [A]bout     [B]ack
+
+browse by title:
 0123456789012345678901234567890123456789
 Sierra: Mystery House              Sort
 Micro-Fun: Death in the Caribbean 1-name
 Phoenix: Masquerade               2-year
 American Eagle: Fraktured Faebles 3-pub
 
+browse by publisher:
 0123456789012345678901234567890123456789
 Browse  Sierra    Mystery House
 1-name  Micro-Fun Death in the Caribbean
@@ -58,9 +61,80 @@ Polarware: Transylvania
 Polarware: The Coveted Mirror
 Polarware: The Quest
 
-by year:
+browse by year:
 0123456789012345678901234567890123456789
 1980: Mystery House                Sort
 1982: Death in the Caribbean      1-name
 1983: Masquerade                  2-year
 1985: Fraktured Faebles           3-pub
+
+browse by year incl. publisher:
+0123456789012345678901234567890123456789
+1980  On-Line     Mission: Asteroid
+1980  On-Line     Mystery House
+1980  On-Line     Wizard & The Princess
+1981  Adv Intl    The Escape from Traam
+1981  On-Line     Cranston Manor
+1981  On-Line     Ulysses/Golden Fleece
+1981  Sirius      Kabul Spy
+1982  Adv Intl    Curse of Crowley Manor
+1982  Adv Intl    Earthquake: SF 1906
+1982  Adv Intl    Adventureland
+1982  Adv Intl    Pirate Adventure
+1982  Adv Intl    Mission Impossible
+1982  Adv Intl    Voodoo Castle
+1982  Adv Intl    The Count
+1982  Adv Intl    Strange Odyssey
+1982  Broderbund  The Mask of the Sun
+1982  Datasoft    The Sands of Egypt
+1982  Phoenix     The Queen of Phobos
+1982  Phoenix     Sherwood Forest
+1982  Sirius      Blade of Blackpoole
+1982  Sirius      Escape from Rungistan
+1983  Broderbund  The Serpent's Star
+1983  Ibidinc     The Alpine Encounter
+1983  Micro-Fun   Death in the Caribbean
+1983  On-Line     The Dark Crystal
+1983  Phoenix     Masquerade
+1983  Screenplay  The Institute
+1983  Sirius      Critical Mass
+1983  Sirius      Gruds in Space
+1984  Adv Intl    Claymorgue Castle
+1984  Adv Intl    QuestProbe/The Hulk
+1984  Adv Intl    QuestProbe/Spider-Man
+1984  AmerEagle   Elysian Fields
+1984  AmerEagle   Kukulcan
+1984  AmerEagle   Lucifer's Realm
+1984  Datasoft    The Dallas Quest
+1984  Penguin     The Quest
+1984  Telarium    Amazon
+1984  Telarium    Dragonworld
+1984  Telarium    Fahrenheit 451
+1984  Telarium    Rendezvous with Rama
+1984  Windham     Swiss Family Robinson
+1985  Adv Intl    QuestProbe/Human Torch
+1985  Adv Intl    Buckaroo Banzai
+1985  AmerEagle   Chalice of Mostania
+1985  AmerEagle   FrakTured FaebLes
+1985  Bantam      Escape
+1985  Bantam      I, Damiano
+1985  Bantam      Sherlock/Another Bow
+1985  Datasoft    The Neverending Story
+1985  Interplay   Borrowed Time
+1985  Interplay   Mindshadow
+1985  Interplay   The Tracer Sanction
+1985  Polarware   Transylvania
+1985  Polarware   Crimson Crown
+1985  Polarware   Oo-Topos
+1985  Telarium    Perry Mason/Mandarin
+1985  Windham     Treasure Island
+1985  Windham     The Wizard of Oz
+1986  Datasoft    Gunslinger
+1986  Interplay   Tass Times in Tonetown
+1986  Polarware   The Coveted Mirror
+1986  Level 9     Snowball
+1986  Level 9     Return to Eden
+1986  Level 9     The Worm in Paradise
+1986  Telarium    Nine Princes in Amber
+1987  Datasoft    Dark Lord
+1987  Polarware   Talisman
