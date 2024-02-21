@@ -1,0 +1,42 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+;------------------------------------------------------------------------------
+; Has64K
+; Checks whether computer has at least 64K
+; according to ProDOS MACHID
+;
+; in:    none
+; out:   C clear if 64K detected
+;        C set if 64K not detected
+;        A clobbered
+;------------------------------------------------------------------------------
+Has64K
+         lda   PRODOS_MACHID
+         and   #%00100000
+         cmp   #%00100000
+         bne   @no
+         clc
+         !byte $A9
+@no      sec
+         rts
+
+;------------------------------------------------------------------------------
+; Has128K
+; Checks whether computer has functioning auxiliary memory (128K)
+;
+; in:    none
+; out:   C set if 128K detected
+;        C clear if 128K not detected
+;        A clobbered
+;------------------------------------------------------------------------------
+Has128K
+         lda   PRODOS_MACHID
+         and   #%00110000
+         cmp   #%00110000
+         bne   @no
+         clc
+         !byte $A9
+@no      sec
+         rts

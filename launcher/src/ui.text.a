@@ -1,0 +1,66 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+.txtbaselo
+         !byte $00,$80,$00,$80,$00,$80,$00,$80
+         !byte $28,$A8,$28,$A8,$28,$A8,$28,$A8
+         !byte $50,$D0,$50,$D0,$50,$D0,$50,$D0
+.txtbasehi
+         !byte $04,$04,$05,$05,$06,$06,$07,$07
+         !byte $04,$04,$05,$05,$06,$06,$07,$07
+         !byte $04,$04,$05,$05,$06,$06,$07,$07
+
+;------------------------------------------------------------------------------
+; DrawTextOffscreen/DrawMoreTextOffscreen
+; draw one or more lines of text onto the text screen that is
+; not currently showing
+;
+; in     A/Y -> text buffer (consecutive strings of $28 bytes each)
+;        |startLine|=starting text row ($00..$17)
+;        |lineCount|=number of lines to draw
+; out:   all registers/flags clobbered
+;        |lineCount|=0
+;------------------------------------------------------------------------------
+DrawTextOffscreen
+         +STAY input
+DrawMoreTextOffscreen                ; alternate entry point if you
+                                     ; don't need to change input pointer
+         jsr   GetOffscreenAddress
+         lsr
+         lsr
+         lsr
+         eor   #$04
+         sta   .xpage+1
+         ldx   startLine
+.outer   lda   .txtbaselo, x
+         sta   output
+         lda   .txtbasehi, x
+.xpage   eor   #SELF_MODIFIED_BYTE
+         sta   output+1
+         ldy   #$27
+.inner   lda   (input), y
+         cmp   #$E1
+         bcc   +
+         and   CharMask
++        bit   INVFLG
+         bvs   +
+         and   #$7F                  ; calculate proper inverse for altcharset
+         cmp   #$41                  ; lowercase gets AND #$7F but
+         bcc   +                     ; uppercase gets AND #$3F
+         cmp   #$5A
+         bcs   +
+         and   #$3F
++        sta   (output), y
+         dey
+         bpl   .inner
+         lda   input
+         clc
+         adc   #$28
+         bcc   +
+         inc   input+1
++        sta   input
+         inx
+         dec   lineCount
+         bne   .outer
+         rts

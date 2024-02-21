@@ -1,0 +1,85 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+kBrowseKeys                          ; must keep in sync with kBrowseKeyHandlers arrays
+         !byte $8D                   ; Return
+         !byte $8B                   ; up arrow
+         !byte $88                   ; left arrow
+         !byte $8A                   ; down arrow
+         !byte $95                   ; right arrow
+         !byte $9B                   ; Esc
+         !byte $00                   ; terminates key list, corresponds to default handler
+
+kBrowseKeyHandlers
+         !word BrowseEventReturn
+         !word BrowseEventUp
+         !word BrowseEventUp
+         !word BrowseEventDown
+         !word BrowseEventDown
+         !word BrowseEventEsc
+         !word BrowseEventDefault
+
+DrawBrowse
+         ldx   BrowseTitleIndex
+         jsr   LoadTitleOffscreen
+         lda   #$14
+         sta   startLine
+         lda   #$01
+         sta   lineCount
+         ; calculate starting point within txtBrowse
+         +LDADDR txtBrowse
+         ldx   BrowseTitleIndex
+-        dex
+         beq   @done
+         clc
+         adc   #$28
+         bcc   -
+         iny
+         bne   -
+@done    jsr   DrawTextOffscreen
+         inc   startLine             ; -> $15
+         inc   lineCount             ; -> $01 because DrawTextOffscreen decrements it to 0
+         jsr   ROM_INVERSE
+         jsr   DrawMoreTextOffscreen
+         jsr   ROM_NORMAL
+         inc   startLine             ; -> $16
+         lda   #$02
+         sta   lineCount
+         jsr   DrawMoreTextOffscreen
+         jmp   ShowOtherPage
+
+BrowseEventReturn
+         lda   BrowseTitleIndex
+         sta   TitleIndex
+         lda   #kScreenGameDetails
+         jmp   GoForward
+
+BrowseEventUp
+         ldx   BrowseTitleIndex
+         dex
+         bne   +
+         ldx   GameCount
++        stx   BrowseTitleIndex
+         sec
+         ldx   #kContinue
+         rts
+
+BrowseEventDown
+         ldx   BrowseTitleIndex
+         cpx   GameCount
+         bne   +
+         ldx   #$00
++        inx
+         stx   BrowseTitleIndex
+         sec
+         ldx   #kContinue
+         rts
+
+BrowseEventEsc
+         jmp   GoBack
+
+BrowseEventDefault
+         clc
+         ldx   #kContinue
+         rts

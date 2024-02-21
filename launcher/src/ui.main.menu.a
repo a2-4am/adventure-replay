@@ -1,0 +1,66 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+kMainMenuKeys                        ; must keep in sync with kMainMenuKeyHandlers arrays
+         !byte $D3                   ; S
+         !byte $F3                   ; s
+         !byte $C2                   ; B
+         !byte $E2                   ; b
+         !byte $CF                   ; O
+         !byte $EF                   ; o
+         !byte $C1                   ; A
+         !byte $E1                   ; a
+         !byte $C8                   ; H
+         !byte $E8                   ; h
+         !byte $D1                   ; Q
+         !byte $F1                   ; q
+         !byte $00                   ; terminates key list, corresponds to default handler
+
+kMainMenuKeyHandlers
+         !word MainMenuEventS
+         !word MainMenuEventS
+         !word MainMenuEventB
+         !word MainMenuEventB
+         !word MainMenuEventO
+         !word MainMenuEventO
+         !word MainMenuEventA
+         !word MainMenuEventA
+         !word MainMenuEventH
+         !word MainMenuEventH
+         !word MainMenuEventQ
+         !word MainMenuEventQ
+         !word MainMenuEventDefault
+
+DrawMainMenu
+         ldx   #$00
+         jsr   LoadTitleOffscreen
+         lda   #$14
+         sta   startLine
+         lda   #$04
+         sta   lineCount
+         +LDADDR txtMainMenu
+         jsr   DrawTextOffscreen
+         jmp   ShowOtherPage
+
+MainMenuEventB
+         lda   #kScreenBrowse
+         +HIDE_NEXT_2_BYTES
+         ; /!\ execution falls through here to MainMenuEventA
+MainMenuEventA
+         lda   #kScreenAbout
+         jmp   GoForward
+
+MainMenuEventQ
+         jmp   GoBack
+
+MainMenuEventO
+         ;TODO
+MainMenuEventS
+         ;TODO
+MainMenuEventH
+         ;TODO
+MainMenuEventDefault
+         clc
+         ldx   #kContinue
+         rts

@@ -1,0 +1,104 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+; glue code to launch games
+;
+; Public functions
+; - Launch
+;
+
+LAUNCH_STAGE_2            = $0300
+
+;------------------------------------------------------------------------------
+; Launch
+; load game and jump to it
+;
+; in:    X = index of game to launch
+;        A/Y -> parameter to pass to game loader (or Y=0 if none)
+; out:   exits via new game code loaded at $2000, or crashes trying
+;------------------------------------------------------------------------------
+Launch
+         stx   @index
+         +STAY input
+         tya
+         beq   @noParameter
+         ldy   #$00
+         lda   (input), y
+         tay
+-        lda   (input), y
+         sta   .move_launch_start + .launch_parameter - LAUNCH_STAGE_2, y
+         dey
+         bpl   -
+@noParameter
+
+         jsr   ROM_TEXT
+         jsr   ROM_HOME
+         sta   PRIMARYCHARSET
+         jsr   CloseAllFiles
+         jsr   InstallBye
+
+         +LDADDR sGameDirectory
+         jsr   .SetPrefix
+
+@index=*+1
+         ldx   #SELF_MODIFIED_BYTE
+         lda   VolNamesLo, x
+         ldy   VolNamesHi, x
+         jsr   .SetPrefix
+
+         +SHORT_COPY .move_launch_start, .move_launch_end, LAUNCH_STAGE_2
+         jmp   LAUNCH_STAGE_2
+
+.SetPrefix
+         +STAY .parm_setprefix+1
+         jsr   PRODOS_MLI
+         !byte CMD_SETPREFIX
+         !word .parm_setprefix
+         rts
+
+.parm_setprefix
+         !byte 1
+         !word SELF_MODIFIED_WORD
+
+.move_launch_start
+!pseudopc LAUNCH_STAGE_2 {
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word .parm_launch_open
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word .parm_launch_read
+         jsr   PRODOS_MLI
+         !byte CMD_CLOSE
+         !word .parm_launch_close
+
+         ldx   #$40
+-        lda   .launch_parameter, x
+         sta   $2006, x
+         dex
+         bpl   -
+         txs
+         jmp   $2000
+
+.parm_launch_open
+         !byte 3
+         !word .launch_filename
+         !word PRODOS_BUFFER
+         !byte 0
+.launch_filename
+         !byte 13
+         !raw  "LOADER.SYSTEM"
+.parm_launch_read
+         !byte 4
+         !byte 1
+         !word $2000
+         !word $FFFF
+         !word 0
+.parm_launch_close
+         !byte 1
+         !byte 0
+
+.launch_parameter
+         !fill $41
+}
+.move_launch_end

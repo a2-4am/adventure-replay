@@ -1,4 +1,4 @@
-subtargets := \
+SOURCES := \
 	Masquerade \
 	Fraktured-Faebles \
 	Death-in-the-Caribbean \
@@ -20,19 +20,18 @@ subtargets := \
 CADIUS=cadius
 
 BUILDDIR=build
-SOURCES=
-EXE=
-RES=$(wildcard res/*)
+EXE=$(BUILDDIR)/LAUNCHER.SYSTEM\#FF2000
+TITLES=$(BUILDDIR)/TITLES\#060000
 DISKVOLUME=ADVENTUREREPLAY
 BUILDDISK=$(BUILDDIR)/$(DISKVOLUME).hdv
 targets := \
 	$(EXE) \
-	$(RES)
+	$(TITLES)
 
-.PHONY: all $(subtargets)
+.PHONY: $(EXE) $(SOURCES)
 
-$(BUILDDISK): $(targets) | $(subtargets) $(BUILDDIR)
-	@for dir in $(subtargets); do \
+$(BUILDDISK): $(targets) | $(SOURCES) $(BUILDDIR)
+	@for dir in $(SOURCES); do \
 	  $(CADIUS) EXTRACTVOLUME $$dir/build/*.po "$(BUILDDIR)/X/"; \
 	done
 	rm -f $(BUILDDIR)/X/**/PRODOS* $(BUILDDIR)/X/**/_FileInformation.txt
@@ -45,20 +44,20 @@ $(BUILDDISK): $(targets) | $(subtargets) $(BUILDDIR)
         done
 	@touch "$@"
 
-# Build all subtargets
-$(subtargets):
+# Build all games
+$(SOURCES):
 	cd "$@" && make
 
-$(EXE): $(SOURCES) | $(BUILDDIR)
-#	$(ACME) -r build/loader.lst src/loader.a
-#	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
-#	@touch "$@"
+$(EXE): $(BUILDDIR)
+	cd launcher/ && make
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
 
-$(RES): $(BUILDDIR)
-	for f in "$@"/*; do \
-	  $(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/$(notdir $@)" "$$f" -C; \
+$(TITLES): $(BUILDDIR)
+	cat res/TITLE.HGR/REPLAY\#062000 > "$@" && \
+	for f in $$(awk -F',' '!/^$$|^#|^\[/ { print $$1 }' < res/GAMES.CONF); do \
+		cat res/TITLE.HGR/"$$f"\#062000 >> "$@"; \
 	done
-	@touch "$@"
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@" -C
 
 mount: $(BUILDDISK)
 	@open "$(BUILDDISK)"
@@ -66,13 +65,13 @@ mount: $(BUILDDISK)
 # Clean all temporary/target files
 clean:
 	rm -rf "$(BUILDDIR)"
-	@for dir in $(subtargets); do \
+	@for dir in $(SOURCES); do \
 	  $(MAKE) -C $$dir clean; \
 	done
 
 $(BUILDDIR):
 	mkdir -p "$@"/X
-	$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 32MB -C
+	cp res/blank.hdv "$(BUILDDISK)"
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" common/res/PRODOS#FF2000 -C
 
-all: clean $(subtargets)
+launcher: $(EXE)

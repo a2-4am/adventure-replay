@@ -1,0 +1,21 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+kAboutKeys
+         !byte 0
+
+kAboutKeyHandlers
+         !word AboutEventDefault
+
+DrawAbout
+         lda   #$00
+         sta   startLine
+         lda   #$18
+         sta   lineCount
+         +LDADDR txtAbout
+         jsr   DrawTextOffscreen
+         jmp   MixedFizzle
+
+AboutEventDefault
+         jmp   GoBack

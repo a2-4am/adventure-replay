@@ -1,0 +1,48 @@
+;License:MIT
+;(c) 2024 by 4am
+;
+; functions for managing which HGR page is showing, and doing things on the other one
+;
+; Public functions
+; - GetOffscreenAddress
+; - ShowOtherPage
+;
+
+;------------------------------------------------------------------------------
+; GetOffscreenAddress
+; get high byte of HGR page that is not currently showing
+;
+; in:    none
+; out:   A = high byte of offscreen HGR page (#$20 or #$40)
+;        preserves X/Y
+;------------------------------------------------------------------------------
+GetOffscreenAddress
+         lda   #$40
+.OffscreenPage = * + 1
+         bne   +                     ; SMC
+                                     ; 0 = currently showing HGR page 2
+                                     ;     (so offscreen is page 1 @ $2000)
+                                     ; 1 = currently showing HGR page 1
+                                     ;     (so offscreen is page 2 @ $4000)
++        lsr
+         rts
+
+;------------------------------------------------------------------------------
+; ShowOtherPage
+; switch to the HGR page that is not currently showing
+; (also unconditionally enable graphics mode)
+;
+; in:    none
+; out:   A = new value of OffscreenPage
+;        preserves X/Y
+;------------------------------------------------------------------------------
+ShowOtherPage
+         bit   GFXMODE
+         lda   .OffscreenPage
+         eor   #$01
+         sta   .OffscreenPage
+         bne   +
+         bit   PAGE2                 ; show page 2
+         rts
++        bit   PAGE1                 ; show page 1
+         rts

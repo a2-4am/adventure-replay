@@ -6,6 +6,9 @@
 
          !src  "../common/src/constants.a"
 
+first_zp                  = $40
+last_zp                   = $4F
+
 SwapZP
          pha
          txa

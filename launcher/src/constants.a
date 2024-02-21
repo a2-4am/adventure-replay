@@ -1,0 +1,18 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+RELOC                     = $6000    ; start of relocated program space
+PRODOS_BUFFER             = $1C00
+
+; AND masks for MachineStatus
+HAS_128K                  = %10000000
+IS_IIGS                   = %01000000
+
+; zero page addresses
+LastKeyPressed            = $F0      ; byte, used everywhere, not persisted
+gfxdst                    = $FA      ; word, used by MixedFizzle, not persisted
+startLine                 = $FA      ; byte, used by DrawText, not persisted
+lineCount                 = $FB      ; byte, used by DrawText, not persisted
+input                     = $FC      ; word, used everywhere, not persisted
+output                    = $FE      ; word, used everywhere, not persisted

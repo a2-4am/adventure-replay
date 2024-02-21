@@ -1,0 +1,86 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+GameDifficulty
+         !byte 0,2,3,4,2,4,3,3,3,2,5,4,4,3,5
+
+GameLength
+         !byte 0,1,4,3,4,1,2,3,3,3,4,3,2,3,5
+
+sFullName1
+         !byte 13
+         !text "Mystery House"
+sFullName2
+         !byte 14
+         !text "Cranston Manor"
+sFullName3
+         !byte 22
+         !text "Adventureland v2.1-416"
+sFullName4
+         !byte 25
+         !text "Pirate Adventure v2.1-408"
+sFullName5
+         !byte 27
+         !text "Mission Impossible v2.1-306"
+sFullName6
+         !byte 22
+         !text "Voodoo Castle v2.1-119"
+sFullName7
+         !byte 18
+         !text "The Count v2.1-115"
+sFullName8
+         !byte 24
+         !text "Strange Odyssey v2.1-119"
+sFullName9
+         !byte 22
+         !text "Death in the Caribbean"
+sFullName10
+         !byte 10
+         !text "Masquerade"
+sFullName11
+         !byte 38
+         !text "Sorcerer of Claymorgue Castle v2.2-122"
+sFullName12
+         !byte 17
+         !text "FrakTured FaebLes"
+sFullName13
+         !byte 12
+         !text "Transylvania"
+sFullName14
+         !byte 18
+         !text "The Coveted Mirror"
+
+FullNamesLo
+         !byte 0
+         !byte <sFullName1
+         !byte <sFullName2
+         !byte <sFullName3
+         !byte <sFullName4
+         !byte <sFullName5
+         !byte <sFullName6
+         !byte <sFullName7
+         !byte <sFullName8
+         !byte <sFullName9
+         !byte <sFullName10
+         !byte <sFullName11
+         !byte <sFullName12
+         !byte <sFullName13
+         !byte <sFullName14
+FullNamesHi
+         !byte 0
+         !byte >sFullName1
+         !byte >sFullName2
+         !byte >sFullName3
+         !byte >sFullName4
+         !byte >sFullName5
+         !byte >sFullName6
+         !byte >sFullName7
+         !byte >sFullName8
+         !byte >sFullName9
+         !byte >sFullName10
+         !byte >sFullName11
+         !byte >sFullName12
+         !byte >sFullName13
+         !byte >sFullName14
+

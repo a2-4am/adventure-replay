@@ -1,0 +1,120 @@
+;license:MIT
+;(c) 2023-2024 by 4am/qkumba
+;
+
+RELOC_BYE                 = $1000    ; required by ProDOS
+
+InstallBye
+         +READ_RAM2_WRITE_RAM2
+         lda   $d100
+         cmp   #$D8                  ; CLD opcode
+         bne   @noBye
+         lda   #$d1                  ; copy existing Bye to $D400..$D6FF
+         sta   input+1
+         lda   #$d4
+         sta   output+1
+         ldy   #$00
+         sty   input
+         sty   output
+         ldx   #$03
+-        lda   (input), y
+         sta   (output), y
+         iny
+         bne   -
+         inc   input+1
+         inc   output+1
+         dex
+         bne   -
+@noBye
+         ldy   #(persisted_globals_end - persisted_globals_start)
+-        lda   persisted_globals_start-1, y
+         sta   move_bye_start + .globals_copy - RELOC_BYE -1, y
+         dey
+         bne   -
+         ;Y=0
+-        lda   move_bye_start, y     ; install our Bye program to $D100
+         sta   $d100, y              ; can be up to $300 bytes but we know
+         iny                         ; ours is less than $100
+         bne   -
+         +READ_ROM_NO_WRITE
+         rts
+
+move_bye_start
+!pseudopc RELOC_BYE {
+         cld                         ; magic byte (required by ProDOS)
+         ; unique signature so we can identify if our Bye is already installed
+         clc
+         bcc   +
+         !byte $D3,$C1,$CE,$A0,$C9,$CE,$C3,$AE
++
+         ; no touch
+         +READ_ROM_NO_WRITE
+         sta   CLR80VID
+         sta   STOREOFF
+         jsr   ROM_PR0
+         jsr   ROM_IN0
+         sta   $4fb
+         jsr   ROM_TEXT
+         jsr   ROM_NORMAL
+         jsr   ROM_HOME
+         ldx   #$df
+         lda   #$cf
+-        sta   $be79, x
+         lda   #0
+         txs
+         inx
+         bne     -
+         inc   $bf6f
+
+         ; restore ProDOS prefix (saved during InstallBye)
+         jsr   PRODOS_MLI
+         !byte CMD_SETPREFIX
+         !word .parm_bye_setprefix
+
+         ; reload application from disk
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word .parm_bye_open
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word .parm_bye_read
+         jsr   PRODOS_MLI
+         !byte CMD_CLOSE
+         !word .parm_bye_close
+
+         ; restore application globals (saved during InstallBye)
+         ldy   #(persisted_globals_end - persisted_globals_start)
+-        lda   .globals_copy-1, y
+         sta   FirstMover + persisted_globals_start - RELOC -1, y
+         dey
+         bne   -
+
+         ; exit via launcher's init (skip initializing ProDOS prefix because
+         ; we just set it, which is sufficient)
+         jmp   OneTimeInit
+
+.parm_bye_open
+         !byte 3
+         !word .bye_filename
+         !word $1300
+         !byte 0
+.bye_filename
+         !byte 15
+         !raw  "LAUNCHER.SYSTEM"
+.parm_bye_read
+         !byte 4
+         !byte 1
+         !word $2000
+         !word $FFFF
+         !word 0
+.parm_bye_close
+         !byte 1
+         !byte 0
+.parm_bye_setprefix
+         !byte 1
+         !word .prefix_copy
+
+.globals_copy
+.prefix_copy                         ; saved prefix is first, then other persisted globals
+         !fill (persisted_globals_end - persisted_globals_start)
+}

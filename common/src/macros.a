@@ -37,6 +37,49 @@
          +STA_16 .addr+1, .dest
 }
 
+; use BIT to swallow the following 1-byte opcode
+!macro   HIDE_NEXT_BYTE {
+         !byte $24
+}
+
+; use BIT to swallow the following 2-byte opcode
+!macro   HIDE_NEXT_2_BYTES {
+         !byte $2C
+}
+
+; various language card configurations
+!macro   READ_RAM1_NO_WRITE {
+         sta   $C088
+}
+
+!macro   READ_RAM1_WRITE_RAM1 {
+         bit   $C08B
+         bit   $C08B
+}
+
+!macro   READ_RAM2_NO_WRITE {
+         sta   $C080
+}
+
+!macro   READ_RAM2_WRITE_RAM2 {
+         bit   $C083
+         bit   $C083
+}
+
+!macro   READ_ROM_WRITE_RAM1 {
+         bit   $C089
+         bit   $C089
+}
+
+!macro   READ_ROM_WRITE_RAM2 {
+         bit   $C081
+         bit   $C081
+}
+
+!macro   READ_ROM_NO_WRITE {
+         sta   $C082
+}
+
 ; exits with Z=1 if machine can display lowercase
 ; A clobbered
 !macro HAS_LOWERCASE {

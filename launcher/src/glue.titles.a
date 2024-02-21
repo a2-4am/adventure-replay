@@ -1,0 +1,104 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+; routines for loading HGR title screens
+;
+; Public functions
+; - OpenTitlesFile
+; - LoadTitleOffscreen
+;
+
+.currentTitlesOffsetHi
+         !byte 0                     ; compare to .parm_titles_seek_hi
+.currentTitlesOffsetVeryHi
+         !byte 0                     ; compare to .parm_titles_seek_very_hi
+
+.parm_titles_open
+         !byte 3
+         !word .parm_titles_filename
+         !word PRODOS_BUFFER
+         !byte 0
+.parm_titles_filename
+         !byte 6
+         !text "TITLES"
+
+.parm_titles_seek
+         !byte 2
+         !byte 1                     ; refnum (always 1)
+         !byte 0                     ; seek offset lo (always 0)
+.parm_titles_seek_hi
+         !byte 0
+.parm_titles_seek_very_hi
+         !byte 0
+
+.parm_titles_read
+         !byte 4
+         !byte 1
+         !byte 0
+.parm_titles_read_hi
+         !byte $20                   ; may be changed in ReadTitle
+         !word $2000
+         !word 0
+
+;------------------------------------------------------------------------------
+; OpenTitlesFile
+; opens TITLES file that contains HGR graphics for game title screens
+;
+; in:    TITLES file must not already be open
+; out:   none
+;------------------------------------------------------------------------------
+OpenTitlesFile
+         lda   #$00
+         sta   .currentTitlesOffsetHi
+         sta   .currentTitlesOffsetVeryHi
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word .parm_titles_open
+         rts
+
+;------------------------------------------------------------------------------
+; LoadTitleOffscreen
+; load HGR title screen by index into offscreen graphics page
+;   (tracked by GetOffscreenAddress)
+;
+; in:    X=title index (0=main AR title, 1+ for individual games)
+;        TITLES file is already open
+; out:   none
+;------------------------------------------------------------------------------
+LoadTitleOffscreen
+         jsr   GetOffscreenAddress
+         sta   .parm_titles_read_hi
+         lda   #$00
+         sta   .parm_titles_seek_very_hi
+         txa
+         asl
+         rol   .parm_titles_seek_very_hi
+         asl
+         rol   .parm_titles_seek_very_hi
+         asl
+         rol   .parm_titles_seek_very_hi
+         asl
+         rol   .parm_titles_seek_very_hi
+         asl
+         rol   .parm_titles_seek_very_hi
+         sta   .parm_titles_seek_hi
+         cmp   .currentTitlesOffsetHi
+         bne   @seek
+         lda   .parm_titles_seek_very_hi
+         cmp   .currentTitlesOffsetVeryHi
+         beq   @skipSeek
+@seek
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word .parm_titles_seek
+@skipSeek
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word .parm_titles_read
+         lda   .parm_titles_seek_hi
+         clc
+         adc   #$20
+         sta   .currentTitlesOffsetHi
+         bcc   +
+         inc   .currentTitlesOffsetVeryHi
++        rts

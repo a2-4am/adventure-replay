@@ -1,0 +1,106 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+; routines to manage which screen is showing, and the stack of screens
+; the user has gone through (and could go 'back' through)
+;
+; Public functions
+; - EventLoop
+; - GoForward
+; - GoBack
+;
+
+; event IDs (returned by key handlers)
+kContinue                 = 0
+kBack                     = 1
+
+; screen IDs (stored in ScreenStack)
+kScreenMainMenu           = 0
+kScreenAbout              = 1
+kScreenBrowse             = 2
+kScreenGameDetails        = 3
+
+ScreenDraw                           ; must keep in sync with screen IDs
+         !word DrawMainMenu
+         !word DrawAbout
+         !word DrawBrowse
+         !word DrawGameDetails
+
+ScreenKeys                           ; must keep in sync with screen IDs
+         !word kMainMenuKeys
+         !word kAboutKeys
+         !word kBrowseKeys
+         !word kGameDetailsKeys
+
+ScreenHandlers                       ; must keep in sync with screen IDs
+         !word kMainMenuKeyHandlers
+         !word kAboutKeyHandlers
+         !word kBrowseKeyHandlers
+         !word kGameDetailsKeyHandlers
+
+EventLoop
+; in:    C=1 if full redraw is required
+;        C=0 if no redraw is required
+; out:   none
+         bcc   @skipRedraw
+         ldx   ScreenStackPointer
+         lda   ScreenStack, x
+         asl
+         tax
+         lda   ScreenDraw, x
+         ldy   ScreenDraw+1, x
+         +STAY @redraw+1
+@redraw  jsr   SELF_MODIFIED_WORD
+@skipRedraw
+         ldx   ScreenStackPointer
+         lda   ScreenStack, x
+         asl
+         tax
+         lda   ScreenKeys, x
+         ldy   ScreenKeys+1, x
+         +STAY @keys+1
+         lda   ScreenHandlers, x
+         ldy   ScreenHandlers+1, x
+         +STAY input
+         bit   CLEARKBD
+@inputLoop
+         lda   KBD
+         bpl   @inputLoop
+         bit   CLEARKBD
+         sta   LastKeyPressed
+         ldx   #0
+@keys    ldy   SELF_MODIFIED_WORD, x
+         beq   @dispatch
+         cpy   LastKeyPressed
+         beq   @dispatch
+         inx
+         bne   @keys                 ; always branches
+@dispatch
+         txa
+         asl
+         tay
+         lda   (input), y
+         sta   @j+1
+         iny
+         lda   (input), y
+         sta   @j+2
+@j       jsr   SELF_MODIFIED_WORD
+         beq   EventLoop
+         rts
+
+GoForward
+; in:    A=new screen ID
+         inc   ScreenStackPointer
+         ldx   ScreenStackPointer
+         sta   ScreenStack, x
+RedrawAndContinue
+         sec
+         ldx   #kContinue
+         rts
+
+GoBack
+         dec   ScreenStackPointer
+         bpl   RedrawAndContinue
+         ldx   #kBack
+         rts
+

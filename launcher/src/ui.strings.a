@@ -1,0 +1,65 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+txtMainMenu    ; 4 lines of 40 characters
+         !text "Welcome to Adventure Replay!    14 games"
+         !text "                                        "
+         !text "    [ ]earch    [B]rowse    [ ]ptions   "
+         !text "    [A]bout     [ ]elp      [Q]uit      "
+
+txtAbout       ; 24 lines of 40 characters
+         !text "            Adventure Replay            "
+         !text "         GET KEY. UNLOCK STORY.         "
+         !text "                                        "
+         !text "                   ~                    "
+         !text "                                        "
+         !text " revision 1.0 / serial number 20240219  "
+         !text "                                        "
+         !text "                   ~                    "
+         !text "                                        "
+         !text "design & interface . . . . . . . . . 4am"
+         !text "                                        "
+         !text "help & moral support . . . . . . .qkumba"
+         !text "                                        "
+         !text "testing & patches. . . . . . . . . . . ."
+         !text "                                        "
+         !text "      your name here? let's see...      "
+         !text "      nope, it isn't.                   "
+         !text "                                        "
+         !text "                                        "
+         !text "                                        "
+         !text "                                        "
+         !text "                   ~                    "
+         !text "                                        "
+         !text "  archive.org/details/AdventureReplay   "
+
+txtBrowse
+         !text "                                        "
+         !text "1980  On-Line     Mystery House         "
+         !text "1981  On-Line     Cranston Manor        "
+         !text "1982  Adv Intl    Adventureland         "
+         !text "1982  Adv Intl    Pirate Adventure      "
+         !text "1982  Adv Intl    Mission Impossible    "
+         !text "1982  Adv Intl    Voodoo Castle         "
+         !text "1982  Adv Intl    The Count             "
+         !text "1982  Adv Intl    Strange Odyssey       "
+         !text "1983  Micro-Fun   Death in the Caribbean"
+         !text "1983  Phoenix     Masquerade            "
+         !text "1984  Adv Intl    Claymorgue Castle     "
+         !text "1985  AmerEagle   FrakTured FaebLes     "
+         !text "1985  Polarware   Transylvania          "
+         !text "1986  Polarware   The Coveted Mirror    "
+         !text "                                        "
+         !text "                                        "
+
+txtGameDetails ; 4 lines of 40 characters
+         !text "<filled in at runtime>                  "
+         !text "Difficulty: "
+txtGameDifficulty
+         !text "xxxxx          Length: "
+txtGameLength
+         !text "xxxxx"
+txtGameMenu
+         !text "                                        "
+         !text "    [P]lay      [D]emo      [ ]bout     "

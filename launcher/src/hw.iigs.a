@@ -1,0 +1,28 @@
+;license:MIT
+;(c) 2018-2024 by 4am
+;
+
+;------------------------------------------------------------------------------
+; IsIIgs
+; Checks whether computer is a IIgs based on ROM bytes and calls.
+; Do not attempt to optimize this routine or replace it with something
+; clever, or you will certainly end up with false positives like
+; '8-bit //e with 65816 accelerator card' which is a thing that exists
+; but is not a IIgs.
+;
+; in:    ROM banked in
+; out:   C set if IIgs detected          /!\ this might be backwards
+;        C clear if IIgs not detected        from your expectations
+;        A clobbered
+;------------------------------------------------------------------------------
+IsIIgs
+         lda   ROM_MACHINEID
+         cmp   #$06
+         bne   @NotGS
+         sec
+         jsr   $FE1F
+         bcs   @NotGS
+         sec
+         +HIDE_NEXT_BYTE
+@NotGS   clc
+         rts

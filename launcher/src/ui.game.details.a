@@ -1,0 +1,109 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+kGameDetailsKeys                     ; must keep in sync with kGameDetailsKeyHandlers arrays
+         !byte $8D                   ; Return
+         !byte $D0                   ; P
+         !byte $F0                   ; p
+         !byte $C4                   ; D
+         !byte $E4                   ; d
+         !byte $C1                   ; A
+         !byte $E1                   ; a
+         !byte $9B                   ; Esc
+         !byte $00                   ; terminates key list, corresponds to default handler
+
+kGameDetailsKeyHandlers
+         !word GameDetailsEventP
+         !word GameDetailsEventP
+         !word GameDetailsEventP
+         !word GameDetailsEventD
+         !word GameDetailsEventD
+         !word GameDetailsEventA
+         !word GameDetailsEventA
+         !word GameDetailsEventEsc
+         !word GameDetailsEventDefault
+
+DrawGameDetails
+         ; populate full game name
+         ldx   TitleIndex
+         lda   FullNamesLo, x
+         ldy   FullNamesHi, x
+         +STAY input
+         +LDADDR txtGameDetails
+         +STAY output
+         lda   #$A0
+         ldy   #$28
+@clearloop
+         dey
+         sta   (output), y           ; clear line
+         bne   @clearloop
+         ;Y=0
+         lda   (input), y            ; length of full game name
+         tay
+@copyloop
+         lda   (input), y
+         dey
+         sta   (output), y
+         bne   @copyloop
+
+         ; populate game difficulty and length
+         ldx   TitleIndex
+         lda   GameDifficulty, x
+         tax
+         +LDADDR txtGameDifficulty
+         jsr   Populate5Star
+         ldx   TitleIndex
+         lda   GameLength, x
+         tax
+         +LDADDR txtGameLength
+         jsr   Populate5Star
+
+         ; now draw everything
+         ldx   TitleIndex
+         jsr   LoadTitleOffscreen
+         ldx   #$14
+         stx   startLine
+         ldx   #$04
+         stx   lineCount
+         +LDADDR txtGameDetails
+         jsr   DrawTextOffscreen
+         jmp   ShowOtherPage
+
+Populate5Star
+; in:    X=number of stars
+;        A/Y -> 5-character text buffer (no prefix)
+         inx
+         stx   .stars
+         +STAY output
+         ldy   #5
+@starloop
+.stars=*+1
+         cpy   #SELF_MODIFIED_BYTE
+         bcc   +
+         lda   OpenStar
+         bne   ++                    ; always branches
++        lda   ClosedStar
+++       dey
+         sta   (output), y
+         bne   @starloop
+         rts
+
+GameDetailsEventD
+         +LDADDR sDemo
+         +HIDE_NEXT_2_BYTES
+         ; /!\ execution falls through here to GameDetailsEventP
+GameDetailsEventP
+         ldy   #0
+         ldx   TitleIndex
+         jmp   Launch
+
+GameDetailsEventA
+         ;TODO
+GameDetailsEventDefault
+         clc
+         ldx   #kContinue
+         rts
+
+GameDetailsEventEsc
+         jmp   GoBack

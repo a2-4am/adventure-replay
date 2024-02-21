@@ -27,7 +27,6 @@ op_prefix
          !word parm_prefix
          ldx   PREFIX_BUFFER
          bne   clear_memory_map
-
          ; get boot volume name
          lda   PRODOS_BOOT_UNIT
          sta   parm_online_unit

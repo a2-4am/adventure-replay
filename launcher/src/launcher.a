@@ -1,0 +1,67 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+!cpu 6502
+!to "../build/LAUNCHER.SYSTEM#FF2000",plain
+!ct "src/lcase.ct"
+*=$2000
+
+         !src  "../common/src/constants.a"
+         !src  "src/constants.a"
+         !src  "../common/src/macros.a"
+         !src  "../common/src/loader.init.a" ; initializes ProDOS and exits via Stage1
+Stage1
+         !src  "src/launcher.init.a" ; relocates code and exits via Start
+
+FirstMover
+PREFIX_BUFFER
+!pseudopc RELOC {
+persisted_globals_start
+         !fill $40                   ; for PREFIX_BUFFER (populated before relocation)
+BrowseTitleIndex
+         !byte 1
+TitleIndex
+         !byte 1
+ScreenStack
+         !fill 4
+ScreenStackPointer
+         !byte 0
+persisted_globals_end
+
+MachineStatus
+         !byte $00
+CharMask
+         !byte $FF
+ClosedStar
+         !byte $40                   ; closed-apple in altcharset
+OpenStar
+         !byte $41                   ; open-apple in altcharset
+GameCount
+         !byte 14
+
+         !src  "src/glue.titles.a"
+         !src  "src/glue.launch.a"
+         !src  "src/glue.bye.a"
+         !src  "src/db.paths.a"
+         !src  "src/db.games.a"
+         !src  "src/ui.strings.a"
+         !src  "src/ui.offscreen.a"
+         !src  "src/ui.text.a"
+         !src  "src/ui.screens.a"
+         !src  "src/ui.main.menu.a"
+         !src  "src/ui.about.a"
+         !src  "src/ui.browse.a"
+         !src  "src/ui.game.details.a"
+         !src  "src/fx.mixed.fizzle.a"
+
+Start
+         jsr   OpenTitlesFile
+         sec
+         jsr   EventLoop
+         jsr   CloseAllFiles
+         sta   PRIMARYCHARSET
+         ; /!\ execution falls through here to QuitToProDOS
+         !src  "../common/src/shared.quit.a"
+         !src  "../common/src/shared.closeallfiles.a"
+}
+LastMover

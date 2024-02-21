@@ -1,0 +1,85 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+;------------------------------------------------------------------------------
+; MixedFizzle
+; blocky fizzle that transitions both graphics and text pages to white
+; then transitions again to full text page that caller has drawn offscreen
+;
+; in:    mixed graphics mode active
+;          (can be page 1 or 2, tracked by GetOffscreenAddress)
+; out:   full text mode active
+;        all registers/flags clobbered
+;------------------------------------------------------------------------------
+MixedFizzle
+         jsr   GetOffscreenAddress
+         eor   #$60
+         sta   @gfxbase
+         lsr
+         lsr
+         lsr
+         sta   @txtbase
+         lda   #0
+         sta   input
+         sta   output
+         sta   gfxdst
+         lda   #$24                  ; BIT opcode
+         sta   @bit
+         jsr   +
+         lda   #$B1                  ; LDA ($$),Y opcode
+         sta   @bit
+         bit   $c051
+         lda   #0
+         jsr   ROM_WAIT
++        ldx   #0
+         ldy   #0
+@loop    txa
+@loop1   eor   #$02                  ; LFSR form 0x0204 with period 1023
+-        dex
+         bne   -
+         tax
+         tya
+         eor   #$04
+-        dey
+         bne   -
+         tay
+@loop2   tya
+         and   #$7F
+         cmp   #$78
+         bcs   @next
+         txa
+@gfxbase=*+1
+         adc   #$20
+         sta   gfxdst+1
+         txa
+@txtbase=*+1
+         adc   #$04
+         sta   output+1
+         eor   #$0C
+         sta   input+1
+         jsr   @copy1
+@next    txa
+         lsr
+         tax
+         tya
+         ror
+         tay
+         bcc   @loop2
+         bne   @loop
+         txa
+         bne   @loop1
+         lda   @gfxbase
+         sta   gfxdst+1
+@copy1   lda   #$20
+@bit     lda   (input), y            ; SMC opcode BIT <-> LDA
+         sta   (output), y
+         jsr   +
++        jsr   ++
+++       jsr   +++
++++      lda   #$7F
+         sta   (gfxdst), y
+         lda   gfxdst+1
+         adc   #$04
+         sta   gfxdst+1
+@exit    rts

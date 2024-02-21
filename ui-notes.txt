@@ -34,6 +34,25 @@ Difficulty: xxxxx          Length: xxxxx
 
 [P]lay     [D]emo     [A]bout     [B]ack
 
+0123456789012345678901234567890123456789
+The Adventures of Buckaroo Banzai vG-397
+Difficulty: xxxxx          Length: xxxxx
+
+    [P]lay      [D]emo      [A]bout
+
+options screen:
+0123456789012345678901234567890123456789
+[T]ext                [G]raphics
+   Mixed case            16-color (DHGR)
+   UPPERCASE             6-color  (HGR)
+ * Not all games support all options. *
+
+0123456789012345678901234567890123456789
+[T]ext. . . . . . Mixed case | UPPERCASE
+[G]raphics. . . . 16-color   | 6-color
+
+ * Not all games support all options. *
+
 browse by title:
 0123456789012345678901234567890123456789
 Sierra: Mystery House              Sort
