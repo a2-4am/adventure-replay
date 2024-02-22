@@ -26,3 +26,41 @@ IsIIgs
          +HIDE_NEXT_BYTE
 @NotGS   clc
          rts
+
+;------------------------------------------------------------------------------
+; SetGSColors
+; set screen border to black and text color to white
+; and a bunch of other voodoo
+;
+; Note that this calling this routine will crash on an 8-bit machine with a
+; VidHD card providing mostly-GS-compatible graphics modes (because in that
+; environment these softswitches are write-only), so don't do that
+;
+; in:    ROM is swapped in
+; out:   none
+;------------------------------------------------------------------------------
+SetGSColors
+         lda   NEWVIDEO
+         and   #%00011111            ; bit 7 = 0 -> IIgs Apple II-compatible video modes
+                                     ; bit 6 = 0 -> IIgs 128K memory map is the same as the Apple IIe
+                                     ; bit 5 = 0 -> IIgs DHGR is color, not monochrome
+                                     ; bits 1-4 reserved (preserved)
+         ora   #%00000001            ; bit 0 = 1 -> disable bank latch
+         sta   NEWVIDEO
+
+         lda   #$F0
+         sta   TBCOLOR               ; white text on black background
+
+         lda   MONOCOLOR
+         and   #%01111111            ; bit 7 = 0 -> color composite mode
+         sta   MONOCOLOR
+
+         lda   CLOCKCTL
+         and   #$F0                  ; bits 4-7 reserved (preserved)
+                                     ; bits 0-3 -> black border
+         sta   CLOCKCTL
+
+         jsr   ROM_TEXT2COPY         ; set up //e-compatible use of text page 2
+         cli                         ; required for TEXT2COPY to function
+         rts
+

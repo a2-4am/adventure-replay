@@ -5,6 +5,8 @@
 RELOC                     = $6000    ; start of relocated program space
 PRODOS_BUFFER             = $1C00
 
+ROM_TEXT2COPY             = $F962    ; turn on alternate display mode on IIgs
+
 ; AND masks for MachineStatus
 HAS_128K                  = %10000000
 IS_IIGS                   = %01000000
