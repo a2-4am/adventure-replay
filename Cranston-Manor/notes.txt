@@ -1,0 +1,2 @@
+TODO game has a built-in "INIT DISK" command which formats a floppy,
+so we should probably disable that
