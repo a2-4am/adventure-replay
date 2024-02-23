@@ -34,6 +34,7 @@ kMainMenuKeyHandlers
 
 DrawMainMenu
          ldx   #$00
+         stx   TitleIndex
          jsr   LoadTitleOffscreen
          lda   #$14
          sta   startLine

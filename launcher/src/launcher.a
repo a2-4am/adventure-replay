@@ -21,7 +21,7 @@ persisted_globals_start
 BrowseTitleIndex
          !byte 1
 TitleIndex
-         !byte 1
+         !byte 0
 ScreenStack
          !fill 4
 ScreenStackPointer
@@ -39,7 +39,8 @@ OpenStar
 GameCount
          !byte 14
 
-         !src  "src/glue.titles.a"
+         !src  "src/glue.gametitles.a"
+         !src  "src/glue.gametext.a"
          !src  "src/glue.launch.a"
          !src  "src/glue.bye.a"
          !src  "src/db.paths.a"

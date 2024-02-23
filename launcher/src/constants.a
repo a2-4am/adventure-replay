@@ -3,7 +3,8 @@
 ;
 
 RELOC                     = $6000    ; start of relocated program space
-PRODOS_BUFFER             = $1C00
+GAMETEXT                  = $0C00    ; $3C0 bytes, not persisted
+PRODOS_BUFFER             = $1C00    ; $400 bytes
 
 ROM_TEXT2COPY             = $F962    ; turn on alternate display mode on IIgs
 

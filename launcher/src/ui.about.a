@@ -9,11 +9,13 @@ kAboutKeyHandlers
          !word AboutEventDefault
 
 DrawAbout
+         ldx   TitleIndex
+         jsr   LoadGametext
          lda   #$00
          sta   startLine
          lda   #$18
          sta   lineCount
-         +LDADDR txtAbout
+         +LDADDR GAMETEXT
          jsr   DrawTextOffscreen
          jmp   MixedFizzle
 

@@ -99,7 +99,9 @@ GameDetailsEventP
          jmp   Launch
 
 GameDetailsEventA
-         ;TODO
+         lda   #kScreenAbout
+         jmp   GoForward
+
 GameDetailsEventDefault
          clc
          ldx   #kContinue

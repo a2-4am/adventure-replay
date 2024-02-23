@@ -1,0 +1,21 @@
+!cpu 6502
+!to "../build/GAMETEXT#060000",plain
+!ct "src/lcase.ct"
+*=$2000
+
+         !src  "src/gametext/adventure.replay.a"
+         !src  "src/gametext/mystery.house.a"
+         !src  "src/gametext/cranston.manor.a"
+         !src  "src/gametext/saga1.adventureland.a"
+         !src  "src/gametext/saga2.pirate.adventure.a"
+         !src  "src/gametext/saga3.mission.impossible.a"
+         !src  "src/gametext/saga4.voodoo.castle.a"
+         !src  "src/gametext/saga5.the.count.a"
+         !src  "src/gametext/saga6.strange.odyssey.a"
+         !src  "src/gametext/death.in.the.caribbean.a"
+         !src  "src/gametext/masquerade.a"
+         !src  "src/gametext/saga13.sorcerer.of.claymorgue.castle.a"
+         !src  "src/gametext/fraktured.faebles.a"
+         !src  "src/gametext/transylvania.a"
+         !src  "src/gametext/the.coveted.mirror.a"
+

@@ -8,32 +8,6 @@ txtMainMenu    ; 4 lines of 40 characters
          !text "    [ ]earch    [B]rowse    [ ]ptions   "
          !text "    [A]bout     [ ]elp      [Q]uit      "
 
-txtAbout       ; 24 lines of 40 characters
-         !text "            Adventure Replay            "
-         !text "         GET KEY. UNLOCK STORY.         "
-         !text "                                        "
-         !text "                   ~                    "
-         !text "                                        "
-         !text " revision 1.0 / serial number 20240219  "
-         !text "                                        "
-         !text "                   ~                    "
-         !text "                                        "
-         !text "design & interface . . . . . . . . . 4am"
-         !text "                                        "
-         !text "help & moral support . . . . . . .qkumba"
-         !text "                                        "
-         !text "testing & patches. . . . . . . . . . . ."
-         !text "                                        "
-         !text "      your name here? let's see...      "
-         !text "      nope, it isn't.                   "
-         !text "                                        "
-         !text "                                        "
-         !text "                                        "
-         !text "                                        "
-         !text "                   ~                    "
-         !text "                                        "
-         !text "  archive.org/details/AdventureReplay   "
-
 txtBrowse
          !text "                                        "
          !text "1980  On-Line     Mystery House         "
@@ -62,4 +36,4 @@ txtGameLength
          !text "xxxxx"
 txtGameMenu
          !text "                                        "
-         !text "    [P]lay      [D]emo      [ ]bout     "
+         !text "    [P]lay      [D]emo      [A]bout     "

@@ -1,0 +1,68 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+; routines for loading gametext screens
+;
+; Public functions
+; - LoadGametext
+;
+
+.parm_gametext_open
+         !byte 3
+         !word .parm_gametext_filename
+         !word PRODOS_BUFFER
+         !byte 0
+.parm_gametext_filename
+         !byte 8
+         !text "GAMETEXT"
+
+.parm_gametext_seek
+         !byte 2
+         !byte 1                     ; refnum (always 1)
+         !byte 0                     ; seek offset lo (always 0)
+.parm_gametext_seek_hi
+         !byte 0
+.parm_gametext_seek_very_hi
+         !byte 0
+
+.parm_gametext_read
+         !byte 4
+         !byte 1                     ; refnum (always 1)
+         !word GAMETEXT              ; target address
+         !word $03C0                 ; read length
+         !word 0
+
+;------------------------------------------------------------------------------
+; LoadGametext
+; load screen of text from disk
+;
+; in:    X=title index (0=main AR text, 1+ for individual games)
+; out:   none
+;------------------------------------------------------------------------------
+LoadGametext
+         lda   #$00
+         sta   .parm_gametext_seek_very_hi
+         txa
+         asl
+         rol   .parm_gametext_seek_very_hi
+         asl
+         rol   .parm_gametext_seek_very_hi
+         sta   .parm_gametext_seek_hi
+
+         jsr   CloseAllFiles
+
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word .parm_gametext_open
+
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word .parm_gametext_seek
+
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word .parm_gametext_read
+
+         jsr   CloseAllFiles
+
+         jmp   OpenTitlesFile

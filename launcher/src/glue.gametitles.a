@@ -19,8 +19,8 @@
          !word PRODOS_BUFFER
          !byte 0
 .parm_titles_filename
-         !byte 6
-         !text "TITLES"
+         !byte 10
+         !text "GAMETITLES"
 
 .parm_titles_seek
          !byte 2
