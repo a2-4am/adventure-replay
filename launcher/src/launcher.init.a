@@ -53,6 +53,12 @@ FMDEST   sta   RELOC, x
          cmp   #>RELOC
          bcs   FM
 
+         ; populate build number
+         lda   LoadingBuild
+         ldx   LoadingBuild+1
+         ldy   #$00
+         jsr   PrintAsDecimal
+
          ; get machine configuration
          jsr   IsIIgs
          php
@@ -125,6 +131,31 @@ FMDEST   sta   RELOC, x
          +STAY $3F2
          jsr   ROM_FINALIZE_RESET
          jmp   Start                 ; continue from relocated program code
+
+LoadingBuild
+         !word BUILDNUMBER
+
+PrintAsDecimal
+         jsr   $FF4A
+         ldy   #$02
+--       lda   #$00
+         ldx   #$18
+-        cmp   #$05
+         bcc   +
+         sbc   #$85
+         sec
++        rol   $45
+         rol   $46
+         rol   $47
+         rol
+         dex
+         bne   -
+         and   #$0F
+         ora   #$B0
+         sta   txtBuild, y
+         dey
+         bpl   --
+         rts
 
          !source "src/hw.memcheck.a"
          !source "src/hw.iigs.a"

@@ -3,7 +3,9 @@
 ;
 
 txtMainMenu    ; 4 lines of 40 characters
-         !text "Welcome to Adventure Replay!    14 games"
+         !text "Welcome to Adventure Replay!   build "
+txtBuild       ; populated at runtime
+         !text "000"
          !text "                                        "
          !text "    [ ]earch    [B]rowse    [ ]ptions   "
          !text "    [A]bout     [ ]elp      [Q]uit      "
@@ -28,7 +30,7 @@ txtBrowse
          !text "                                        "
 
 txtGameDetails ; 4 lines of 40 characters
-         !text "<filled in at runtime>                  "
+         !text "                                        "
          !text "Difficulty: "
 txtGameDifficulty
          !text "xxxxx          Length: "

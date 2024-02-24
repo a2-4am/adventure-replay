@@ -7,7 +7,7 @@ TEXTSOURCES=$(wildcard/src/gametext/*.a)
 GAMETEXT=../build/GAMETEXT#060000
 
 $(EXE): $(SOURCES) $(GAMETEXT)
-	$(ACME) src/launcher.a
+	$(ACME) -DBUILDNUMBER=`git rev-list --count HEAD` src/launcher.a
 
 $(GAMETEXT): $(TEXTSOURCES)
 	$(ACME) src/gametext/gametext.a
