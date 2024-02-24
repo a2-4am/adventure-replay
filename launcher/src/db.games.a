@@ -15,23 +15,23 @@ sFullName2
          !byte 14
          !text "Cranston Manor"
 sFullName3
-         !byte 22
-         !text "Adventureland v2.1-416"
+         !byte 13
+         !text "Adventureland"
 sFullName4
-         !byte 25
-         !text "Pirate Adventure v2.1-408"
+         !byte 16
+         !text "Pirate Adventure"
 sFullName5
-         !byte 27
-         !text "Mission Impossible v2.1-306"
-sFullName6
-         !byte 22
-         !text "Voodoo Castle v2.1-119"
-sFullName7
          !byte 18
-         !text "The Count v2.1-115"
+         !text "Mission Impossible"
+sFullName6
+         !byte 13
+         !text "Voodoo Castle"
+sFullName7
+         !byte 9
+         !text "The Count"
 sFullName8
-         !byte 24
-         !text "Strange Odyssey v2.1-119"
+         !byte 15
+         !text "Strange Odyssey"
 sFullName9
          !byte 22
          !text "Death in the Caribbean"
@@ -39,8 +39,8 @@ sFullName10
          !byte 10
          !text "Masquerade"
 sFullName11
-         !byte 38
-         !text "Sorcerer of Claymorgue Castle v2.2-122"
+         !byte 29
+         !text "Sorcerer of Claymorgue Castle"
 sFullName12
          !byte 17
          !text "FrakTured FaebLes"
@@ -51,36 +51,19 @@ sFullName14
          !byte 18
          !text "The Coveted Mirror"
 
-FullNamesLo
-         !byte 0
-         !byte <sFullName1
-         !byte <sFullName2
-         !byte <sFullName3
-         !byte <sFullName4
-         !byte <sFullName5
-         !byte <sFullName6
-         !byte <sFullName7
-         !byte <sFullName8
-         !byte <sFullName9
-         !byte <sFullName10
-         !byte <sFullName11
-         !byte <sFullName12
-         !byte <sFullName13
-         !byte <sFullName14
-FullNamesHi
-         !byte 0
-         !byte >sFullName1
-         !byte >sFullName2
-         !byte >sFullName3
-         !byte >sFullName4
-         !byte >sFullName5
-         !byte >sFullName6
-         !byte >sFullName7
-         !byte >sFullName8
-         !byte >sFullName9
-         !byte >sFullName10
-         !byte >sFullName11
-         !byte >sFullName12
-         !byte >sFullName13
-         !byte >sFullName14
-
+FullNames
+         !word 0
+         !word sFullName1
+         !word sFullName2
+         !word sFullName3
+         !word sFullName4
+         !word sFullName5
+         !word sFullName6
+         !word sFullName7
+         !word sFullName8
+         !word sFullName9
+         !word sFullName10
+         !word sFullName11
+         !word sFullName12
+         !word sFullName13
+         !word sFullName14

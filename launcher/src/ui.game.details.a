@@ -25,27 +25,29 @@ kGameDetailsKeyHandlers
          !word GameDetailsEventDefault
 
 DrawGameDetails
-         ; populate full game name
-         ldx   TitleIndex
-         lda   FullNamesLo, x
-         ldy   FullNamesHi, x
-         +STAY input
-         +LDADDR txtGameDetails
-         +STAY output
-         lda   #$A0
-         ldy   #$28
-@clearloop
-         dey
-         sta   (output), y           ; clear line
-         bne   @clearloop
-         ;Y=0
-         lda   (input), y            ; length of full game name
-         tay
-@copyloop
-         lda   (input), y
-         dey
-         sta   (output), y
-         bne   @copyloop
+;          ; populate full game name
+;          lda   TitleIndex
+;          asl
+;          tax
+;          lda   FullNames, x
+;          ldy   FullNames+1, x
+;          +STAY input
+;          +LDADDR txtGameDetails
+;          +STAY output
+;          lda   #$A0
+;          ldy   #$28
+; @clearloop
+;          dey
+;          sta   (output), y           ; clear line
+;          bne   @clearloop
+;          ;Y=0
+;          lda   (input), y            ; length of full game name
+;          tay
+; @copyloop
+;          lda   (input), y
+;          dey
+;          sta   (output), y
+;          bne   @copyloop
 
          ; populate game difficulty and length
          ldx   TitleIndex
