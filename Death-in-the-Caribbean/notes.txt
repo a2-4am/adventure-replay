@@ -1,3 +1,8 @@
+TODO after dying (e.g. KICK BULL), game prompts to restart
+the adventure then drops to monitor
+
+-=-=-
+
 multi-disk:
 
 Good: game boots DOS 3.3 but only uses it to load one
