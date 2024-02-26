@@ -9,7 +9,7 @@ kAboutKeyHandlers
          !word AboutEventDefault
 
 DrawAbout
-         ldx   TitleIndex
+         ldx   GameID
          jsr   LoadGametext
          lda   #$00
          sta   startLine

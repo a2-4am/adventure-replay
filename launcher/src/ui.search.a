@@ -1,0 +1,288 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+
+kSearchKeys                          ; must keep in sync with kSearchKeyHandlers arrays
+         !byte $8D                   ; Return
+         !byte $8B                   ; up arrow
+         !byte $8A                   ; down arrow
+         !byte $FF                   ; delete
+         !byte $88                   ; left arrow
+         !byte $9B                   ; Esc
+         !byte $00                   ; terminates key list, corresponds to default handler
+
+kSearchKeyHandlers
+         !word SearchEventReturn
+         !word SearchEventUp
+         !word SearchEventDown
+         !word SearchEventLeft
+         !word SearchEventLeft
+         !word SearchEventEsc
+         !word SearchEventDefault
+
+; array of game indexes, populated by Search
+; game indexes are 1-based, so any 0 means 'no more matches'
+kMaxSearchResults         = 3
+SearchResults
+         !fill kMaxSearchResults
+
+SearchTmpIndex            = $F1      ; byte
+SearchResultCount         = $F2      ; byte
+SearchTmpChar             = $F3      ; byte
+
+
+DrawSearch
+         ; clear search result lines
+         ldy   #$27
+         lda   #$A0                  ; space
+-        sta   txtSearchResult1, y
+         sta   txtSearchResult2, y
+         sta   txtSearchResult3, y
+         dey
+         bpl   -
+
+         lda   SearchInputIndex
+         bne   @hasInput
+         ; if no input yet, reset results and display instructions on input line
+         ;A=0
+         sta   SearchResultsIndex
+         ldy   #$25
+-        lda   txtSearchDefault, y
+         sta   txtSearch+1, y
+         dey
+         bpl   -
+         bmi   @print                ; always branches
+
+@hasInput
+         ; display input, then solid cursor ($20), then fill with spaces ($A0)
+         ldy   #$00
+         clv                         ; V -> 0
+-        lda   #$A0                  ; space
+         bvs   +
+         lda   SearchInput, y
+         bne   +
+         bit   $FF58                 ; V -> 1
+         lda   #$20                  ; inverse space
++        sta   txtSearch+1, y
+         iny
+         cpy   #$26
+         bcc   -
+         jsr   Search
+         jsr   PopulateSearchResults
+@print
+         lda   SearchResultsIndex
+         beq   +
+         tax
+         lda   SearchResults-1, x
++        tax
+         jsr   LoadTitleOffscreen
+         lda   #$14
+         sta   startLine
+         lda   #$01
+         sta   lineCount
+         +LDADDR txtSearch
+         jsr   DrawTextOffscreen
+
+         ; draw search results
+@printResultsLoop
+         inc   startLine             ; -> $15, then $16, then $17
+         inc   lineCount             ; -> $01 because DrawTextOffscreen decrements it to 0
+         lda   SearchResultsIndex
+         clc
+         adc   #$14
+         cmp   startLine
+         bne   +
+         jsr   ROM_INVERSE
++        jsr   DrawMoreTextOffscreen
+         jsr   ROM_NORMAL
+         lda   startLine
+         cmp   #$17
+         bcc   @printResultsLoop
+
+         jmp   ShowOtherPage
+
+PopulateSearchResults
+         lda   SearchResults
+         beq   @noresults
+
+         ; populate search result 1
+         asl
+         tax
+         lda   FullNames, x
+         ldy   FullNames+1, x
+         +STAY input
+         +LDADDR txtSearchResult1
+         jsr   CopyZeroTerminated
+
+         lda   SearchResultsIndex
+         bne   +
+         inc   SearchResultsIndex
++
+         ; populate search result 2, if exists
+         lda   SearchResults+1
+         beq   @done
+         asl
+         tax
+         lda   FullNames, x
+         ldy   FullNames+1, x
+         +STAY input
+         +LDADDR txtSearchResult2
+         jsr   CopyZeroTerminated
+
+         ; populate search result 3, if exists
+         lda   SearchResults+2
+         beq   @done
+         asl
+         tax
+         lda   FullNames, x
+         ldy   FullNames+1, x
+         +STAY input
+         +LDADDR txtSearchResult3
+         jmp   CopyZeroTerminated
+
+@noresults
+         ;A=0
+         sta   SearchResultsIndex
+         ldy   #$27
+-        lda   txtNoResults, y
+         sta   txtSearchResult2, y
+         dey
+         bpl   -
+@done    rts
+
+SearchEventReturn
+         lda   SearchResultsIndex
+         beq   SearchIgnore
+         tax
+         lda   SearchResults-1, x
+         sta   GameID
+         lda   #kScreenGameDetails
+         jmp   GoForward
+
+SearchEventUp
+         ldx   SearchResultsIndex
+         beq   SearchIgnore
+         dex
+         bne   +
+         ldx   SearchResultCount
++        stx   SearchResultsIndex
+         sec
+         ldx   #kContinue
+         rts
+
+SearchEventDown
+         ldx   SearchResultsIndex
+         beq   SearchIgnore
+         cpx   SearchResultCount
+         bne   +
+         ldx   #$00
++        inx
+         stx   SearchResultsIndex
+         sec
+         ldx   #kContinue
+         rts
+
+SearchEventLeft
+         ldx   SearchInputIndex
+         beq   SearchIgnore
+         dex
+         stx   SearchInputIndex
+         lda   #$00
+         sta   SearchInput, x
+         sec
+         ldx   #kContinue
+         rts
+
+SearchEventDefault
+         ldx   SearchInputIndex
+         cpx   #$25
+         bcs   SearchIgnore
+         lda   LastKeyPressed
+         cmp   #$E1
+         bcc   +
+         and   #$DF
++        cmp   #$C1
+         bcc   SearchIgnore
+         cmp   #$DB
+         bcs   SearchIgnore
+         sta   SearchInput, x
+         inx
+         stx   SearchInputIndex
+         lda   #$00
+         sta   SearchInput, x
+         sta   SearchResultsIndex
+         sec
+         +HIDE_NEXT_BYTE
+SearchIgnore
+         clc
+         ldx   #kContinue
+         rts
+
+SearchEventEsc
+         jmp   GoBack
+
+Search
+         ldx   #$01
+         stx   SearchTmpIndex
+         dex
+         stx   SearchResults
+         stx   SearchResults+1
+         stx   SearchResults+2
+         stx   SearchResultCount
+@loop
+         lda   SearchTmpIndex
+         asl
+         tax
+         lda   FullNames, x
+         ldy   FullNames+1, x
+         beq   @exit
+         jsr   IsMatch
+         bcs   @next
+         ldx   SearchResultCount
+         lda   SearchTmpIndex
+         sta   SearchResults, x
+         inx
+         stx   SearchResultCount
+         cpx   #kMaxSearchResults
+         beq   @exit
+@next
+         inc   SearchTmpIndex
+         bne   @loop
+@exit    rts
+
+IsMatch
+; in:    A/Y -> zero-terminated string to match against SearchInput
+; out:   C=0 if match
+;        C=1 if no match
+         +STAY input
+         ldy   #0
+@resetx
+         ldx   #0
+@xloop
+         lda   SearchInput, x
+         beq   @yes
+         cmp   #$E1
+         bcc   +
+         and   #$DF
++        sta   SearchTmpChar
+@yloop
+         lda   (input), y
+         beq   @no
+         cmp   #$E1
+         bcc   +
+         and   #$DF
++        cmp   SearchTmpChar
+         beq   @maybe
+-        lda   (input), y
+         beq   @no
+         iny
+         cmp   #$A0
+         beq   @resetx
+         bne   -
+@maybe   iny
+         inx
+         bne   @xloop
+@no      sec
+         rts
+@yes     clc
+         rts

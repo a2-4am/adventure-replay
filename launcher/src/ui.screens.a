@@ -17,24 +17,28 @@ kBack                     = 1
 ; screen IDs (stored in ScreenStack)
 kScreenMainMenu           = 0
 kScreenAbout              = 1
-kScreenBrowse             = 2
-kScreenGameDetails        = 3
+kScreenSearch             = 2
+kScreenBrowse             = 3
+kScreenGameDetails        = 4
 
 ScreenDraw                           ; must keep in sync with screen IDs
          !word DrawMainMenu
          !word DrawAbout
+         !word DrawSearch
          !word DrawBrowse
          !word DrawGameDetails
 
 ScreenKeys                           ; must keep in sync with screen IDs
          !word kMainMenuKeys
          !word kAboutKeys
+         !word kSearchKeys
          !word kBrowseKeys
          !word kGameDetailsKeys
 
 ScreenHandlers                       ; must keep in sync with screen IDs
          !word kMainMenuKeyHandlers
          !word kAboutKeyHandlers
+         !word kSearchKeyHandlers
          !word kBrowseKeyHandlers
          !word kGameDetailsKeyHandlers
 

@@ -9,47 +9,33 @@ GameLength
          !byte 0,1,4,3,4,1,2,3,3,3,4,3,2,3,5
 
 sFullName1
-         !byte 13
-         !text "Mystery House"
+         !text "Mystery House",0
 sFullName2
-         !byte 14
-         !text "Cranston Manor"
+         !text "Cranston Manor",0
 sFullName3
-         !byte 13
-         !text "Adventureland"
+         !text "Adventureland",0
 sFullName4
-         !byte 16
-         !text "Pirate Adventure"
+         !text "Pirate Adventure",0
 sFullName5
-         !byte 18
-         !text "Mission Impossible"
+         !text "Mission Impossible",0
 sFullName6
-         !byte 13
-         !text "Voodoo Castle"
+         !text "Voodoo Castle",0
 sFullName7
-         !byte 9
-         !text "The Count"
+         !text "The Count",0
 sFullName8
-         !byte 15
-         !text "Strange Odyssey"
+         !text "Strange Odyssey",0
 sFullName9
-         !byte 22
-         !text "Death in the Caribbean"
+         !text "Death in the Caribbean",0
 sFullName10
-         !byte 10
-         !text "Masquerade"
+         !text "Masquerade",0
 sFullName11
-         !byte 29
-         !text "Sorcerer of Claymorgue Castle"
+         !text "Sorcerer of Claymorgue Castle",0
 sFullName12
-         !byte 17
-         !text "FrakTured FaebLes"
+         !text "FrakTured FaebLes",0
 sFullName13
-         !byte 12
-         !text "Transylvania"
+         !text "Transylvania",0
 sFullName14
-         !byte 18
-         !text "The Coveted Mirror"
+         !text "The Coveted Mirror",0
 
 FullNames
          !word 0
@@ -67,3 +53,4 @@ FullNames
          !word sFullName12
          !word sFullName13
          !word sFullName14
+         !word 0

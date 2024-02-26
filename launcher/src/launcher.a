@@ -18,10 +18,27 @@ PREFIX_BUFFER
 !pseudopc RELOC {
 persisted_globals_start
          !fill $40                   ; for PREFIX_BUFFER (populated before relocation)
-BrowseTitleIndex
-         !byte 1
-TitleIndex
+
+; ID of selected game, or 0 if none
+GameID
          !byte 0
+
+; selection index within browseable games list (1-based)
+BrowseIndex
+         !byte 1
+
+; buffer of characters typed so far, zero-terminated
+SearchInput
+         !fill $26
+
+; cursor position within SearchInput (0-based)
+SearchInputIndex
+         !byte 0
+
+; selection index within SearchResults (1-based)
+SearchResultsIndex
+         !byte 0
+
 ScreenStack
          !fill 4
 ScreenStackPointer
@@ -50,8 +67,9 @@ GameCount
          !src  "src/ui.text.a"
          !src  "src/ui.screens.a"
          !src  "src/ui.main.menu.a"
-         !src  "src/ui.about.a"
+         !src  "src/ui.search.a"
          !src  "src/ui.browse.a"
+         !src  "src/ui.about.a"
          !src  "src/ui.game.details.a"
          !src  "src/fx.mixed.fizzle.a"
 

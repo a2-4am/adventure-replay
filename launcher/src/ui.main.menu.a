@@ -34,7 +34,7 @@ kMainMenuKeyHandlers
 
 DrawMainMenu
          ldx   #$00
-         stx   TitleIndex
+         stx   GameID
          jsr   LoadTitleOffscreen
          lda   #$14
          sta   startLine
@@ -50,14 +50,16 @@ MainMenuEventB
          ; /!\ execution falls through here to MainMenuEventA
 MainMenuEventA
          lda   #kScreenAbout
+         +HIDE_NEXT_2_BYTES
+         ; /!\ execution falls through here to MainMenuEventA
+MainMenuEventS
+         lda   #kScreenSearch
          jmp   GoForward
 
 MainMenuEventQ
          jmp   GoBack
 
 MainMenuEventO
-         ;TODO
-MainMenuEventS
          ;TODO
 MainMenuEventH
          ;TODO

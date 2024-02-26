@@ -64,3 +64,16 @@ DrawMoreTextOffscreen                ; alternate entry point if you
          dec   lineCount
          bne   .outer
          rts
+
+CopyZeroTerminated
+; in:    (input) -> buffer of 40 characters
+;        A/Y -> buffer of 40 characters
+         +STAY output
+         ldy   #$00
+-        lda   (input), y
+         beq   +
+         sta   (output), y
+         iny
+         bne   -
++        rts
+

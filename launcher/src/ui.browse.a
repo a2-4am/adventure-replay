@@ -21,7 +21,7 @@ kBrowseKeyHandlers
          !word BrowseEventDefault
 
 DrawBrowse
-         ldx   BrowseTitleIndex
+         ldx   BrowseIndex
          jsr   LoadTitleOffscreen
          lda   #$14
          sta   startLine
@@ -29,7 +29,7 @@ DrawBrowse
          sta   lineCount
          ; calculate starting point within txtBrowse
          +LDADDR txtBrowse
-         ldx   BrowseTitleIndex
+         ldx   BrowseIndex
 -        dex
          beq   @done
          clc
@@ -50,28 +50,28 @@ DrawBrowse
          jmp   ShowOtherPage
 
 BrowseEventReturn
-         lda   BrowseTitleIndex
-         sta   TitleIndex
+         lda   BrowseIndex
+         sta   GameID
          lda   #kScreenGameDetails
          jmp   GoForward
 
 BrowseEventUp
-         ldx   BrowseTitleIndex
+         ldx   BrowseIndex
          dex
          bne   +
          ldx   GameCount
-+        stx   BrowseTitleIndex
++        stx   BrowseIndex
          sec
          ldx   #kContinue
          rts
 
 BrowseEventDown
-         ldx   BrowseTitleIndex
+         ldx   BrowseIndex
          cpx   GameCount
          bne   +
          ldx   #$00
 +        inx
-         stx   BrowseTitleIndex
+         stx   BrowseIndex
          sec
          ldx   #kContinue
          rts

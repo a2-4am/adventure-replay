@@ -7,7 +7,7 @@ txtMainMenu    ; 4 lines of 40 characters
 txtBuild       ; populated at runtime
          !text "000"
          !text "                                        "
-         !text "    [ ]earch    [B]rowse    [ ]ptions   "
+         !text "    [S]earch    [B]rowse    [ ]ptions   "
          !text "    [A]bout     [ ]elp      [Q]uit      "
 
 txtBrowse
@@ -28,6 +28,21 @@ txtBrowse
          !text "1986  Polarware   The Coveted Mirror    "
          !text "                                        "
          !text "                                        "
+
+txtSearch      ; 4 lines of 40 characters
+         !text "[                                      ]"  ; brackets are never clobbered
+txtSearchResult1
+         !text "                                        "
+txtSearchResult2
+         !text "                                        "
+txtSearchResult3
+         !text "                                        "
+
+txtSearchDefault; 38 characters
+         !byte $20
+         !text "                       Type to search"
+txtNoResults   ; 40 characters
+         !text "               No results               "
 
 txtGameDetails ; 4 lines of 40 characters
          !text "                                        "
