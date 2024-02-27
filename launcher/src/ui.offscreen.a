@@ -18,7 +18,7 @@
 ;------------------------------------------------------------------------------
 GetOffscreenAddress
          lda   #$40
-.OffscreenPage = * + 1
+OffscreenPage = * + 1
          bne   +                     ; SMC
                                      ; 0 = currently showing HGR page 2
                                      ;     (so offscreen is page 1 @ $2000)
@@ -38,9 +38,9 @@ GetOffscreenAddress
 ;------------------------------------------------------------------------------
 ShowOtherPage
          bit   GFXMODE
-         lda   .OffscreenPage
+         lda   OffscreenPage
          eor   #$01
-         sta   .OffscreenPage
+         sta   OffscreenPage
          bne   +
          bit   PAGE2                 ; show page 2
          rts

@@ -82,5 +82,6 @@ Start
          ; /!\ execution falls through here to QuitToProDOS
          !src  "../common/src/shared.quit.a"
          !src  "../common/src/shared.closeallfiles.a"
+         !src  "src/fx.apple.a"
 }
 LastMover

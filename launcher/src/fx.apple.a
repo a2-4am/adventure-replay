@@ -1,0 +1,254 @@
+;license:MIT
+;(c) 2021 by qkumba
+
+!macro BUILD_HGR_LOOKUP_TABLES .hgrlo, .hgr1hi {
+         ldx   #0
+-        txa
+         and   #$F8
+         bpl   +
+         ora   #5
++        asl
+         bpl   +
+         ora   #5
++        asl
+         asl
+         sta   .hgrlo,x
+         txa
+         and   #7
+         rol
+         asl   .hgrlo,x
+         rol
+         ora   #$20
+         sta   .hgr1hi,x
+         inx
+         cpx   #$C0
+         bne   -
+}
+
+; .counter0=$f9
+.height=$fa
+.offset=$fb
+.left=$fc
+.horzlo=$fe
+.horzhi=$ff
+.MWIDTH=16
+.MHEIGHT=107
+.hgrlo=$1A00
+.hgr1hi=$1B00
+
+Apple
+         jsr   $fc58
+         bit   $c051
+         bit   $c052
+         bit   $c054
+         bit   $c057
+         bit   $c010
+         ldx   #$20
+         stx   .clear+2
+         lda   #$00
+         tay
+.clear   sta   $2000, y
+         iny
+         bne   .clear
+         inc   .clear+2
+         dex
+         bne   .clear
+         lda   #1
+         sta   OffscreenPage
+         ldx   #0
+         ; stx   .counter0
+         jsr   LoadTitleOffscreen
+
+         +BUILD_HGR_LOOKUP_TABLES .hgrlo, .hgr1hi
+
+         lda   #>.model1
+         sta   <.source + 1
+         lda   #<.model1
+         sta   <.source
+         lda   #>(.model1 + (.MWIDTH * .MHEIGHT))
+         sta   .horzhi
+         lda   #<(.model1 + (.MWIDTH * .MHEIGHT))
+         sta   .horzlo
+         lda   #6
+         sta   .left
+
+.genmod
+         ldx   #.MHEIGHT - 1
+         clc
+
+.genouter
+         ldy   #0
+         php
+
+.geninner
+         lda   #$80
+         cpx   #.MHEIGHT - 1
+         beq   .noshift
+         txa
+         beq   .noshift
+         lda   (<.source), y
+         plp
+         rol
+         asl
+         php
+         sec
+         ror
+
+.noshift
+         sta   (.horzlo), y
+         iny
+         cpy   #.MWIDTH
+         bne   .geninner
+         lda   <.source
+         adc   #.MWIDTH - 1
+         sta   <.source
+         bcc   .noincsrc
+         inc   <.source + 1
+         clc
+
+.noincsrc
+         lda   .horzlo
+         adc   #.MWIDTH
+         sta   .horzlo
+         bcc   .noinchorz
+         inc   .horzhi
+
+.noinchorz
+         plp
+         dex
+         bpl   .genouter
+         dec   .left
+         bne   .genmod
+
+         lda   #0
+         sta   .horzhi
+
+         jsr   +
+         bit   $c050
+         jsr   .modloop
+         bit   $c010
+         bit   $c053
++        ldx   #(.end-.start)
+-        ldy   .start-1, x
+         lda   $FF, x
+         sty   $FF, x
+         sta   .start-1, x
+         dex
+         bne   -
+         rts
+
+.start
+!pseudopc 0 {
+.modloop
+         lda   #7
+         sta   .offset
+
+.vertloop
+         lda   #.MHEIGHT
+         sta   .height
+
+.hposn
+.vert=*+1
+         ldx   #$00                  ; initial value, then SMC later
+         lda   .hgrlo, x
+         sta   <.dst
+         sta   <.source
+         lda   .hgr1hi, x
+         sta   <.dst + 1
+         eor   #$60
+         sta   <.source + 1
+         ldx   #(256 - .MWIDTH)
+.horz=*+1
+         ldy   #$00                  ; initial value, then SMC later
+-
+.source=*+1
+         lda   SELF_MODIFIED_WORD, y
+.model=*+1
+         and   .model1 - (256 - .MWIDTH), x
+                                     ; initial value, then SMC later
+.dst=*+1
+         sta   SELF_MODIFIED_WORD, y
+         iny
+         inx
+         bne   -
+         lda   <.model
+         clc
+         adc   #.MWIDTH
+         sta   <.model
+         bcc   +
+         inc   <.model + 1
++        inc   <.vert
+         dec   .height
+         bne   .hposn
+
+.modeladj=*+1
+         lda   #0                    ; initial operation, then SMC later
+         beq   .vertadj
+         clc
+         adc   <.model
+         sta   <.model
+         lda   #>-(.MWIDTH * .MHEIGHT * 2)
+         adc   <.model + 1
+         sta   <.model + 1
+
+.vertadj=*
+         inc   <.overt               ; initial operation, then SMC later
+
+.overt=*+1
+         ldx   #0                    ; initial value, then SMC later
+         stx   <.vert
+         beq   .fixvert
+         cpx   #192 - .MHEIGHT
+         bne   .skipfix
+
+.fixvert
+         lda   <.vertadj
+         eor   #$20                  ; inc <-> dec
+         sta   <.vertadj
+
+.skipfix
+         dec   .offset
+         bne   .vertloop
+
+.edgecase
+.horzadj=*
+         inc   <.horz                ; initial operation, then SMC later
+         bmi   .fixhorz
+         lda   <.horz
+         cmp   #41 - .MWIDTH
+         bne   .skiphorz
+
+.fixhorz
+         lda   .horzadj
+         eor   #$20                  ; inc <-> dec
+         sta   .horzadj
+         lda   .modeladj
+         eor   #<-(.MWIDTH * .MHEIGHT * 2)
+         sta   .modeladj
+         jmp   .edgecase
+
+.skiphorz
+         ldx   #>(.model1 - (256 - .MWIDTH))
+         ldy   #<(.model1 - (256 - .MWIDTH))
+         lda   .modeladj
+         beq   .setmodel
+         ldx   #>(.model1 + (.MWIDTH * .MHEIGHT * 6) - (256 - .MWIDTH))
+         ldy   #<(.model1 + (.MWIDTH * .MHEIGHT * 6) - (256 - .MWIDTH))
+
+.setmodel
+         sty   <.model
+         stx   <.model+1
+
+         ; inc   .counter0
+         ; beq   .exit
+         bit   $c000
+         bmi   .exit
+         jmp   .modloop
+.exit    rts
+}
+.end
+
+.model1
+         !byte $80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80
+         !src  "src/fx.apple.data.a"
+         !byte $80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80
