@@ -9,8 +9,8 @@ $0300..$03CF is unused
 $1C45..$1CFE is unused loader text (part of T3)
 $1E79..$1EFF is unused loader text (part of T3)
 $1F00..$1FFF is unused EDIT NO IT IS NOT
-  TODO must move both auto.input and better.input down
-  see Transylvania for example
+  FIXED moved both auto.input and better.input down
+  like Transylvania
 game uses text screen
 game uses screen holes
 game uses actual ProDOS
