@@ -16,6 +16,7 @@ UTILS                     = $0300
 
 ; application-specific flags
 AUTO_DRAW_CURSOR          = 0        ; used by automate.input
+BETTER_INC_RANDOM         = 0
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
@@ -34,11 +35,18 @@ AUTO_INPUT = UTILS + move_utils_end - move_utils_start
 WRAP_INPUT = AUTO_INPUT
 move_wrap_input_start
 !pseudopc WRAP_INPUT {
+         tya
+         pha
          lda   CV
          jsr   ROM_BASCALC
          dec   CH
          jsr   BlockingBetterInput
+         sta   @out
          inc   CH
+         pla
+         tay
+@out=*+1
+         lda   #SELF_MODIFIED_BYTE
          rts
 }
 move_wrap_input_end
