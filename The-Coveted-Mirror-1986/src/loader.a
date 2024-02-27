@@ -18,7 +18,6 @@ AUTO_TEMP_BUFFER          = $BA00    ; $100 bytes, saved and restored
 ; application-specific flags
 BETTER_INC_RANDOM         = 0        ; used by better.input
 AUTO_DRAW_CURSOR          = 0        ; used by automate.input
-BETTER_INC_RANDOM         = 0
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
