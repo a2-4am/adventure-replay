@@ -1,4 +1,4 @@
-TODO after dying (e.g. KICK BULL), game prompts to restart
+FIXED: after dying (e.g. KICK BULL), game prompts to restart
 the adventure then drops to monitor
 
 -=-=-
