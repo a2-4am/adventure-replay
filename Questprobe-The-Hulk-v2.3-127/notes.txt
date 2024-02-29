@@ -1,5 +1,12 @@
 loader is virtually identical to Claymorgue Castle
 except address of locations array
 
-TODO need verified walkthrough
-TODO need demo script
+TODO need game about text
+
+Scott Adams presents Marvel Adventure #1
+ by Scott Adams with Art by John Romita
+Sr, Mark Gruenwald & Kem McNair. Series
+outline by Scott Adams and John Byrne &
+Bob Budiansky. Dedicated: Stan Lee, My
+wife Alexis & CIS CBers!  With Special
+Thanks to Joe Calamari & Jim Shooter!

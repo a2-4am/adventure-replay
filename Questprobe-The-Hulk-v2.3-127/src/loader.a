@@ -101,6 +101,14 @@ Stage1
          sta   $0F9F
          lda   #$0F
          sta   $0FA0
+         ; and remove pause keys
+         lda   #$A9
+         sta   $169E
+         lda   #$8D
+         sta   $169F
+         lda   #$EA
+         sta   $16A0
+
          jmp   @start_game
 
 @no_auto

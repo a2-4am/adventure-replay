@@ -7,7 +7,7 @@ The Count                 ✅          ✅         ✅ 163           ✅        
 Strange Odyssey           ✅          ✅         ✅ 172           ✅          ✅                 ✅               ✅
 Claymorgue Castle         ✅          ✅         ✅ 159           ✅          ✅                 ✅               ✅
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-QP/Hulk (SAGA)            ✅          ✅         ❌               ✅          untested           ✅               ✅
+QP/Hulk (SAGA)            ✅          ✅         ✅ 190           ✅          ✅                 ✅               ✅
 QP/Spider-Man (SAGA+)     ✅          ✅         ❌               ❌          ❌                 ❌               ❌
 QP/Thing (SAGA+)          ❌
 Buckaroo Banzai (SAGA+)   ✅          ✅         ❌               ✅          ❌                 ✅               ❌
