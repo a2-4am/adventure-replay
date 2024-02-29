@@ -56,14 +56,14 @@ Stage1
          sta   $3F3
          jsr   ROM_FINALIZE_RESET
 
+; these changes have been made in the OBJ files directly
+!if 0 {
          ; patch game to preserve our custom reset vector
-         ; TODO move this to OBJ file
          lda   #$2C
          sta   $6A54
          sta   $6A57
 
          ; shorten prompt
-         ; TODO move this to OBJ file
          lda   #$3E
          sta   $7359
          lda   #$20
@@ -72,9 +72,9 @@ Stage1
          sta   $735B
 
          ; always continue after returning from custom input routine
-         ; TODO move this to OBJ file
          lda   #$00
          sta   $6FD1
+}
 
          ; turn on lowercase display by default on machines that support it
          +HAS_LOWERCASE
@@ -114,8 +114,9 @@ Stage1
          ; copy savegame code into place
          +INSTALL_SAGA_SAVEGAME
 
+; these changes have been made in the OBJ files directly
+!if 0 {
          ; and change save prompt
-         ; TODO move this to OBJ file
          ;X=0
 -        lda   new_save_prompt, x
          sta   $154F, x
@@ -125,13 +126,13 @@ Stage1
          bne   -                     ; always branches
 +
          ; and increase save slots
-         ; TODO move this to OBJ file
          lda   #$31
          sta   $1541
          sta   $74D9
          lda   #$3A
          sta   $1545
          sta   $74DD
+}
 
          ; and hook save and restore routines
          +STA_16 $1536, PrintSavedGames
@@ -146,8 +147,11 @@ Stage1
 @start_game
          jmp   $0800
 
+; these changes have been made in the OBJ files directly
+!if 0 {
 new_save_prompt
          !text "GAME NUMBER (1-9)? ",0
+}
 
 parm_open1
          !byte 3
