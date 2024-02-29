@@ -1,0 +1,5 @@
+loader is virtually identical to Claymorgue Castle
+except address of locations array
+
+TODO need verified walkthrough
+TODO need demo script

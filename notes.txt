@@ -6,14 +6,11 @@ Voodoo Castle             ✅          ✅         ✅ 129           ✅        
 The Count                 ✅          ✅         ✅ 163           ✅          ✅                 ✅               ✅
 Strange Odyssey           ✅          ✅         ✅ 172           ✅          ✅                 ✅               ✅
 Claymorgue Castle         ✅          ✅         ✅ 159           ✅          ✅                 ✅               ✅
-Curse of Crowley Manor    ❌
-Escape from Traam         ❌          ❌         ✅ 178
-Earthquake: SF 1906       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-Buckaroo Banzai (SAGA+)   ✅          ✅         ❌               ✅          ❌                 ✅               ❌
-QP/Hulk (SAGA)            ❌
+QP/Hulk (SAGA)            ✅          ✅         ❌               ✅          untested           ✅               ✅
 QP/Spider-Man (SAGA+)     ✅          ✅         ❌               ❌          ❌                 ❌               ❌
 QP/Thing (SAGA+)          ❌
+Buckaroo Banzai (SAGA+)   ✅          ✅         ❌               ✅          ❌                 ✅               ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Masquerade                ✅          ✅         ✅ 211           ✅          ✅                 ✅               ✅
 FrakTured FaebLes         ✅          ✅         ✅ 143           ✅          ✅                 ✅               ✅
@@ -33,6 +30,10 @@ Death in the Caribbean    ✅          ✅         ✅ 163           ✅        
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Mystery House             ✅          ✅         ✅  73           ✅          ✅                 ✅               ❌
 Cranston Manor            ✅          ✅         ✅ 214           ✅          ✅                 ✅               ❌
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Curse of Crowley Manor    ❌
+Escape from Traam         ❌          ❌         ✅ 178
+Earthquake: SF 1906       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 ✅

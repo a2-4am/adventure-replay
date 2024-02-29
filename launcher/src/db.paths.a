@@ -44,12 +44,15 @@ sVolname11
          !byte 6
          !raw  "SAGA13"
 sVolname12
+         !byte 8
+         !raw  "SAGA.QP1"
+sVolname13
          !byte 9
          !raw  "FRAKTURED"
-sVolname13
+sVolname14
          !byte 12
          !raw  "TRANSYLVANIA"
-sVolname14
+sVolname15
          !byte 14
          !raw  "COVETED.MIRROR"
 
@@ -69,6 +72,7 @@ VolNamesLo
          !byte <sVolname12
          !byte <sVolname13
          !byte <sVolname14
+         !byte <sVolname15
 VolNamesHi
          !byte 0
          !byte >sVolname1
@@ -85,3 +89,4 @@ VolNamesHi
          !byte >sVolname12
          !byte >sVolname13
          !byte >sVolname14
+         !byte >sVolname15

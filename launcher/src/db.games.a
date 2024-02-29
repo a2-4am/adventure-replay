@@ -3,10 +3,10 @@
 ;
 
 GameDifficulty
-         !byte 0,2,3,4,2,4,3,3,3,2,5,4,4,3,5
+         !byte 0,2,3,4,2,4,3,3,3,2,5,4,1,4,3,5
 
 GameLength
-         !byte 0,1,4,3,4,1,2,3,3,3,4,3,2,3,5
+         !byte 0,1,4,3,4,1,2,3,3,3,4,3,1,2,3,5
 
 sFullName1
          !text "Mystery House",0
@@ -31,10 +31,12 @@ sFullName10
 sFullName11
          !text "Sorcerer of Claymorgue Castle",0
 sFullName12
-         !text "FrakTured FaebLes",0
+         !text "QuestProbe featuring The Hulk",0
 sFullName13
-         !text "Transylvania",0
+         !text "FrakTured FaebLes",0
 sFullName14
+         !text "Transylvania",0
+sFullName15
          !text "The Coveted Mirror",0
 
 FullNames
@@ -53,4 +55,5 @@ FullNames
          !word sFullName12
          !word sFullName13
          !word sFullName14
+         !word sFullName15
          !word 0

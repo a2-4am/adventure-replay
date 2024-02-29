@@ -1,0 +1,4 @@
+https://archive.org/details/wozaday_Questprobe_featuring_The_Hulk
+
+.woz -> .dsk by Passport
+repatched to bypass protection routine altogether
