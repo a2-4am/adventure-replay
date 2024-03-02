@@ -3,8 +3,7 @@
 ;
 CommitBetterInput
 ; in:    A=key to commit
-; out:   A/X preserved
-;        Y=CH
+; out:   A/X/Y preserved
 ;        N=0
 ;        Z=0
 ;        C clobbered
@@ -16,4 +15,8 @@ CommitBetterInput
          inc   input_offset
 +        bit   CLEARKBD
          lda   (BASL), y
+         php
+save_y=*+1
+         ldy   #SELF_MODIFIED_BYTE
+         plp
          rts

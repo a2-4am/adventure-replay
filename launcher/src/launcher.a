@@ -53,14 +53,11 @@ ClosedStar
          !byte $40                   ; closed-apple in altcharset
 OpenStar
          !byte $41                   ; open-apple in altcharset
-GameCount
-         !byte 14
 
          !src  "src/glue.gametitles.a"
          !src  "src/glue.gametext.a"
          !src  "src/glue.launch.a"
          !src  "src/glue.bye.a"
-         !src  "src/db.paths.a"
          !src  "src/db.games.a"
          !src  "src/ui.strings.a"
          !src  "src/ui.offscreen.a"

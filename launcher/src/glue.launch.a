@@ -9,6 +9,10 @@
 
 LAUNCH_STAGE_2            = $0300
 
+sDemo
+         !byte 4
+         !raw  "DEMO"
+
 ;------------------------------------------------------------------------------
 ; Launch
 ; load game and jump to it
@@ -37,17 +41,23 @@ Launch
          jsr   CloseAllFiles
          jsr   InstallBye
 
-         +LDADDR sGameDirectory
+         +LDADDR .sGameDirectory
          jsr   .SetPrefix
 
 @index=*+1
-         ldx   #SELF_MODIFIED_BYTE
-         lda   VolNamesLo, x
-         ldy   VolNamesHi, x
+         lda   #SELF_MODIFIED_BYTE
+         asl
+         tax
+         lda   VolNames, x
+         ldy   VolNames+1, x
          jsr   .SetPrefix
 
          +SHORT_COPY .move_launch_start, .move_launch_end, LAUNCH_STAGE_2
          jmp   LAUNCH_STAGE_2
+
+.sGameDirectory
+         !byte 1
+         !raw  "X"
 
 .SetPrefix
          +STAY .parm_setprefix+1

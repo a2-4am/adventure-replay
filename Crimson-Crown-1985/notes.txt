@@ -1,0 +1,13 @@
+$447C:2C to disable pause after 4 lines
+
+-=-=-
+
+$4339: prompt to "Please put in side 2 of your disk"
+  (occurs naturally during gameplay after you SAY LORELEI)
+
+$4349: prompt to "Please put in side 1 of your disk"
+  (during SAVE/RESTORE)
+
+$435F: prompt to "Please put in side 2 of your disk"
+  (during SAVE/RESTORE)
+

@@ -10,26 +10,6 @@ txtBuild       ; populated at runtime
          !text "    [S]earch    [B]rowse    [ ]ptions   "
          !text "    [A]bout     [ ]elp      [Q]uit      "
 
-txtBrowse
-         !text "                                        "
-         !text "1980  On-Line     Mystery House         "
-         !text "1981  On-Line     Cranston Manor        "
-         !text "1982  Adv Intl    Adventureland         "
-         !text "1982  Adv Intl    Pirate Adventure      "
-         !text "1982  Adv Intl    Mission Impossible    "
-         !text "1982  Adv Intl    Voodoo Castle         "
-         !text "1982  Adv Intl    The Count             "
-         !text "1982  Adv Intl    Strange Odyssey       "
-         !text "1983  Micro-Fun   Death in the Caribbean"
-         !text "1983  Phoenix     Masquerade            "
-         !text "1984  Adv Intl    Claymorgue Castle     "
-         !text "1984  Adv Intl    QuestProbe/The Hulk   "
-         !text "1985  AmerEagle   FrakTured FaebLes     "
-         !text "1985  Polarware   Transylvania          "
-         !text "1986  Polarware   The Coveted Mirror    "
-         !text "                                        "
-         !text "                                        "
-
 txtSearch      ; 4 lines of 40 characters
          !text "[                                      ]"  ; brackets are never clobbered
 txtSearchResult1

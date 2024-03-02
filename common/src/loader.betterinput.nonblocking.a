@@ -18,6 +18,8 @@
 better_input_start
 !pseudopc INPUT {
 NonBlockingBetterInput
+; out:   preserves Y
+         sty   save_y
          jsr   BeginBetterInput
          jsr   PendingBetterInput
          bpl   @exit

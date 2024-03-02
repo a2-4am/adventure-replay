@@ -7,6 +7,9 @@ BETTER_INC_RANDOM = 1
 }
 
 BlockingBetterInput
+; out:   preserves Y (required for Polarware Comprehend)
+         sty   save_y
+@blockingLoop
 !if BETTER_INC_RANDOM = 1 {
          inc   RNDL
          bne   +
@@ -15,7 +18,7 @@ BlockingBetterInput
 }
          jsr   BeginBetterInput
          jsr   PendingBetterInput
-         bpl   BlockingBetterInput
+         bpl   @blockingLoop
          bit   CLEARKBD
          jsr   AcceptableBetterInput
          bcs   BlockingBetterInput

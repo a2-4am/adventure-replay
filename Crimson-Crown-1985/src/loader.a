@@ -25,9 +25,28 @@ move_utils_start
          !src  "../common/src/shared.quit.a"
          !src  "../common/src/shared.closeallfiles.a"
          !src  "../common/src/shared.swapzp.a"
+SwitchToSideA
+         lda   #<PREFIX_BUFFER_A
+         +HIDE_NEXT_2_BYTES
+SwitchToSideB
+         lda   #<PREFIX_BUFFER_B
+         sta   parm_setprefix_path   ; change low byte only
+         jsr   PRODOS_MLI
+         !byte CMD_SETPREFIX
+         !word parm_setprefix
+         rts
+parm_setprefix
+         !byte 1
+parm_setprefix_path
+         !word PREFIX_BUFFER_B
+PREFIX_BUFFER_B
+         !byte 1
+         !raw  "B"
+PREFIX_BUFFER_A
+         !fill 40
+AUTO_FILENAME
 }
 move_utils_end
-AUTO_FILENAME = UTILS + move_utils_end - move_utils_start
 
          !src  "../common/src/loader.automateinput.blocking.a"
          !src  "../common/src/loader.betterinput.blocking.a"
@@ -40,19 +59,20 @@ Stage1
          sta   $BF06                 ; with game input by clobbering $200+
 
          +SHORT_COPY move_utils_start, move_utils_end, UTILS
+         +SHORT_COPY PREFIX_BUFFER, PREFIX_BUFFER + $40, PREFIX_BUFFER_A
 
          ; set up our custom reset vector (inside UTILS)
          +STA_16 $3F2, QuitToProDOS
          jsr   ROM_FINALIZE_RESET
 
-         ; 1C00..1DAA
+         ; 1C00..1D7E
          +READ_ENTIRE_FILE parm_open1, parm_read1
 
          ; copy stage 2 callback into place
          +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2_CALLBACK
 
          ; install hook to call stage 2 once game loads its assets
-         +STA_16 $1CF3, STAGE2_CALLBACK
+         +STA_16 $1D03, STAGE2_CALLBACK
 
          lda   input_filename_start
          ; stage 2 (now in place) needs to know if we're using automation
@@ -83,19 +103,21 @@ address_ptr
          !word $FFFF
          !word 0
 obj_filename1
-         !byte 6
-         !text "LOADER"
+         !byte 2
+         !text "T3"
 
 move_stage2_start
 !pseudopc STAGE2_CALLBACK {
+         +STA_16 $433E, SwitchToSideB
+         +STA_16 $4351, SwitchToSideA
+         +STA_16 $4364, SwitchToSideB
+
 HasAutomationFile=*+1
          lda   #SELF_MODIFIED_BYTE
          beq   @no_auto
 
          ; if we're using automation, install the AutomateInput hook
          +MAKE_JSR $442F, AutomateInput
-         lda   #0
-         sta   $4433
 
          ; don't pause after printing 4 lines
          lda   #$2C
@@ -105,8 +127,6 @@ HasAutomationFile=*+1
 
 @no_auto
          +MAKE_JSR $442F, BlockingBetterInput
-         lda   #0
-         sta   $4433
 
 @start_game
          jmp   $4000

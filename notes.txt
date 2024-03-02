@@ -21,7 +21,7 @@ The Queen of Phobos       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 The Coveted Mirror        ✅          ✅         ✅ 367           ✅          ✅                 ✅               ✅
 Transylvania              ✅          ✅         ✅ 171           ✅          ✅                 ✅               ❌
-Crimson Crown             ❌
+Crimson Crown             ✅          ✅         ✅ 252           ✅          ✅                 ✅               ❌
 The Quest                 ❌
 Oo-Topos                  ❌
 Talisman                  ❌

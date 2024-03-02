@@ -36,23 +36,20 @@ AUTO_FILENAME = UTILS + move_utils_end - move_utils_start
 WRAP_INPUT = AUTO_FILENAME
 move_wrap_input_start
 !pseudopc WRAP_INPUT {
-         tya
-         pha
+         ; must preserve Y throughout
          lda   CV
          jsr   ROM_BASCALC
          dec   CH
          jsr   BlockingBetterInput
-         sta   @out
          inc   CH
-         pla
-         tay
-@out=*+1
-         lda   #SELF_MODIFIED_BYTE
          rts
 }
 move_wrap_input_end
 
 Stage1
+         ldx   #$FF                  ; initialize stack pointer because we're
+         txs                         ; going to copy stuff to page 1
+
          lda   #$00                  ; game bug: uninitialized address used
          sta   $26                   ; to clear part of screen during title
 
