@@ -261,17 +261,11 @@ IsMatch
 @xloop
          lda   SearchInput, x
          beq   @yes
-         cmp   #$E1
-         bcc   +
-         and   #$DF
-+        sta   SearchTmpChar
+         sta   SearchTmpChar
 @yloop
          lda   (input), y
          beq   @no
-         cmp   #$E1
-         bcc   +
-         and   #$DF
-+        cmp   SearchTmpChar
+         cmp   SearchTmpChar
          beq   @maybe
 -        lda   (input), y
          beq   @no
