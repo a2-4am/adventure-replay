@@ -254,26 +254,23 @@ IsMatch
 ;        C=1 if no match
          +STAY input
          ldy   #0
-@resetx
-         ldx   #0
-@xloop
-         lda   SearchInput, x
-         beq   @yes
-@yloop
+         beq   @resetx               ; always branches
+@skipToNextWord
          lda   (input), y
-         beq   @no
-         cmp   SearchInput, x
-         beq   @maybe
--        lda   (input), y
          beq   @no
          iny
          cmp   #$A0
-         beq   @resetx
-         bne   -
+         bne   @skipToNextWord
+@resetx  ldx   #0
+@loop    lda   (input), y
+         beq   @no
+         cmp   SearchInput, x
+         bne   @skipToNextWord
 @maybe   iny
          inx
-         bne   @xloop
-@no      sec
-         rts
+         lda   SearchInput, x
+         bne   @loop
 @yes     clc
+         rts
+@no      sec
          rts
