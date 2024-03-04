@@ -28,8 +28,6 @@ SearchResults
 
 SearchTmpIndex            = $F1      ; byte
 SearchResultCount         = $F2      ; byte
-SearchTmpChar             = $F3      ; byte
-
 
 DrawSearch
          ; clear search result lines
@@ -261,11 +259,10 @@ IsMatch
 @xloop
          lda   SearchInput, x
          beq   @yes
-         sta   SearchTmpChar
 @yloop
          lda   (input), y
          beq   @no
-         cmp   SearchTmpChar
+         cmp   SearchInput, x
          beq   @maybe
 -        lda   (input), y
          beq   @no
