@@ -48,8 +48,8 @@ Launch
          lda   #SELF_MODIFIED_BYTE
          asl
          tax
-         lda   VolNames, x
-         ldy   VolNames+1, x
+         lda   VolumeNames, x
+         ldy   VolumeNames+1, x
          jsr   .SetPrefix
 
          +SHORT_COPY .move_launch_start, .move_launch_end, LAUNCH_STAGE_2

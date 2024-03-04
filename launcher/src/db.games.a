@@ -34,83 +34,129 @@ txtBrowse
 
 sFullName1
          !text "Mystery House",0
-sFullName2
-         !text "Cranston Manor",0
-sFullName3
-         !text "Adventureland",0
-sFullName4
-         !text "Pirate Adventure",0
-sFullName5
-         !text "Mission Impossible",0
-sFullName6
-         !text "Voodoo Castle",0
-sFullName7
-         !text "The Count",0
-sFullName8
-         !text "Strange Odyssey",0
-sFullName9
-         !text "Death in the Caribbean",0
-sFullName10
-         !text "Masquerade",0
-sFullName11
-         !text "Sorcerer of Claymorgue Castle",0
-sFullName12
-         !text "QuestProbe featuring The Hulk",0
-sFullName13
-         !text "FrakTured FaebLes",0
-sFullName14
-         !text "Transylvania",0
-sFullName15
-         !text "Crimson Crown",0
-sFullName16
-         !text "The Coveted Mirror",0
-
-sVolname1
+sSearchName1
+         !text "MYSTERY HOUSE",0
+sVolumeName1
          !byte 13
          !raw  "MYSTERY.HOUSE"
-sVolname2
+
+sFullName2
+         !text "Cranston Manor",0
+sSearchName2
+         !text "CRANSTON MANOR",0
+sVolumeName2
          !byte 14
          !raw  "CRANSTON.MANOR"
-sVolname3
+
+sFullName3
+         !text "Adventureland",0
+sSearchName3
+         !text "ADVENTURELAND",0
+sVolumeName3
          !byte 5
          !raw  "SAGA1"
-sVolname4
+
+sFullName4
+         !text "Pirate Adventure",0
+sSearchName4
+         !text "PIRATE ADVENTURE",0
+sVolumeName4
          !byte 5
          !raw  "SAGA2"
-sVolname5
+
+sFullName5
+         !text "Mission Impossible",0
+sSearchName5
+         !text "MISSION IMPOSSIBLE",0
+sVolumeName5
          !byte 5
          !raw  "SAGA3"
-sVolname6
+
+sFullName6
+         !text "Voodoo Castle",0
+sSearchName6
+         !text "VOODOO CASTLE",0
+sVolumeName6
          !byte 5
          !raw  "SAGA4"
-sVolname7
+
+sFullName7
+         !text "The Count",0
+sSearchName7
+         !text "COUNT",0
+sVolumeName7
          !byte 5
          !raw  "SAGA5"
-sVolname8
+
+sFullName8
+         !text "Strange Odyssey",0
+sSearchName8
+         !text "STRANGE ODYSSEY",0
+sVolumeName8
          !byte 5
          !raw  "SAGA6"
-sVolname9
+
+sFullName9
+         !text "Death in the Caribbean",0
+sSearchName9
+         !text "DEATH CARIBBEAN",0
+sVolumeName9
          !byte 9
          !raw  "CARIBBEAN"
-sVolname10
+
+sFullName10
+         !text "Masquerade",0
+sSearchName10
+         !text "MASQUERADE",0
+sVolumeName10
          !byte 10
          !raw  "MASQUERADE"
-sVolname11
+
+sFullName11
+         !text "Sorcerer of Claymorgue Castle",0
+sSearchName11
+         !text "SORCERER CLAYMORGUE CASTLE",0
+sVolumeName11
          !byte 6
          !raw  "SAGA13"
-sVolname12
+
+sFullName12
+         !text "QuestProbe featuring The Hulk",0
+sSearchName12
+         !text "QUESTPROBE HULK",0
+sVolumeName12
          !byte 8
          !raw  "SAGA.QP1"
-sVolname13
+
+sFullName13
+         !text "FrakTured FaebLes",0
+sSearchName13
+         !text "FRACTURED FRAKTURED FABLES FAEBLES",0
+sVolumeName13
          !byte 9
          !raw  "FRAKTURED"
-sVolname14
+
+sFullName14
+         !text "Transylvania",0
+sSearchName14
+         !text "TRANSYLVANIA",0
+sVolumeName14
          !byte 12
          !raw  "TRANSYLVANIA"
-sVolname15
+
+sFullName15
+         !text "Crimson Crown",0
+sSearchName15
+         !text "CRIMSON CROWN",0
+sVolumeName15
          !byte 13
          !raw  "CRIMSON.CROWN"
-sVolname16
+
+sFullName16
+         !text "The Coveted Mirror",0
+sSearchName16
+         !text "COVETED MIRROR",0
+sVolumeName16
          !byte 14
          !raw  "COVETED.MIRROR"
 
@@ -132,23 +178,42 @@ FullNames
          !word sFullName14
          !word sFullName15
          !word sFullName16
+
+SearchNames
+         !word 0
+         !word sSearchName1
+         !word sSearchName2
+         !word sSearchName3
+         !word sSearchName4
+         !word sSearchName5
+         !word sSearchName6
+         !word sSearchName7
+         !word sSearchName8
+         !word sSearchName9
+         !word sSearchName10
+         !word sSearchName11
+         !word sSearchName12
+         !word sSearchName13
+         !word sSearchName14
+         !word sSearchName15
+         !word sSearchName16
          !word 0
 
-VolNames
+VolumeNames
          !word 0
-         !word sVolname1
-         !word sVolname2
-         !word sVolname3
-         !word sVolname4
-         !word sVolname5
-         !word sVolname6
-         !word sVolname7
-         !word sVolname8
-         !word sVolname9
-         !word sVolname10
-         !word sVolname11
-         !word sVolname12
-         !word sVolname13
-         !word sVolname14
-         !word sVolname15
-         !word sVolname16
+         !word sVolumeName1
+         !word sVolumeName2
+         !word sVolumeName3
+         !word sVolumeName4
+         !word sVolumeName5
+         !word sVolumeName6
+         !word sVolumeName7
+         !word sVolumeName8
+         !word sVolumeName9
+         !word sVolumeName10
+         !word sVolumeName11
+         !word sVolumeName12
+         !word sVolumeName13
+         !word sVolumeName14
+         !word sVolumeName15
+         !word sVolumeName16
