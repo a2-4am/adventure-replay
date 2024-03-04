@@ -255,21 +255,23 @@ IsMatch
          +STAY input
          ldy   #0
          beq   @resetx               ; always branches
-@skipToNextWord
+@skiploop
          lda   (input), y
          beq   @no
+@skipstart
          iny
          cmp   #$A0
-         bne   @skipToNextWord
+         bne   @skiploop
 @resetx  ldx   #0
-@loop    lda   (input), y
+@matchloop
+         lda   (input), y
          beq   @no
          cmp   SearchInput, x
-         bne   @skipToNextWord
-@maybe   iny
+         bne   @skipstart
+         iny
          inx
          lda   SearchInput, x
-         bne   @loop
+         bne   @matchloop
 @yes     clc
          rts
 @no      sec
