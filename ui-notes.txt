@@ -93,6 +93,8 @@ browse by year incl. publisher:
 1980  On-Line     Mystery House
 1980  On-Line     Wizard & The Princess
 1981  Adv Intl    The Escape from Traam
+1981  AvantGarde  Race for Midnight
+1981  Highland    Mummy's Curse
 1981  On-Line     Cranston Manor
 1981  On-Line     Ulysses/Golden Fleece
 1981  Sirius      Kabul Spy
@@ -110,6 +112,7 @@ browse by year incl. publisher:
 1982  Phoenix     Sherwood Forest
 1982  Sirius      Blade of Blackpoole
 1982  Sirius      Escape from Rungistan
+1982  SoftMarket  Pillage Village
 1983  Broderbund  The Serpent's Star
 1983  Ibidinc     The Alpine Encounter
 1983  Micro-Fun   Death in the Caribbean
@@ -118,13 +121,17 @@ browse by year incl. publisher:
 1983  Screenplay  The Institute
 1983  Sirius      Critical Mass
 1983  Sirius      Gruds in Space
+1983  Softdisk    Man-Eng Master of Evil
+1983  ThreeSigma  Secret/Easter Island
 1984  Adv Intl    Claymorgue Castle
 1984  Adv Intl    QuestProbe/The Hulk
 1984  Adv Intl    QuestProbe/Spider-Man
 1984  AmerEagle   Elysian Fields
 1984  AmerEagle   Kukulcan
 1984  AmerEagle   Lucifer's Realm
+1984  CompEasy    Supermartian
 1984  Datasoft    The Dallas Quest
+1984  On Target   Glennmore Castle
 1984  Penguin     The Quest
 1984  Telarium    Amazon
 1984  Telarium    Dragonworld
@@ -142,6 +149,7 @@ browse by year incl. publisher:
 1985  Interplay   Borrowed Time
 1985  Interplay   Mindshadow
 1985  Interplay   The Tracer Sanction
+1985  Milliken    Lantern of D'Gamma
 1985  Polarware   Transylvania
 1985  Polarware   Crimson Crown
 1985  Polarware   Oo-Topos
@@ -157,3 +165,6 @@ browse by year incl. publisher:
 1986  Telarium    Nine Princes in Amber
 1987  Datasoft    Dark Lord
 1987  Polarware   Talisman
+1989  Miles       Questmaster
+1989  Satchel     Jara Tava
+
