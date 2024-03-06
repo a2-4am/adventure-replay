@@ -31,6 +31,10 @@ Death in the Caribbean    ✅          ✅         ✅ 163           ✅        
 Mystery House             ✅          ✅         ✅  73           ✅          ✅                 ✅               ❌
 Cranston Manor            ✅          ✅         ✅ 214           ✅          ✅                 ✅               ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Snowball                  ✅          --         ❌               ❌          ❌                 ❌               ✅
+Return to Eden            ✅          --         ❌               ❌          ❌                 ❌               ✅
+The Worm in Paradise      ✅          --         ❌               ❌          ❌                 ❌               ✅
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Curse of Crowley Manor    ❌
 Escape from Traam         ❌          ❌         ✅ 178
 Earthquake: SF 1906       ❌

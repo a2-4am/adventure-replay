@@ -15,7 +15,8 @@ SOURCES := \
 	Transylvania-1985 \
 	Crimson-Crown-1985 \
 	Oo-Topos-1985 \
-	The-Coveted-Mirror-1986
+	The-Coveted-Mirror-1986 \
+	Snowball
 
 # https://github.com/mach-kernel/cadius
 CADIUS=cadius

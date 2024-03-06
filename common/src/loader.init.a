@@ -8,12 +8,20 @@
 ;
 ; .SYSTEM code starts here
 ;
-         jmp   prefix_loop           ; magic jump
+         jmp   init_machine          ; magic jump
          !byte $EE,$EE               ; magic bytes
          !byte $41                   ; length of following buffer
 input_filename_start
          !fill $41                   ; may contain filename passed in by caller
 input_filename_end
+
+;
+; Reset machine to a known state
+;
+init_machine
+         jsr   ROM_IN0
+         jsr   ROM_PR0
+
 ;
 ; Ensure ProDOS has a current prefix, otherwise opening any file will fail,
 ; which is bad. If launched from Bitsy Bye, there will be no current prefix.

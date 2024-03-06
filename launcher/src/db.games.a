@@ -3,13 +3,13 @@
 ;
 
 GameCount
-         !byte 17
+         !byte 18
 
 GameDifficulty
-         !byte 0,2,3,4,2,4,3,3,3,2,5,4,4,4,3,3,5,5
+         !byte 0,2,3,4,2,4,3,3,3,2,5,4,4,4,3,3,1,5,5
 
 GameLength
-         !byte 0,1,4,3,4,1,2,3,3,3,4,3,3,2,3,4,5,5
+         !byte 0,1,4,3,4,1,2,3,3,3,4,3,3,2,3,4,1,5,5
 
 txtBrowse
          !text "                                        "
@@ -28,6 +28,7 @@ txtBrowse
          !text "1985  AmerEagle   FrakTured FaebLes     "
          !text "1985  Polarware   Transylvania          "
          !text "1985  Polarware   Crimson Crown         "
+         !text "1986  Level 9     Snowball              "
          !text "1986  Polarware   Oo-Topos              "
          !text "1986  Polarware   The Coveted Mirror    "
          !text "                                        "
@@ -154,18 +155,26 @@ sVolumeName15
          !raw  "CRIMSON.CROWN"
 
 sFullName16
-         !text "Oo-Topos",0
+         !text "Snowball",0
 sSearchName16
-         !text "OOTOPOS",0
+         !text "SNOWBALL",0
 sVolumeName16
+         !byte 8
+         !raw  "SNOWBALL"
+
+sFullName17
+         !text "Oo-Topos",0
+sSearchName17
+         !text "OOTOPOS",0
+sVolumeName17
          !byte 7
          !raw  "OOTOPOS"
 
-sFullName17
+sFullName18
          !text "The Coveted Mirror",0
-sSearchName17
+sSearchName18
          !text "COVETED MIRROR",0
-sVolumeName17
+sVolumeName18
          !byte 14
          !raw  "COVETED.MIRROR"
 
@@ -188,6 +197,7 @@ FullNames
          !word sFullName15
          !word sFullName16
          !word sFullName17
+         !word sFullName18
 
 SearchNames
          !word 0
@@ -208,6 +218,7 @@ SearchNames
          !word sSearchName15
          !word sSearchName16
          !word sSearchName17
+         !word sSearchName18
          !word 0
 
 VolumeNames
@@ -229,3 +240,4 @@ VolumeNames
          !word sVolumeName15
          !word sVolumeName16
          !word sVolumeName17
+         !word sVolumeName18

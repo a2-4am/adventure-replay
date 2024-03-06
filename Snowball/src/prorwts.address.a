@@ -1,0 +1,25 @@
+!if load_banked = 1 {
+  !if load_high = 1 {
+    !ifdef PASS2 {
+    } else { ;PASS2 not defined
+                reloc     = $ff00       ;page-aligned, as high as possible, the ideal value will be shown on mismatch
+    } ;PASS2
+  } else { ;load_high = 0
+                reloc     = $fe00       ;page-aligned, but otherwise wherever you want
+  } ;load_high = 1
+} else { ;load_banked = 0
+  !if load_high = 1 {
+    !ifdef PASS2 {
+    } else { ;PASS2 not defined
+                reloc     = $bf00       ;page-aligned, as high as possible, the ideal value will be shown on mismatch
+    } ;PASS2
+  } else { ;load_high = 0
+                reloc     = $bc00       ;page-aligned, but otherwise wherever you want ($BC00 is common for rwts_mode)
+  } ;load_high = 1
+} ;load_banked = 1
+
+                ;there are also buffers that can be moved if necessary:
+                ;dirbuf, encbuf, treebuf (and corresponding hdd* versions that load to the same place)
+                ;they are independent of each other so they can be placed separately
+                ;see near EOF for those
+                ;note that hddencbuf must be even-page-aligned in RWTS-mode

@@ -1,0 +1,158 @@
+;[music] you can't touch this [music]
+;math magic to determine ideal loading address, and information dump
+!ifdef PASS2 {
+} else { ;PASS2 not defined
+  !set PASS2=1
+  !if reloc < $c000 {
+    !if ((hdddataend + $ff) & -256) > $c000 {
+      !serious "initial reloc too high, adjust to ", $c000 - (((hdddataend + $ff) & -256) - reloc)
+    } ;hdddataend
+    !if load_high = 1 {
+      !if ((hdddataend + $ff) & -256) != $c000 {
+        !warn "initial reloc too low, adjust to ", $c000 - (((hdddataend + $ff) & -256) - reloc)
+      } ;hdddataend
+      hdddirbuf = reloc - $200
+      !if aligned_read = 0 {
+        hddencbuf = hdddirbuf - $200
+      } ;aligned_read
+      !if allow_trees = 1 {
+        !if fast_trees = 1 {
+          !if ((aligned_read xor 1) + enable_write) > 0 {
+            hddtreebuf = hddencbuf - $200
+          } else { ;aligned_read = 1 and enable_write = 0
+            hddtreebuf = hdddirbuf - $200
+          } ;aligned_read = 0 or enable_write = 1
+        } else { ;fast_trees = 0
+          hddtreebuf = hdddirbuf
+        } ;fast_trees
+      } ;allow_trees
+    } else { ;load_high = 0
+      !pseudopc ((hdddataend + $ff) & -256) {
+        hdddirbuf = *
+        !if (hdddirbuf + $200) > $c000 {
+          !if hdddirbuf < $d000 {
+            !set hdddirbuf = reloc - $200
+          } ;hdddirbuf
+        } ;hdddirbuf
+      }
+      !if ((aligned_read xor 1) + rwts_mode) > 0 {
+        !if fast_subindex = 0 {
+          hddencbuf = hdddirbuf ;writes come from cache
+        } else { ;fast_subindex = 1
+          !if hdddirbuf < reloc {
+            hddencbuf = hdddirbuf - $200
+          } else { ;hdddirbuf
+            hddencbuf = hdddirbuf + $200
+            !if (hddencbuf + $200) > $c000 {
+              !if hddencbuf < $d000 {
+                !set hddencbuf = reloc - $200
+              } ;hddencbuf
+            } ;hddencbuf
+          } ;hdddirbuf
+        } ;fast_subindex
+      } ;aligned_read = 0 or rwts_mode = 1
+      !if allow_trees = 1 {
+        !if fast_trees = 1 {
+          !if ((aligned_read xor 1) + rwts_mode) > 0 {
+            !if hddencbuf < reloc {
+              hddtreebuf = hddencbuf - $200
+            } else { ;hddencbuf
+              hddtreebuf = hddencbuf + $200
+              !if (hddtreebuf + $200) > $c000 {
+                !if hddtreebuf < $d000 {
+                  !set hddtreebuf = reloc - $200
+                } ;hddtreebuf
+              } ;hddtreebuf
+            } ;hddencbuf
+          } else { ;aligned_read = 1
+            !if hdddirbuf < reloc {
+              hddtreebuf = hdddirbuf - $200
+            } else { ;hdddirbuf
+              hddtreebuf = hdddirbuf + $200
+              !if (hddtreebuf + $200) > $c000 {
+                !if hddtreebuf < $d000 {
+                  !set hddtreebuf = reloc - $200
+                } ;hddtreebuf
+              } ;hddtreebuf
+            } ;hdddirbuf
+          } ;aligned_read
+        } else { ;fast_trees = 0
+            hddtreebuf = hdddirbuf
+        } ;fast_trees
+      } ;allow_trees
+    } ;load_high
+  } else { ;reloc > $c000
+    !if ((hdddataend + $ff) & -256) != 0 {
+      !if ((hdddataend + $ff) & -256) < reloc {
+        !serious "initial reloc too high, adjust to ", (0 - (((hdddataend + $ff) & -256) - reloc)) & $ffff
+      } ;hdddataend
+    } ;hdddataend
+    !if load_high = 1 {
+        !if (((hdddataend + $ff) & -256) & $ffff) != 0 {
+          !warn "initial reloc too low, adjust to ", (0 - (((hdddataend + $ff) & -256) - reloc)) & $ffff
+        } ;hdddataend
+      hdddirbuf = reloc - $200
+      !if aligned_read = 0 {
+        hddencbuf = hdddirbuf - $200
+      } ;aligned_read
+      !if allow_trees = 1 {
+        !if fast_trees = 1 {
+          !if ((aligned_read xor 1) + enable_write) > 0 {
+            hddtreebuf = hddencbuf - $200
+          } else { ;aligned_read = 1 and enable_write = 0
+            hddtreebuf = hdddirbuf - $200
+          } ;aligned_read = 0 or enable_write = 1
+        } else { ;fast_trees = 0
+          hddtreebuf = hdddirbuf
+        } ;fast_trees
+      } ;allow_trees
+    } else { ;load_high = 0
+      !pseudopc ((hdddataend + $ff) & -256) {
+        hdddirbuf = $fc00
+        !if (hdddirbuf + $200) < reloc {
+          !set hdddirbuf = reloc - $200
+        }
+      }
+      !if ((aligned_read xor 1) + rwts_mode) > 0 {
+        !if fast_subindex = 0 {
+          hddencbuf = hdddirbuf ;writes come from cache
+        } else { ;fast_subindex = 1
+          hddencbuf = hdddirbuf + $200
+        } ;fast_subindex
+      } ;aligned_read = 0 or rwts_mode = 1
+      !if allow_trees = 1 {
+        !if fast_trees = 1 {
+          !if ((aligned_read xor 1) + enable_write) > 0 {
+            hddtreebuf = hddencbuf + $200
+          } else { ;aligned_read = 1 and enable_write = 0
+            hddtreebuf = hdddirbuf + $200
+          } ;aligned_read = 0 or enable_write = 1
+        } else { ;fast_trees = 0
+          hddtreebuf = hdddirbuf
+        } ;fast_trees
+      } ;allow_trees
+    } ;load_high
+  } ;reloc
+  !if verbose_info = 1 {
+    !warn "hdd code: ", reloc, "-", hddcodeend - 1
+    !if hddcodeend != hdddataend {
+      !warn "hdd data: ", hddcodeend, "-", hdddataend - 1
+    }
+    !warn "hdd dirbuf: ", hdddirbuf, "-", hdddirbuf + $1ff
+    !if ((aligned_read xor 1) + rwts_mode) > 0 {
+      !warn "hdd encbuf: ", hddencbuf, "-", hddencbuf + $1ff
+    } ;aligned_read = 0 or rwts_mode = 1
+    !if allow_trees = 1 {
+      !warn "hdd treebuf: ", hddtreebuf, "-", hddtreebuf + $1ff
+    } ;allow_trees
+    !warn "hdd driver start: ", unrelochdd - init
+    !if (one_page + 0) = 0 {
+      !if ((hddcodeend - reloc) <= $100) {
+        !warn "one_page can be enabled, code is small enough"
+      } ;hddcodeend
+    } ;not one_page
+  } ;verbose_info
+} ;PASS2
+
+readbuff
+!byte $D3,$C1,$CE,$A0,$C9,$CE,$C3,$AE

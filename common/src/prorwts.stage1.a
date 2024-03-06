@@ -1,0 +1,344 @@
+         jmp   +
+
+c7_parms        !byte   1
+                !word   $200
+
+x80_parms       !byte   3, $d1
+                !word   readbuff, 2
++
+                lda     DEVNUM
+                sta     x80_parms + 1
+                sta     unrunit1 + 1
+                and     #$70
+                pha
+                ldx     #1
+                stx     namlo
+                inx
+                stx     namhi
+
+                ;fetch path, if any
+
+                jsr     MLI
+                !byte   $c7
+                !word   c7_parms
+                ldx     $200
+                dex
+                stx     sizelo
+                sec
+                bmi     +++
+
+                ;find current directory name in directory
+
+                php
+
+readblock       jsr     MLI
+                !byte   $80
+                !word   x80_parms
+
+                lda     #<(readbuff + NAME_LENGTH)
+                sta     scratchlo
+                lda     #>(readbuff + NAME_LENGTH)
+                sta     scratchhi
+inextent        ldy     #0
+                lda     (scratchlo), y
+                pha
+                and     #$0f
+                tax
+--              iny
+                lda     (scratchlo), y
+                cmp     (namlo), y
+                beq     ifoundname
+
+                ;match failed, move to next directory in this block, if possible
+
+-               pla
+
+skiphdr         clc
+                lda     scratchlo
+                adc     #ENTRY_SIZE
+                sta     scratchlo
+                bcc     +
+
+                ;there can be only one page crossed, so we can increment instead of adc
+
+                inc     scratchhi
++               cmp     #<(readbuff + NAME_LENGTH + ($27 * $0d))
+                lda     scratchhi
+                sbc     #>(readbuff + NAME_LENGTH + ($27 * $0d))
+                bcc     inextent
+
+                ;read next directory block when we reach the end of this block
+
+                lda     readbuff + NEXT_BLOCK_LO
+                ldx     readbuff + NEXT_BLOCK_HI
+                bcs     +
+
+ifoundname      dex
+                bne     --
+
+                ;parse path until last directory is seen
+
+                iny
+                lda     (namlo), y
+                cmp     #'/'
+                bne     -
+                pla
+                and     #$20 ;Volume Directory Header XOR subdirectory
+                beq     adjpath
+                pla
+                clc
+                php
+                lsr
+                bcc     skiphdr
+                inx
+
+adjpath         tya
+                eor     #$ff
+                adc     sizelo
+                sta     sizelo
+                clc
+                tya
+                adc     namlo
+                sta     namlo
+                dex
+                beq     ++
+
+                ;cache block number of current directory
+                ;as starting position for subsequent searches
+
+                ldy     #(KEY_POINTER + 1)
+                lda     (scratchlo), y
+                tax
+                dey
+                lda     (scratchlo), y
+                sta     unrhddblocklo + 1
+                stx     unrhddblockhi + 1
++               sta     x80_parms + 4
+                stx     x80_parms + 5
+++              lda     sizelo
+                bne     readblock
+                pla
+
+                ;unit to slot for ProDOS interface
+                ;accept if slot code matches unit number
+
++++             pla
+                lsr
+                lsr
+                lsr
+                tay
+                lsr
+                ora     #$c0
+                tax
+                cmp     DEVADR01HI, y
+                clc
+                beq     set_slot
+
+                ldx     #$c8
+
+                ;find SmartPort device for basic MicroDrive, BOOTi support
+                ;the BOOTi can load floppy .po images via the SmartPort interface
+                ;but the virtual slot behaviour differs slightly from regular ProDOS
+                ;so we scan for the SmartPort interface in all cases
+
+iterdevice
+-               dex
+                stx     scratchhi
+                ldy     #0
+                sty     scratchlo
+                iny
+                lda     (scratchlo), y
+                cmp     #$20
+                bne     -
+                iny
+                iny
+                lda     (scratchlo), y
+                bne     -
+                iny
+                iny
+                lda     (scratchlo), y
+                cmp     #3
+                bne     -
+                ldy     #$ff
+                lda     (scratchlo), y
+                beq     -
+
+set_slot        stx     slot + 2
+                stx     unrentry + 2
+slot            ldx     $cfff
+                stx     unrentry + 1
+!if use_smartport = 1 {
+                bcs     +
+                jmp     bankram
++
+
+                ldy     #$8c ;STY
+  !if (rwts_mode + enable_write) > 1 {
+                sty     unrcommand1
+  } ;rwts_mode = 1 and enable_write = 1
+                sty     unrcommand3
+                lda     #<pcommand
+  !if (rwts_mode + enable_write) > 1 {
+                sta     unrcommand1 + 1
+  } ;rwts_mode = 1 and enable_write = 1
+  !if (rwts_mode + aligned_read + (enable_write xor 1)) = 0 {
+                sta     unrcommand2 + 1
+  } ;rwts_mode = 0 and aligned_read = 0 and enable_write = 1
+                sta     unrcommand3 + 1
+                lda     #>pcommand
+  !if (rwts_mode + enable_write) > 1 {
+                sta     unrcommand1 + 2
+  } ;rwts_mode = 1 and enable_write = 1
+  !if (rwts_mode + aligned_read + (enable_write xor 1)) = 0 {
+                sta     unrcommand2 + 2
+  } ;rwts_mode = 0 and aligned_read = 0 and enable_write = 1
+                sta     unrcommand3 + 2
+                iny      ;STA
+                sty     unrblokhi1
+                sty     unrunit1 + 2
+                iny     ;STX
+  !if (rwts_mode + aligned_read + (enable_write xor 1)) = 0 {
+                sty     unrcommand2
+  } ;rwts_mode = 0 and aligned_read = 0 and enable_write = 1
+                sty     unrbloklo1
+                ;;lda     #>pblock
+                ;;pblock_enabled=1
+                sta     unrbloklo1 + 2
+  !if (rwts_mode + write_sparse) > 1 {
+                sta     unrbloklo2 + 2
+  } ;rwts_mode = 1 and write_sparse = 1
+                ;;lda     #>(pblock + 1)
+                ;;pblock1_enabled=1
+                sta     unrblokhi1 + 2
+  !if (rwts_mode + write_sparse) > 1 {
+                sta     unrblokhi2 + 2
+                sta     unrblokhi3 + 2
+  } ;rwts_mode = 1 and write_sparse = 1
+                ;;lda     #>paddr
+                sta     unrunit1 + 4
+                ldy     #<pblock
+                sty     unrbloklo1 + 1
+  !if (rwts_mode + write_sparse) > 1 {
+                sty     unrbloklo2 + 1
+  } ;rwts_mode = 1 and write_sparse = 1
+                iny
+                sty     unrblokhi1 + 1
+  !if (rwts_mode + write_sparse) > 1 {
+                sty     unrblokhi2 + 1
+                sty     unrblokhi3 + 1
+  } ;rwts_mode = 1 and write_sparse = 1
+                lda     #$a5 ;LDA
+                sta     unrunit1
+  !if (rwts_mode + write_sparse) > 1 {
+                lda     #$ee ;INC
+                sta     unrblokhi2
+                ldy     #$ad ;LDA
+                sty     unrblokhi3
+                iny ;LDX
+                sty     unrbloklo2
+  } ;rwts_mode = 1 and write_sparse = 1
+                lda     #adrlo
+                sta     unrunit1 + 1
+                lda     #<paddr
+                sta     unrunit1 + 3
+
+                ;use SmartPort entrypoint instead
+
+                inx
+                inx
+                inx
+                stx     unrentry + 1
+
+                ldx     #2
+                stx     x80_parms + 4
+                lda     #0
+                sta     x80_parms + 5
+                jsr     MLI
+                !byte   $80
+                !word   x80_parms
+                lda     #cmdread
+                sta     unrpcommand
+                lda     #$ea
+                sta     hackstar
+
+iterunit        inc     unrunit2
+                bne     +
+                ldx     slot + 2
+                jmp     iterdevice
++               jsr     unrentrysei
+
+                ldy     #$10
+-               lda     readbuff + 3, y
+                cmp     readbuff + $203, y
+                bne     iterunit
+                dey
+                bne     -
+                lda     #$68
+                sta     hackstar
+                lda     #<packet
+                sta     unrppacket
+                lda     #>packet
+                sta     unrppacket + 1
+} ;use_smartport = 1
+
+bankram
+!if load_banked = 1 {
+                lda     LCBANK2 - ((lc_bank - 1) * 8) - ((rwts_mode xor 1) * 2)+2
+                lda     LCBANK2 - ((lc_bank - 1) * 8) - ((rwts_mode xor 1) * 2)+2
+} ;load_banked = 1
+  !ifdef PASS2 {
+    !if (hddcodeend - reloc) > $100 {
+      !if one_page = 1 {
+        !error "one_page must be 0"
+      } ;one_page = 0
+      !if (hddcodeend - reloc) > $200 {
+        !if three_pages = 0 {
+          !error "three_pages must be 1"
+        } ;three_pages = 0
+      } ;hddcodeend
+    } ;hddcodeend
+  } ;PASS2
+  !if three_pages = 1 {
+                ldx     #>(hddcodeend + $ff - reloc)
+  } ;three_pages = 1
+                ldy     #0
+  !if load_aux = 1 {
+                sta     SETAUXWR + (load_banked * 4) ;SETAUXWR or SETAUXZP
+  } ;load_aux = 1
+multicopy
+-               lda     unrelochdd, y
+                sta     reloc, y
+
+  !if three_pages = 0 {
+    !if two_pages = 1 {
+                lda     unrelochdd + $100, y
+                sta     reloc + $100, y
+    } ;two_pages = 1
+  } ;three_pages = 0
+                iny
+                bne     -
+  !if three_pages = 1 {
+    !if (load_aux and (load_banked xor 1)) = 1 {
+                sta     CLRAUXWR
+    } ;load_aux = 1 and load_banked = 0
+                inc     multicopy + 2
+                inc     multicopy + 5
+    !if (load_aux and (load_banked xor 1)) = 1 {
+                sta     SETAUXWR
+    } ;load_aux = 1 and load_banked = 0
+                dex
+                bne     multicopy
+  } ;three_pages = 1
+  !if (fast_subindex + swap_zp) > 1 {
+                sty     zp_array + adrlo - first_zp
+  } ;fast_subindex = 1 and swap_zp = 1
+
+  !if swap_scrn = 1 {
+                jsr     saveslot
+                lda     #$91
+                sta     initpatch
+  } ;swap_scrn = 1
+
+  !if load_aux = 1 {
+                sta     CLRAUXWR + (load_banked * 4) ;CLRAUXWR or CLRAUXZP
+  } ;load_aux = 1

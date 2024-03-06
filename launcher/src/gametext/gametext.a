@@ -19,6 +19,7 @@
          !src  "src/gametext/fraktured.faebles.a"
          !src  "src/gametext/transylvania.a"
          !src  "src/gametext/crimson.crown.a"
+         !src  "src/gametext/snowball.a"
          !src  "src/gametext/ootopos.a"
          !src  "src/gametext/the.coveted.mirror.a"
 
