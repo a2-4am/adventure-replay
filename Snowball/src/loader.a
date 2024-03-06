@@ -14,7 +14,6 @@ ver_02 = 1
 !to "build/LOADER.SYSTEM#FF2000",plain
 *=$2000
 
-PREFIX_BUFFER             = $0800    ; $40 bytes
 STAGE2                    = $B600    ; $100 bytes
 
          ; ProRWTS user-defined options - no code
@@ -25,8 +24,6 @@ STAGE2                    = $B600    ; $100 bytes
 
          ; ProRWTS constants (some depend on options) - no code
          !src  "../common/src/prorwts.constants.a"
-
-;         !src  "../common/src/loader.init.a"               ; exits via Stage1
 
          !src  "../common/src/constants.a"         ; no code
          !src  "../common/src/macros.a"            ; no code
@@ -48,7 +45,6 @@ init_machine
          jsr   ROM_IN0
          jsr   ROM_PR0
 
-;Stage1
 init
          !src  "../common/src/prorwts.stage1.a"
 
