@@ -1,0 +1,4 @@
+$806 calls $886 for drawing room or objects
+
+do not need to preserve A/X/Y on the way in or on the way out,
+so that's nice

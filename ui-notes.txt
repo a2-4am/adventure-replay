@@ -157,11 +157,11 @@ browse by year incl. publisher:
 1986  Adv Intl    QuestProbe/Human Torch
 1986  Datasoft    Gunslinger
 1986  Interplay   Tass Times in Tonetown
-1986  Polarware   Oo-Topos
-1986  Polarware   The Coveted Mirror
 1986  Level 9     Snowball
 1986  Level 9     Return to Eden
 1986  Level 9     The Worm in Paradise
+1986  Polarware   Oo-Topos
+1986  Polarware   The Coveted Mirror
 1986  Telarium    Nine Princes in Amber
 1987  Datasoft    Dark Lord
 1987  Polarware   Talisman
