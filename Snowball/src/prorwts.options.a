@@ -25,7 +25,7 @@
                                         ;requires load_high to be set for arbitrary memory access
                                         ;else driver must be running from same memory target
                                         ;i.e. running from main if accessing main, running from aux if accessing aux
-                allow_saplings=0        ;enable support for saplings
+                allow_saplings=1        ;enable support for saplings
                 allow_trees  = 0        ;enable support for tree files, as opposed to only seedlings and saplings
                                         ;required in RWTS mode if file > 128kb
                 fast_trees   = 0        ;keep tree block in memory, requires an additional 512 bytes of RAM
