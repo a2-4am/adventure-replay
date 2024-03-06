@@ -99,7 +99,7 @@ FMDEST   sta   RELOC, x
 @noMouseText
          lda   #$AA                  ; asterisk
          sta   ClosedStar
-         lda   #$AE                  ; period
+         lda   #$AD                  ; dash
          sta   OpenStar
 @yesMouseText
 
