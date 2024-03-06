@@ -58,7 +58,7 @@ $(EXE): $(BUILDDIR)
 
 $(GAMETITLES): $(BUILDDIR)
 	cat res/TITLE.HGR/REPLAY\#062000 > "$@" && \
-	for f in $$(awk -F',' '!/^$$|^#|^\[/ { print $$1 }' < res/GAMES.CONF); do \
+	for f in $$(awk -F'"' '/^sVolumeName/ { print $$2 }' < launcher/src/db.games.a); do \
 		cat res/TITLE.HGR/"$$f"\#062000 >> "$@"; \
 	done
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@" -C
