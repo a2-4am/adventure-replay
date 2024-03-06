@@ -85,11 +85,23 @@ FMDEST   sta   RELOC, x
          beq   @hasLower
          lda   #$DF
          sta   CharMask
+@hasLower
+
+         ; accomodate non-MouseText machines (MouseText only on enhanced //e or later)
+         lda   ROM_MACHINEID
+         cmp   #$06
+         bne   @noMouseText
+         lda   $FBC0
+         beq   @yesMouseText
+         cmp   #$E0
+         beq   @yesMouseText
+
+@noMouseText
          lda   #$AA                  ; asterisk
          sta   ClosedStar
          lda   #$AE                  ; period
          sta   OpenStar
-@hasLower
+@yesMouseText
 
          ; restore previous Bye program if ours is already installed and we moved
          ; a previous Bye program on a previous launch
