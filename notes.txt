@@ -20,9 +20,9 @@ Sherwood Forest           ❌
 The Queen of Phobos       ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 The Coveted Mirror        ✅          ✅         ✅ 367           ✅          ✅                 ✅               ✅
-Transylvania              ✅          ✅         ✅ 171           ✅          ✅                 ✅               ❌
-Crimson Crown             ✅          ✅         ✅ 252           ✅          ✅                 ✅               ❌
-Oo-Topos                  ✅          ✅         ✅ 334           ✅          ✅                 ✅               ❌
+Transylvania              ✅          ✅         ✅ 171           ✅          ✅                 ✅               3/9
+Crimson Crown             ✅          ✅         ✅ 252           ✅          ✅                 ✅               3/9
+Oo-Topos                  ✅          ✅         ✅ 334           ✅          ✅                 ✅               3/9
 The Quest                 ❌
 Talisman                  ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
