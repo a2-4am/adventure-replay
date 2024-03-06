@@ -64,6 +64,6 @@
                 load_aux     = 0        ;load to aux memory
                 load_banked  = 1        ;set to 1 to load into banked RAM instead of main RAM (can be combined with load_aux for aux banked)
                 lc_bank      = 1        ;load into specified bank (1 or 2) if load_banked=1
-                one_page     = 1        ;set to 1 if verbose mode says that you should (smaller code)
-                two_pages    = 0        ;default size
+                one_page     = 0        ;set to 1 if verbose mode says that you should (smaller code)
+                two_pages    = 1        ;default size
                 three_pages  = 0        ;set to 1 if verbose mode says that you should (code is larger than two pages)
