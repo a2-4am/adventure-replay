@@ -106,9 +106,6 @@ obj_filename1
 
 move_stage2_start
 !pseudopc STAGE2_CALLBACK {
-         lda   #$AD;TODO temp should only be for automation
-         sta   $4452
-
 HasAutomationFile=*+1
          lda   #SELF_MODIFIED_BYTE
          beq   @no_auto
