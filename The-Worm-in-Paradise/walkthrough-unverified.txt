@@ -1,0 +1,380 @@
+T H E   W O R M   I N   P A R A D I S E (Level 9)
+-------------------------------------------------
+
+(Later released as Part 3 of the 'Silicon Dreams Trilogy')
+
+
+Before  describing a 'solution' to this adventure, it must be accepted that
+there isn't a move-by-move solution from start to finish!
+Only the very early part of the adventure is constant, as far as a solution
+is concerned. This is due to two main features:
+
+   (1)THE EDEN TRANSPORT SYSTEM - which throws up different address
+                                  locations on each load of the game.
+
+   (2)THE FUZBOTS OF ENOCH - who could crop up anywhere at any time.
+
+These being, obviously, in addition to any normal problems you may generate
+by the wrong action. Other notable features are:
+
+   (3)The Enoch TIME system - be sure to be home before curfew is
+                              imposed, and do not attempt to start a
+                              job too late in the day or the
+                              Workplace Droid will reject you!
+
+   (4)Never be in debt - you cannot afford the fine AND complete
+                         the game, so keep an eye on your Creds by
+                         'EXAMINE TATTOO'.
+
+THE EDEN TRANSPORT SYSTEM: Refer to your maps for clarification!
+
+This consists of three 'ETS' Roundabouts, all accessible from the Northmost
+roundabout. They are uniquely colour-coded by the FIRST COLOUR mentioned on
+a grid location, as follows:
+
+                   RED........the ETS 'EAST'
+                   BROWN......the ETS 'NORTH'
+                   BLACK......the ETS 'WEST'
+
+When  entering  an  ETS  type  'JUMP' to reach the centre and 'SAY EXIT' to
+leave (then SOUTH).
+
+There are SIX important addresses on the ETS which you must visit, BUT they
+may differ on each loading of the game!
+
+                  1.YOUR HABIHOME
+                  2.THE SOCIALIST'S HABIHOME
+                  3.THE JOB CENTRE
+                  4.THE TRAVEL AGENTS
+                  5.THE FLORISTS
+                  6.THE HARDWARE WAREHOUSE
+
+The  first one (Your Habihome) is easy to find and you don't really need to
+remember  this  address  -  just  type 'SAY HOME' in open areas, other than
+exits  from  roundabouts  leading to an ETS, and you are deposited one move
+North  of  your  Habihome  (SOUTH to enter). On leaving your Habihome, type
+'SAY  EXIT'  then  'SOUTH'  and  you're  placed  somewhere on the Northmost
+Roundabout, depending on your 'home' address.
+
+The  second  one (Socialist's Habihome) is found by examining a brooch (see
+Solution).
+
+The  remaining  four  are  given  out  on  television  advertisements  (see
+Solution).
+The  different  addresses  found  so far may not provide for EVERY possible
+address but most codes are mentioned. They are as follows:
+
+A.SOCIALIST'S HABIHOME
+
+       CODE: RED/YELLOW/BROWN/BLUE/GREY/VIOLET/BROWN
+   EAST ETS: Route from centre is:- SE-SW-SE-S-SE-SW-SW-S-SW
+                                    -SW-SW-W-W-S- then SOUTH.
+
+       CODE: BLACK/GREEN/BROWN/ORANGE/WHITE/BLACK/ORANGE
+   WEST ETS: Route from centre is:- SW-S-SE-SW-SE-S-SW-SE-SW
+                                    -SW-SE-E-E-E-SW- then SOUTH.
+
+B.THE JOBCENTRE
+       CODE: BROWN/GREY/GREEN/VIOLET/GREY/YELLOW/RED
+  NORTH ETS: Route from centre is:- S-SW-SE-SW-SW-SE-S-S-S
+                                    -S-SW-S- then SOUTH.
+
+       CODE: RED/WHITE/GREEN/VIOLET/BROWN/BLUE/BROWN
+   EAST ETS: Route from centre is:- S-S-SW-SE-SW-SE-SE-SE-SW
+                                    -S-SE-E-E-SE- then SOUTH.
+
+       CODE: RED/VIOLET/GREEN/BROWN/BLACK/VIOLET/BROWN
+   EAST ETS: Route from centre is:- S-SW-SW-SW-SE-S-SE-SW-SW
+                                    -SW-SE-E-E-E-SW- then SOUTH.
+
+C.THE TRAVEL AGENTS
+       CODE: RED/VIOLET/YELLOW/ORANGE/BLUE/GREY/VIOLET
+   EAST ETS: Route from centre is:- S-SW-SW-SW-S-S-SW-SE-SE
+                                    -SW-SW-SE- then SOUTH.
+
+       CODE: BLACK/YELLOW/YELLOW/BLUE/BROWN/BLACK/BLACK
+   WEST ETS: Route from centre is:- SE-S-SW-SW-SW-S-S-S-SW
+                                    -SE-SE-E-E-W-S- then SOUTH.
+
+       CODE: BROWN/BROWN/YELLOW/GREY/YELLOW/GREEN/GREY
+  NORTH ETS: Route from centre is:- S-SE-S-SW-SW-SW-S-SW-S
+                                    -SW-SE-E-E-E-S- then SOUTH.
+
+D.THE FLORISTS
+       CODE: RED/BLUE/RED/BLUE/BROWN/BLUE/GREY
+   EAST ETS: Route from centre is:- SW-SE-S-SW-S-S-S-SE-SW
+                                    -SW-SE-E-E-SE- then SOUTH.
+
+       CODE: BLACK/BLACK/RED/YELLOW/GREEN/GREY/BROWN
+   WEST ETS: Route from centre is:- S-S-S-SE-SE-SW-SE-SW-S
+                                    -SE-SE-E-E-E-SW- then SOUTH.
+
+       CODE: RED/GREY/RED/BLACK/ORANGE/WHITE/BLACK
+   EAST ETS: Route from centre is:- S-SW-S-S-S-SW-S-SW-S-SW
+                                    -SW-W-W-E-S- then SOUTH.
+
+E.HARDWARE WAREHOUSE
+       CODE: BROWN/BLUE/ORANGE/ORANGE/RED/WHITE/BLACK
+  NORTH ETS: Route from centre is:- SW-SE-S-SW-SE-S-SE-S-S
+                                    -SW-SE-SE- then SOUTH.
+
+
+       CODE: RED/BLUE/ORANGE/BLACK/ORANGE/RED/ORANGE
+   EAST ETS: Route from centre is:- SW-SE-S-SW-SE-SW-S-S-SW-S
+                                    -SE-E-E-W-SE- then SOUTH.
+
+(Note:-  Do  not  'type  ahead'  too  far  in advance as the parser becomes
+confused!  If,  however,  you  become  'lost',  just  type 'JUMP' and start
+working through the appropriate sequence of directions again.)
+
+The  final  note before commencing the game is regarding the clock. It is a
+decimal  clock (0-10).....5 is Midday and 10 is Midnight. 'Curfew' is 10-3.
+Each 'hour' consists of 100 'minutes' - 'WAIT' command uses 10 minutes, any
+other single input uses 1 minute.
+
+It  is  wise  to  tackle  the adventure in 'day stages' but don't waste any
+'days'  because  after about a week the Fuzbots get fed up of you wandering
+about  and fine you for being a parasite of the state, irrespective of your
+work record!!
+
+
+                               THE SOLUTION
+
+The  early part of the game is constant. You start 'in a dream' in a Garden
+in Paradise.
+
+TAKE  BENCH  -  E - S - DROP BENCH - ON BENCH - EXAMINE TREE - TAKE APPLE -
+BITE  APPLE  -  W  - W - W - N - KICK BEHEMOTH - N - W - WAIT - N - W - W -
+WAIT  - W - EXAMINE BEHEMOTH - TAKE SCALE - W - N - N - N - N - (Awake from
+'Paradise  Dream'  wearing  a  visor)  -  (You are in a Dream Alcove in the
+Beautiful Octagonal Room).
+
+DAYS 1&2.
+(Don't worry about the odd fine of 9 Creds)
+DROP  VISOR - BREAK COLLAR - WEAR COLLAR - (this action prevents the Police
+from  gaining any extra information about you - as long as you keep WEARING
+it they won't notice it's broken!) - S - NW - WEAR VISOR - SE - W - W - S -
+S  -  S - S - S - W - S - S - E - E - S - IN - SE - (SELL your spare organs
+to  raise  the  necessary  Creds?)  - YES - E - (you stay overnight and are
+returned to the Foyer next morning) - OUT - N - W - W - S - E - E - E - E -
+E - E - N - TAKE MEDALLION - S - W - BUY FLAG - (cost is 9 Creds) - YES - S
+-  W - W - W - W - IN - BUY BOX - (cost again is 9 Creds) - YES - OUT - N -
+E  -  EXAMINE MEMORIAL - WAIT - (until a potential Socialist arrives and is
+subsequently  arrested)  -  LOOK - TAKE WALLET - SAY HOME - S - E - EXAMINE
+WALLET  -  EXAMINE  BROOCH  -  (make  a  note of the colour code - it's the
+Socialist's address on the ETS) - DROP WALLET - DROP FLAG - DROP BOX - DROP
+MEDALLION.
+
+YOUR HABIHOME
+The  poster is really a television screen. SAY ON to operate it, or SAY OFF
+to  close  it  down. In the Bodymaint is a nozzle - SAY ON for a refreshing
+shower  but  remove your tradclads or other clothing first! The shower will
+remind you of this!! If you don't shower REGULARLY the Droids may refuse to
+serve you.
+
+The crack in the wall is your bed slot. SAY BED and it will swing down. LIE
+ON  BED  to  use  it. If you SAY BED while you're still on it you are swung
+down  to the Undercity below your Habihome, but wait until you're sure that
+you  know how to get out again before you try this! When your tattoo buzzes
+and  announces  'Curfew  in 1 hour', type SLEEP while on the bed and make a
+note of your 'dream'.....it may prove useful!
+
+REMOVE  TRADCLADS  -  N  -  SAY ON - (have a shower) - WEAR TRADCLADS - S -
+EXAMINE POSTER - SAY ON - EXAMINE TATTOO - (note the time and the amount of
+Creds  you have) - (continue to EXAMINE POSTER or even EXAMINE TV until you
+have  got  the  addresses  of  the  JOBCENTRE,  TRAVEL AGENTS, FLORISTS and
+HARDWARE  WAREHOUSE.......it  may  take  quite  a while but they all appear
+eventually!)  -  SAY BED - LIE ON BED - (when curfew is announced.......) -
+SLEEP.
+
+DAY 3.
+(Refer to maps and ETS notes for directions)
+Go  to  the Florist's Shop, buy the wreath, leave the ETS and make your way
+to  the  Memorial in the Theme Park. DROP the wreath at the Memorial. Go to
+the  Jobcentre  and take a job as a Clerk. If you're offered a YTS/YOP job,
+SAY  NO  and she'll offer you a job as a Clerk, eventually - if she doesn't
+you'll have to return the next day......maybe you haven't showered!
+
+Take  the  card  to  the Workplace and go DOWN. After your days work you're
+escorted out again. SAY HOME and go SOUTH into your Habihome. Go to bed and
+SLEEP after curfew is announced.
+
+DAY 4.
+Visit  the  Jobcentre  again and get a job as a Labourer (turn down YTS/YOP
+and  the Clerks job), take the card and proceed to the Workplace. This time
+upon  entering  you're  taken  to  a  Workshop.  Go WEST and you are in the
+Waldroid  Control  Cocoon.  You  now assume the role of the Waldroid in the
+Workshop.  Go  EAST  and  make  your  way  to  the Hardware Warehouse. (The
+Waldroid  behaves  exactly  as  if it was you moving about, i.e., JUMP, SAY
+EXIT, etc).
+
+Buy  the  valve. You obtain it for nothing on the council rates; if you had
+tried  to  buy  it as yourself it would have cost you 1000 Creds! Return to
+the  Workshop  -  the  Waldroid  controls die and you return to your normal
+role. EXAMINE the WALDROID on the way out and TAKE VALVE. Go home, drop the
+valve, WAIT until curfew is announced then SLEEP.
+
+DAY 5.
+Have  a shower and proceed to the Pet Shop in the Pleasure Dome (9 Creds to
+go  NORTH through the turnstile). There is a Dagget here that was 800 Creds
+on Day 1 but is now only 500 Creds. BUY DAGGET.
+
+THE DAGGET
+This  is  a robot dog.....EXAMINE it to reveal that it is a kind of plastic
+labrador!  It operates on batteries through a Batpak (spelling is important
+-  the program doesn't respond to Batpack!!). There is no need to carry the
+Dagget  for as long as he is fitted with the Batpak he'll follow you around
+and you don't risk getting fined for possessing him then! To immobilise the
+Dagget,  or  stop  him from following you, REMOVE BATPAK and then drop it .
+The  Dagget  winds down after a few moves. Ignore the majority of his crazy
+antics....they appear purely for show!
+
+Go  to  the  Museum  and  REMOVE BATPAK. You now have to steal a Helmet and
+Leotard from the exhibition without anyone seeing you do it or leaving with
+the  stolen  items.  Also  there  is  a  security screen covering them. The
+exception  to  the latter rule is when the Tourist Guide comes in and shows
+the exhibits to some tourists.
+
+WAIT  until the tourists leave, then TAKE HELMET AND LEOTARD (you only have
+ONE  move  before  the  screen  comes  down again!). PUT HELMET IN DAGGET -
+REMOVE  TRADCLADS - WEAR LEOTARD - WEAR TRADCLADS.......no-one is any wiser
+as  to  your  misdeeds now. Don't forget to TAKE DAGGET and then go back to
+your Habihome.
+
+REMOVE  HELMET  -  DROP  HELMET  - REMOVE TRADCLADS - REMOVE LEOTARD - DROP
+LEOTARD - WEAR TRADCLADS - PUT BATPAK IN DAGGET.
+
+Take  the  brooch  from  the wallet and go to the Socialist's Habihome. The
+Dagget  will  find  an Invitation for you. Return home with the Invitation.
+Remove  the  Batpak from the Dagget and DROP BATPAK. Examine the Invitation
+and  note  the  time of the meeting (usually at '6'). Drop the brooch, take
+the  medallion  and  valve,  together  with  the invitation. WAIT until the
+Dagget  grinds  to a halt then go to the Bison's Temple at the far North of
+the  Pleasure Dome Corridor. Time is important here, as you're only allowed
+a couple of minutes leeway from the time stated.
+
+WAIT  or  go SOUTH then NORTH until ONE MINUTE BEFORE the appointed time of
+the  meeting.......remembering  that  a  'move'  is ONE minute, WAIT is TEN
+minutes. (EXAMINE TATTOO regularly).
+
+At  the  appointed  time,  enter the Temple and WAIT until the Bison leader
+comes  out to meet you. Joining fee is 100 Creds. After becoming a Bison go
+WEST  to  the Temple Bar and BUY the Bottle of Wine, then go home. Drop the
+medallion,  valve  and bottle and leave the Dagget for now. Take the wallet
+and  brooch, together with your invitation, and hand them in to the Police,
+at  the Police Station, in the order:- GIVE INVITATION - GIVE BROOCH - GIVE
+WALLET.  They  tell  you something you already know and you receive a small
+reward  -  EXAMINE TATTOO. Return home, have a shower and SLEEP when curfew
+is announced.
+
+DAY 6.
+TAKE  BATPAK - PUT BATPAK IN DAGGET. (You need him for the next task). Have
+a shower again and proceed to the Jobcentre yet again. Turn down everything
+and  as  the Droid shakes our hand it realises that you are now a Bison and
+offers  you  a  job  as  a  Managing Director. Go to the Workplace with the
+Dagget.  This time, upon entry, you're shown to a Fabulous Office entrance.
+Go  NORTH and you're up to your neck in carpet - but the Dagget keeps it at
+bay  so  as  not  to  impede  your  progress.  Go  WEST to your desk in the
+Boardroom.  After  your  day's work you're escorted out - with not a little
+increase in Creds. (EXAMINE TATTOO!).
+
+Make  your  way  to  the Travel Agent's and buy a ticket. You couldn't have
+bought  it before because it only sells to Bisons, but make sure you've had
+a   shower  that  day!  Go  home,  WAIT  until  curfew  is  announced  then
+SLEEP.......you're going need all your wits for the last day!!
+
+DAY 7.
+This  is  the final day and it is essential that you 'SAVE' game up to this
+point as a lot of things could still happen - even on the last move!!
+
+Don't  worry  about  the  time  or  Creds, you'll soon have plenty of both,
+providing you're in the right place with the right equipment.
+
+Deactivate  the Dagget (REMOVE BATPAK - WAIT) and after your morning shower
+proceed  to the Hardware Warehouse and buy the Vidcam, (cost is 300 Creds).
+Return home, get the ticket, ensure that you are still carrying the Vidcam,
+then SAY BED - LIE ON BED - SAY BED.
+
+You  are taken down to the Undercity. Refer to the map and proceed SOUTH to
+the  Disgusting  Junction.  Go WEST and TAKE SIGN then DROP the sign at the
+Disgusting  Junction. It tells the Droids where the rubbish and junk should
+be deposited......they always leave it by this sign!
+
+Go back to the Cluttered Stained Room (WEST) and you'll notice a Junk Heap.
+The  cleaning  Droids will eventually move this to wherever you have placed
+the  sign  -  but you must be very patient! When the junk heap is all moved
+from this location an exit South through a grill is revealed. A more useful
+exit,  that  was  there  all  the  time  but  not mentioned in the location
+description, is North past the Waterfall to a ledge behind!
+
+Move  NORTH  ONCE  ONLY from behind the waterfall and you will see a Flying
+Saucer. The wiggly roots before you are part of an alarm/gas system so stay
+put!  SQUEEZE  VIDCAM to record the scene then proceed SOUTH - SOUTH - EAST
+to the Disgusting Junction. If the junk heap has not appeared here yet then
+have  a walk around (or WAIT) awhile. When the junk heap materialises CLIMB
+HEAP then UP, and you pass through the manhole - one way - to the Workplace
+Roundabout Exit of the Southmost Roundabout.
+
+Proceed to the Police Station and GIVE VIDCAM. Go to the Riverboat Platform
+in  the  Theme  Park and then NORTH to cross the river to the Island of the
+Mighty.  (This  is  ONE-WAY once only!). Follow the map to the South of the
+Fabulous Foyer where you see a Reception Droid. On arrival you are escorted
+by  elevator  to  the  Top  Floor  and  subsequently  interviewed about the
+'aliens'  on  television.  The  3rd  Kimberley rewards you (1000 Creds) and
+makes you a Party Member. You are then taken back home.
+
+                         FINAL SEQUENCE OF EVENTS
+
+REMOVE  TRADCLADS - (but still carry them!) - TAKE LEOTARD - WEAR LEOTARD -
+TAKE  HELMET  - TAKE BOTTLE - TAKE MEDALLION - TAKE VALVE - (these latter 2
+items to trigger the alarm) - TAKE BOX - PUT BATPAK IN DAGGET - (Now is his
+finest hour!) - TAKE DAGGET - (he won't necessarily follow you on this one)
+- SAY BED - LIE ON BED - SAY BED.
+
+Drop  the  Dagget and proceed to the Disgusting Junction. Take the sign and
+go EAST to the location described as 'Between Dry Pillars' and festooned in
+red  tape.  Drop  the  sign  here, then proceed: WEST - WEST - NORTH - WEAR
+HELMET  -  THROW  MEDALLION  NORTH - the alarm sounds and gas flows in....a
+Technician  from  the  Saucer will look out, see no-one and proclaim 'False
+Alarm'.  THROW  VALVE NORTH......the Technician records another false alarm
+and  orders  the  system  to  be  shut  down  until  Maintenance  check  it
+over.......BUT  this  is NOT immediate so WAIT at least FOUR TIMES until an
+occupant of the Saucer has looked out another TWICE!
+
+Now  go  NORTH  -  NORTH  for  a  bit of a surprise! (This is where you say
+goodbye to your old friend......wipes tears of emotion away and cancels the
+Kennomeat!).  TAKE  COSTUME  then EAST to the East/West Corridor (see Map).
+Remove  and drop the helmet and leotard here then WEAR TRADCLADS. Go to the
+Red  Tape  location and WAIT until the Junk Heap materialises. When it does
+CLIMB  HEAP then UP. This time, however, the manhole is rusted up somewhat,
+so  REMOVE  CORK......the  cork pops out of the bottle and wine sprays over
+everything, lubricating the manhole cover.
+
+IMPORTANT NOTE: TAKE CORK....you'll need this right at the end!!
+
+UP and you are in the Quad, South of the Pyramid of Power. Proceed NORTH to
+the Fabulous Foyer then NORTHEAST - NORTH - EXAMINE BUTTONS - (they are all
+different colours but WHITE is the one for you!) - PUSH WHITE BUTTON - (the
+Elevator  goes  only  so far towards your required destination, so......) -
+PUSH WHITE BUTTON again, and you're on the Top Floor.
+
+Proceed  SOUTH then EAST past the Pyramid Droid and you are confronted by a
+mirror.  PUSH MIRROR and it revolves depositing you at the base of a Spiral
+Staircase.  Go  UP  -  THROW  BOX  NORTH - it lands below the partition and
+causes   a   malfunction.   Continue  NORTH  then  NORTH  again.  Now  fire
+extinguisher  foam  starts  to  pour  in  from  an orifice!......your final
+command is to PUT CORK IN ORIFICE!!!!!!
+
+
+                               FINAL MESSAGE
+
+"You  block  the  orifice and stop the foam. You threaten to tell the truth
+about  fake  aliens  and  wave  the  costume as proof. Eventually a deal is
+struck.  You  give  back the alien costume and, in return, are adopted into
+the Party Leadership. Congratulations! You have won!"
+
+      "You score 1000 out of 1000 and are a Grandmaster Adventurer".
+
+*****************************************************
+Displayed on the Classic Adventures Solution Archive:
+http://solutionarchive.com

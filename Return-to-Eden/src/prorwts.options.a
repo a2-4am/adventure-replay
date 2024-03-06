@@ -1,0 +1,69 @@
+                verbose_info = 1        ;set to 1 to enable display of memory usage
+                poll_drive   = 0        ;set to 1 to check if disk is in drive, recommended if allow_multi is enabled
+                use_smartport= 1        ;set to 1 to enable support for more than two MicroDrive (or more than four CFFA) partitions
+                override_adr = 0        ;set to 1 to require an explicit load address
+                aligned_read = 1        ;set to 1 if all reads can be a multiple of block size (required for RWTS mode)
+                enable_readseq=0        ;set to 1 to enable reading multiple sequential times from the same file without seek
+                                        ;(exposes a fixed address that can be called for either floppy or hard disk support)
+                                        ;requires fast_subindex
+                                        ;can also be used for sequential writes, but size must be 512-aligned
+                enable_write = 1        ;set to 1 to enable write support
+                                        ;file must exist already and its size cannot be altered
+                                        ;writes occur in multiples of block size
+                enable_format= 0        ;used only by RWTS mode, requires enable_write and fast_subindex
+                enable_seek  = 0        ;set to 1 to enable seek support
+                                        ;seeking with aligned_read=1 requires non-zero offset
+                allow_multi  = 0        ;set to 1 to allow multiple floppies
+                allow_zerovol= 0        ;set to 1 to support volume 0 (=last used volume)
+                check_chksum = 0        ;set to 1 to enforce checksum verification for floppies
+                allow_subdir = 0        ;set to 1 to allow opening subdirectories to access files
+                might_exist  = 0        ;set to 1 if file is not known to always exist already
+                                        ;makes use of status to indicate success or failure
+                many_files   = 0        ;set to 1 to support more than 256 files in a directory
+                detect_wp    = 0        ;detect write-protected floppy during writes
+                allow_aux    = 0        ;set to 1 to allow read/write directly to/from aux memory
+                                        ;requires load_high to be set for arbitrary memory access
+                                        ;else driver must be running from same memory target
+                                        ;i.e. running from main if accessing main, running from aux if accessing aux
+                allow_saplings=1        ;enable support for saplings
+                allow_trees  = 0        ;enable support for tree files, as opposed to only seedlings and saplings
+                                        ;required in RWTS mode if file > 128kb
+                fast_trees   = 0        ;keep tree block in memory, requires an additional 512 bytes of RAM
+                always_trees = 0        ;set to 1 if the only file access involves tree files
+                                        ;not compatible with allow_subdir, allow_saplings
+                                        ;required in RWTS mode if allow_trees is enabled
+                detect_treof = 0        ;detect EOF during read of tree files
+                fast_subindex= 0        ;keep subindex block in memory, requires an additional 512 bytes of RAM
+                                        ;halves the disk access for double the speed (ideal for RWTS mode)
+                allow_sparse = 0        ;enable support for reading sparse files
+                write_sparse = 0        ;enable support for writing to sparse files (blocks are allocated even if empty)
+                                        ;used only by RWTS mode, writing to sparse files in non-RWTS mode will corrupt the file!
+                bounds_check = 0        ;set to 1 to prevent access beyond the end of the file
+                                        ;but limits file size to 64k-2 bytes.
+                return_size  = 0        ;set to 1 to receive file size on open in read-only mode
+                one_shot     = 0        ;set to 1 to load entire file in one pass (avoids the need to specify size)
+                no_interrupts= 0        ;set to 1 to disable interrupts across calls
+                detect_err   = 0        ;set to 1 to to detect errors in no_interrupts mode
+                swap_zp      = 0        ;set to 1 to include code to preserve zpage
+                                        ;used only by RWTS mode
+                swap_scrn    = 1        ;set to 1 to preserve screen hole contents across SmartPort calls
+                                        ;recommended if allow_aux is used, to avoid device reset
+                                        ;requires 64 bytes to save all holes
+                read_scrn    = 0        ;set to 1 to support reading into screen memory
+                                        ;requires swap_scrn
+                rwts_mode    = 0        ;set to 1 to enable emulation of DOS RWTS when running from hard disk
+                                        ;uses a one-time open of a tree file, no other file access allowed
+                                        ;use unique volume numbers to distinguish between images in the same file
+                                        ;requires override_adr, allow_trees, always_trees
+                                        ;or fast_subindex if file is smaller than a tree
+                                        ;not compatible with enable_floppy, allow_subdir, might_exist, bounds_check
+                mem_swap     = 0        ;set to 1 if zpage can be swapped between main and aux, and swap_zp is unsuitable
+                                        ;(caches index registers in code instead of zpage)
+                write_ffff   = 0        ;set to 1 if there might be reads to $FFxx and allow_sparse=1
+                load_high    = 0        ;set to 1 to load to top of RAM (either main or banked, enables a himem check)
+                load_aux     = 0        ;load to aux memory
+                load_banked  = 1        ;set to 1 to load into banked RAM instead of main RAM (can be combined with load_aux for aux banked)
+                lc_bank      = 1        ;load into specified bank (1 or 2) if load_banked=1
+                one_page     = 0        ;set to 1 if verbose mode says that you should (smaller code)
+                two_pages    = 1        ;default size
+                three_pages  = 0        ;set to 1 if verbose mode says that you should (code is larger than two pages)

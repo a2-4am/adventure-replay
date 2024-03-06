@@ -3,13 +3,13 @@
 ;
 
 GameCount
-         !byte 18
+         !byte 20
 
 GameDifficulty
-         !byte 0,2,3,4,2,4,3,3,3,2,5,4,4,4,3,3,1,5,5
+         !byte 0,2,3,4,2,4,3,3,3,2,5,4,4,4,3,3,1,1,1,5,5
 
 GameLength
-         !byte 0,1,4,3,4,1,2,3,3,3,4,3,3,2,3,4,1,5,5
+         !byte 0,1,4,3,4,1,2,3,3,3,4,3,3,2,3,4,1,1,1,5,5
 
 txtBrowse
          !text "                                        "
@@ -29,6 +29,8 @@ txtBrowse
          !text "1985  Polarware   Transylvania          "
          !text "1985  Polarware   Crimson Crown         "
          !text "1986  Level 9     Snowball              "
+         !text "1986  Level 9     Return to Eden        "
+         !text "1986  Level 9     The Worm in Paradise  "
          !text "1986  Polarware   Oo-Topos              "
          !text "1986  Polarware   The Coveted Mirror    "
          !text "                                        "
@@ -98,13 +100,21 @@ sFullName16    !text "Snowball",0
 sSearchName16  !text "SNOWBALL",0
 sVolumeName16  !raw  8,"SNOWBALL"
 
-sFullName17    !text "Oo-Topos",0
-sSearchName17  !text "OOTOPOS",0
-sVolumeName17  !raw  7,"OOTOPOS"
+sFullName17    !text "Return to Eden",0
+sSearchName17  !text "RETURN EDEN",0
+sVolumeName17  !raw  14,"RETURN.TO.EDEN"
 
-sFullName18    !text "The Coveted Mirror",0
-sSearchName18  !text "COVETED MIRROR",0
-sVolumeName18  !raw  14,"COVETED.MIRROR"
+sFullName18    !text "The Worm in Paradise",0
+sSearchName18  !text "WORM PARADISE",0
+sVolumeName18  !raw  13,"WORM.PARADISE"
+
+sFullName19    !text "Oo-Topos",0
+sSearchName19  !text "OOTOPOS",0
+sVolumeName19  !raw  7,"OOTOPOS"
+
+sFullName20    !text "The Coveted Mirror",0
+sSearchName20  !text "COVETED MIRROR",0
+sVolumeName20  !raw  14,"COVETED.MIRROR"
 
 FullNames
          !word 0
@@ -126,6 +136,8 @@ FullNames
          !word sFullName16
          !word sFullName17
          !word sFullName18
+         !word sFullName19
+         !word sFullName20
 
 SearchNames
          !word 0
@@ -147,6 +159,8 @@ SearchNames
          !word sSearchName16
          !word sSearchName17
          !word sSearchName18
+         !word sSearchName19
+         !word sSearchName20
          !word 0
 
 VolumeNames
@@ -169,3 +183,5 @@ VolumeNames
          !word sVolumeName16
          !word sVolumeName17
          !word sVolumeName18
+         !word sVolumeName19
+         !word sVolumeName20
