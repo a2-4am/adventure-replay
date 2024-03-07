@@ -1,2 +1,9 @@
 loader is virtually identical to Claymorgue Castle
 except address of locations array
+
+-=-=-
+
+accelerated drawing
+$161C jumps to $1BB2, wrap this in accel/de-accel
+/!\ need to preserve X register
+also used to draw title screen
