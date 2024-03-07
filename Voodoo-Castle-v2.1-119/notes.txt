@@ -18,3 +18,8 @@ $7780 jsr RestorePart1 hook
 $7791 jsr RestorePart2 hook
 
 $7505 restore prompt
+
+accelerated drawing
+$163C jumps to $1BB6, wrap this in accel/de-accel
+/!\ need to preserve X register
+also used to draw title screen

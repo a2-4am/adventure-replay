@@ -2,7 +2,7 @@
 Adventureland             ✅       ✅      ✅ 169        ✅       ✅      ✅        ✅     ✅
 Pirate Adventure          ✅       ✅      ✅ 281        ✅       ✅      ✅        ✅     ✅
 Mission Impossible        ✅       ✅      ✅  98        ✅       ✅      ✅        ✅     ✅
-Voodoo Castle             ✅       ✅      ✅ 129        ✅       ✅      ✅        ✅     ❌
+Voodoo Castle             ✅       ✅      ✅ 129        ✅       ✅      ✅        ✅     ✅
 The Count                 ✅       ✅      ✅ 163        ✅       ✅      ✅        ✅     ❌
 Strange Odyssey           ✅       ✅      ✅ 172        ✅       ✅      ✅        ✅     ❌
 Claymorgue Castle         ✅       ✅      ✅ 159        ✅       ✅      ✅        ✅     ❌
