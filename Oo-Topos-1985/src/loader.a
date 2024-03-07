@@ -50,6 +50,7 @@ move_wrap_input_end
 move_wrap_drawing_start
 !pseudopc WRAP_DRAWING {
          jsr   EnableAccelerator
+WrapDrawingTarget=*+1
          jsr   $886
 DisableAccelerator
 EnableAccelerator=*+3
@@ -96,6 +97,16 @@ Stage1
          +INSTALL_BETTER_INPUT
          +SHORT_COPY move_wrap_input_start, move_wrap_input_end, WRAP_INPUT
          +SHORT_COPY move_wrap_drawing_start, move_wrap_drawing_end, WRAP_DRAWING
+
+         ; DHGR and HGR have different entry points
+         lda   PRODOS_MACHID
+         and   #$30
+         cmp   #$30
+         beq   @dhgr
+         lda   #$76
+         +HIDE_NEXT_2_BYTES
+@dhgr    lda   #$86
+         sta   WrapDrawingTarget
 
          ; build EnableAccelerator and DisableAccelerator functions
          ; and copy them into place
