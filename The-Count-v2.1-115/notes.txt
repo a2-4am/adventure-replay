@@ -52,3 +52,10 @@ Location strings are length-prefixed strings (not encrypted)
 If first letter of location string is '*' then the location is a self-contained phrase
   and is printed as-is, e.g. "I'm lying in a large brass bed"
 otherwise the location string is printed with the prefix "I'm in a "
+
+-=-=-
+
+accelerated drawing
+$161C jumps to $1B99, wrap this in accel/de-accel
+no need to preserve registers
+also used to draw title screen
