@@ -27,6 +27,7 @@ AUTO_INPUT                = INPUT
 AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 SAGA_LOCATION_ARRAY       = $653B
 SAGA_IO_ERROR             = $FF58
+WRAP_DRAWING              = $0300
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
@@ -43,6 +44,22 @@ WrapOpenSaveFile
 }
 move_wrap_savegame_end
 
+move_wrap_drawing_start
+!pseudopc WRAP_DRAWING {
+         txa
+         pha
+         jsr   EnableAccelerator
+         jsr   $1BC3
+         jsr   DisableAccelerator
+         pla
+         tax
+         rts
+DisableAccelerator
+EnableAccelerator=*+3
+}
+move_wrap_drawing_end
+         !src  "../common/src/hw.accel.a"
+
 Stage1
          ; copy RWTS DOS shim into place
          ; (includes CloseAllFiles routine, so must do this first)
@@ -51,6 +68,12 @@ Stage1
          ; copy savegame code into place
          +INSTALL_SAGA_SAVEGAME
          +SHORT_COPY move_wrap_savegame_start, move_wrap_savegame_end, WRAP_SAVEGAME
+
+         ; 4000..B7FF
+         ; This OBJ file includes DOS, minus RWTS, plus patches. Routines
+         ; at $BFDC, $BFE6, and $BFED have been moved down
+         ; to $B6DC, $B6E6, and $B6ED, and callers have been patched.
+         +READ_ENTIRE_FILE parm_open2, parm_read2
 
          ; set up zero page (in the original game, these are set by calling
          ; HGR earlier in the boot process)
@@ -66,6 +89,19 @@ Stage1
          ; copy stage 2 loader code into place
          +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2
 
+         ; copy accelerated drawing wrapper into place
+         +SHORT_COPY move_wrap_drawing_start, move_wrap_drawing_end, WRAP_DRAWING
+
+         ; build EnableAccelerator and DisableAccelerator functions
+         ; and copy them into place
+         jsr   BuildAcceleratorFunction
+         +STAY @accel+1
+         dex
+@accel   lda   SELF_MODIFIED_WORD, x
+         sta   DisableAccelerator, x
+         dex
+         bpl   @accel
+
          lda   input_filename_start
          ; stage 2 (now in place) needs to know if we're using automation
          sta   HasAutomationFile
@@ -78,6 +114,21 @@ Stage1
          ; continue from relocated stage 2
          jmp   STAGE2
 
+parm_open2
+         !byte 3
+         !word obj_filename2
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read2
+         !byte 4
+         !byte 1
+         !word $4000
+         !word $FFFF
+         !word 0
+obj_filename2
+         !byte 8
+         !text "OBJ.4000"
+
 ;------------------------------------------------------------------------------
 ; Stage 2 loader
 ; loads initial game code and applies patches
@@ -87,12 +138,6 @@ move_stage2_start
 !pseudopc STAGE2 {
          ; 0800..23FF
          +READ_ENTIRE_FILE parm_open1, parm_read1
-
-         ; 4000..B7FF
-         ; This OBJ file includes DOS, minus RWTS, plus patches. Routines
-         ; at $BFDC, $BFE6, and $BFED have been moved down
-         ; to $B6DC, $B6E6, and $B6ED, and callers have been patched.
-         +READ_ENTIRE_FILE parm_open2, parm_read2
 
          ; set up DOS I/O vectors (like calling $3EA, except we're not
          ; setting up the page 3 DOS vectors because we don't need to)
@@ -137,6 +182,9 @@ move_stage2_start
          sta   $7515
          sta   $7516
 }
+
+         ; hook accelerated drawing routine
+         +STA_16 $163D, WRAP_DRAWING
 
          ; turn on lowercase display by default on machines that support it
          +HAS_LOWERCASE
@@ -197,20 +245,5 @@ parm_read1
 obj_filename1
          !byte 8
          !text "OBJ.0800"
-
-parm_open2
-         !byte 3
-         !word obj_filename2
-         !word PRODOS_BUFFER
-         !byte 0
-parm_read2
-         !byte 4
-         !byte 1
-         !word $4000
-         !word $FFFF
-         !word 0
-obj_filename2
-         !byte 8
-         !text "OBJ.4000"
 }
 move_stage2_end

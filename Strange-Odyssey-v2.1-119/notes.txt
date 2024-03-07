@@ -18,3 +18,9 @@ $1571 increments "1" character inside DOS command, so it becomes e.g.
 $1574+ makes some changes to $4033 buffer
   somehow re-saves with the new filename (206 instead of 106) and updated data
 
+-=-=-
+
+accelerated drawing
+$163C jumps to $1BC3, wrap this in accel/de-accel
+/!\ need to preserve X register
+also used to draw title screen
