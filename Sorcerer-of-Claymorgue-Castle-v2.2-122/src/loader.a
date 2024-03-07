@@ -25,6 +25,7 @@ AUTO_INPUT                = INPUT
 AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 SAGA_LOCATION_ARRAY       = $65EA
 SAGA_IO_ERROR             = $782C
+WRAP_DRAWING              = $0300
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
@@ -32,6 +33,22 @@ SAGA_IO_ERROR             = $782C
          !src  "../common/src/loader.automateinput.blocking.a"
          !src  "../common/src/loader.betterinput.blocking.a"
          !src  "../common/src/savegame.saga.a"
+
+move_wrap_drawing_start
+!pseudopc WRAP_DRAWING {
+         txa
+         pha
+         jsr   EnableAccelerator
+         jsr   $1B99
+         jsr   DisableAccelerator
+         pla
+         tax
+         rts
+DisableAccelerator
+EnableAccelerator=*+3
+}
+move_wrap_drawing_end
+         !src  "../common/src/hw.accel.a"
 
 Stage1
          ; copy RWTS DOS shim into place
@@ -75,6 +92,22 @@ Stage1
          lda   #$00
          sta   $6FD1
 }
+
+         ; copy accelerated drawing wrapper into place
+         +SHORT_COPY move_wrap_drawing_start, move_wrap_drawing_end, WRAP_DRAWING
+
+         ; build EnableAccelerator and DisableAccelerator functions
+         ; and copy them into place
+         jsr   BuildAcceleratorFunction
+         +STAY @accel+1
+         dex
+@accel   lda   SELF_MODIFIED_WORD, x
+         sta   DisableAccelerator, x
+         dex
+         bpl   @accel
+
+         ; hook accelerated drawing routine
+         +STA_16 $161D, WRAP_DRAWING
 
          ; turn on lowercase display by default on machines that support it
          +HAS_LOWERCASE
