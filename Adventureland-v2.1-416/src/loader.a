@@ -27,6 +27,7 @@ AUTO_INPUT                = INPUT
 AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 SAGA_LOCATION_ARRAY       = $65A5
 SAGA_IO_ERROR             = $FF58
+WRAP_DRAWING              = $0300
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
@@ -42,6 +43,16 @@ WrapOpenSaveFile
          rts
 }
 move_wrap_savegame_end
+
+move_wrap_drawing_start
+!pseudopc WRAP_DRAWING {
+         jsr   EnableAccelerator
+         jsr   $1BC3
+DisableAccelerator
+EnableAccelerator=*+3
+}
+move_wrap_drawing_end
+         !src  "../common/src/hw.accel.a"
 
 Stage1
          ; copy RWTS DOS shim into place
@@ -79,6 +90,19 @@ Stage1
          ; copy stage 2 loader code into place
          +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2
 
+         ; copy accelerated drawing wrapper into place
+         +SHORT_COPY move_wrap_drawing_start, move_wrap_drawing_end, WRAP_DRAWING
+
+         ; build EnableAccelerator and DisableAccelerator functions
+         ; and copy them into place
+         jsr   BuildAcceleratorFunction
+         +STAY @accel+1
+         dex
+@accel   lda   SELF_MODIFIED_WORD, x
+         sta   DisableAccelerator, x
+         dex
+         bpl   @accel
+
          lda   input_filename_start
          ; stage 2 (now in place) needs to know if we're using automation
          sta   HasAutomationFile
@@ -87,6 +111,7 @@ Stage1
          beq   @goto_stage2          ; always branches
 @no_auto
          +INSTALL_BETTER_INPUT
+
 @goto_stage2
          ; continue from relocated stage 2
          jmp   STAGE2
@@ -168,6 +193,9 @@ move_stage2_start
          sta   $7532
          sta   $7533
 }
+
+         ; hook accelerated drawing routine
+         +STA_16 $163D, WRAP_DRAWING
 
          ; turn on lowercase display by default on machines that support it
          +HAS_LOWERCASE

@@ -1,5 +1,5 @@
                           ported | reset | walkthrough | prompt | AutoI | BetterI | Save | Accel
-Adventureland             ✅       ✅      ✅ 169        ✅       ✅      ✅        ✅     ❌
+Adventureland             ✅       ✅      ✅ 169        ✅       ✅      ✅        ✅     ✅
 Pirate Adventure          ✅       ✅      ✅ 281        ✅       ✅      ✅        ✅     ❌
 Mission Impossible        ✅       ✅      ✅  98        ✅       ✅      ✅        ✅     ❌
 Voodoo Castle             ✅       ✅      ✅ 129        ✅       ✅      ✅        ✅     ❌
