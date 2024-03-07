@@ -13,6 +13,7 @@ UTILS                     = $0110
 INPUT                     = $0228    ; $100 bytes (if interactive, persistent)
 AUTO_INPUT                = INPUT
 AUTO_BUFFER               = $02F0    ; $100 bytes (if non-interactive, persistent)
+WRAP_DRAWING              = INPUT+$100
 AUTO_TEMP_BUFFER          = $BA00    ; $100 bytes, saved and restored
 
 ; application-specific flags
@@ -31,6 +32,16 @@ AUTO_FILENAME = UTILS + move_utils_end - move_utils_start
 
          !src  "../common/src/loader.automateinput.blocking.a"
          !src  "../common/src/loader.betterinput.blocking.a"
+
+move_wrap_drawing_start
+!pseudopc WRAP_DRAWING {
+         jsr   EnableAccelerator
+         jsr   $895
+DisableAccelerator
+EnableAccelerator=*+3
+}
+move_wrap_drawing_end
+         !src  "../common/src/hw.accel.a"
 
 Stage1
          ldx   #$FF                  ; initialize stack pointer because we're
@@ -66,6 +77,17 @@ Stage1
 
 @no_auto
          +INSTALL_BETTER_INPUT
+         +SHORT_COPY move_wrap_drawing_start, move_wrap_drawing_end, WRAP_DRAWING
+         ; build EnableAccelerator and DisableAccelerator functions
+         ; and copy them into place
+         jsr   BuildAcceleratorFunction
+         +STAY @accel+1
+         dex
+@accel   lda   SELF_MODIFIED_WORD, x
+         sta   DisableAccelerator, x
+         dex
+         bpl   @accel
+         +STA_16 $1C44, WRAP_DRAWING
 
 @start_game
          jmp   (address_ptr)
@@ -107,6 +129,7 @@ HasAutomationFile=*+1
          +MAKE_JSR $442F, BlockingBetterInput
          lda   #0
          sta   $4433
+         +STA_16 $807, WRAP_DRAWING
 
 @start_game
          jmp   $4000
