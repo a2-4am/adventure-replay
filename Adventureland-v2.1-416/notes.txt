@@ -1,5 +1,5 @@
 accelerated drawing
 $163C jumps to $1BC3, wrap this in accel/de-accel
-no need to preserve registers
+/!\ must preserve X register
 also used to draw title screen
 

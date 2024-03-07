@@ -46,8 +46,14 @@ move_wrap_savegame_end
 
 move_wrap_drawing_start
 !pseudopc WRAP_DRAWING {
+         txa
+         pha
          jsr   EnableAccelerator
          jsr   $1BC3
+         jsr   DisableAccelerator
+         pla
+         tax
+         rts
 DisableAccelerator
 EnableAccelerator=*+3
 }
