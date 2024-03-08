@@ -24,6 +24,7 @@ Talisman
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Death in the Caribbean    ✅       ✅      ✅ 163        ✅       ✅      ✅        ✅     ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Mission: Asteroid         ✅       ✅      ❌            ✅       ✅      ✅        ❌     ❌
 Mystery House             ✅       ✅      ✅  73        ✅       ✅      ✅        ❌     ❌
 Cranston Manor            ✅       ✅      ✅ 214        ✅       ✅      ✅        ❌     ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯

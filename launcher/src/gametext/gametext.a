@@ -5,6 +5,7 @@
 
          !src  "src/gametext/adventure.replay.a"
          !src  "src/gametext/mystery.house.a"
+         !src  "src/gametext/mission.asteroid.a"
          !src  "src/gametext/cranston.manor.a"
          !src  "src/gametext/saga1.adventureland.a"
          !src  "src/gametext/saga2.pirate.adventure.a"

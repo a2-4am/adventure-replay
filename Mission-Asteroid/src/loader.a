@@ -1,0 +1,124 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+!cpu 6502
+!to "build/LOADER.SYSTEM#FF2000",plain
+*=$2000
+
+; application-specific macros
+!macro RWTS_FILENAMES {
+side_a
+         !byte 6
+         !text "SIDE.A"
+rwts_filenames
+         !word side_a
+}
+
+; application-specific addresses
+PRODOS_BUFFER             = $B800    ; $400 bytes
+PREFIX_BUFFER             = $BC00    ; $40 bytes
+AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
+SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persistent)
+RWTS                      = $BD00    ; max $100 bytes (persistent)
+INPUT                     = $BE00    ; max $100 bytes (persistent)
+AUTO_INPUT                = INPUT
+AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
+SAVE_INPUT_BUFFER         = $0228    ; $26 bytes (persistent, used by BetterLineInput)
+
+         !src  "../common/src/loader.init.a"               ; must be first
+                                                           ; exits via Stage1
+         !src  "../common/src/loader.rwts.dos13.shim.a"
+         !src  "../common/src/loader.automateinput.line.a"
+         !src  "../common/src/loader.betterinput.line.a"
+
+Stage1
+         ; copy RWTS DOS shim into place
+         ; (includes CloseAllFiles routine, so must do this first)
+         +INSTALL_RWTS_DOS_SHIM
+
+         ; B600..B7FF
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word parm_boot_open
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_boot_read
+
+         ; 0900..1FFF from T21,S00+
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word parm_boot_seek
+         lda   #$09
+         sta   parm_boot_read_addr_hi
+         lda   #$17
+         sta   parm_boot_read_len_hi
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_boot_read
+
+         ; 4000..98FF from T19,S00+
+         lda   #$45
+         sta   parm_boot_seek_hi
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word parm_boot_seek
+         lda   #$40
+         sta   parm_boot_read_addr_hi
+         lda   #$59
+         sta   parm_boot_read_len_hi
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_boot_read
+
+         jsr   CloseAllFiles
+
+         ; set up our custom reset vector
+         +STA_16 $3F2, QuitToProDOS
+         jsr   ROM_FINALIZE_RESET
+
+         lda   input_filename_start
+         beq   @no_auto
+         ; if we're using automation, install the AutomateInput hook.
+         ; SIDE.A contains patch to call $BE00 instead of $FD6A for input
+         +INSTALL_AUTOMATE_LINE_INPUT
+
+         ; don't pause after printing 4 lines
+         lda   #$00
+         sta   $6466
+         jmp   @start_game
+
+@no_auto
+         ; if we're not using automation, install the BetterInput hook instead.
+         ; SIDE.A contains patch to call $BE00 instead of $FD6A for input
+         +INSTALL_BETTER_LINE_INPUT
+
+@start_game
+         ldx   #$60
+         stx   $2B
+         jmp   $B700
+
+parm_boot_open
+         !byte 3
+         !word side_a
+         !word PRODOS_BUFFER
+         !byte 0
+
+parm_boot_read
+         !byte 4
+         !byte 1
+         !byte 0
+parm_boot_read_addr_hi
+         !byte $B6
+         !byte 0
+parm_boot_read_len_hi
+         !byte $02
+         !word 0
+
+parm_boot_seek
+         !byte 2
+         !byte 1                     ; refnum (always 1)
+         !byte 0                     ; seek offset lo (always 0)
+parm_boot_seek_hi
+         !byte $AD
+parm_boot_seek_very_hi
+         !byte $01

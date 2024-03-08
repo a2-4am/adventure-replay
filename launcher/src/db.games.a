@@ -6,14 +6,15 @@ GameCount
          !byte 20
 
 GameDifficulty
-         !byte 0,2,3,4,2,4,3,3,3,2,5,4,4,4,3,3,1,1,1,5,5
+         !byte 0,2,1,3,4,2,4,3,3,3,2,5,4,4,4,3,3,1,1,1,5,5
 
 GameLength
-         !byte 0,1,4,3,4,1,2,3,3,3,4,3,3,2,3,4,1,1,1,5,5
+         !byte 0,1,1,4,3,4,1,2,3,3,3,4,3,3,2,3,4,1,1,1,5,5
 
 txtBrowse
          !text "                                        "
          !text "1980  On-Line     Mystery House         "
+         !text "1980  On-Line     Mission: Asteroid     "
          !text "1981  On-Line     Cranston Manor        "
          !text "1982  Adv Intl    Adventureland         "
          !text "1982  Adv Intl    Pirate Adventure      "
@@ -40,81 +41,85 @@ sFullName1     !text "Mystery House",0
 sSearchName1   !text "MYSTERY HOUSE",0
 sVolumeName1   !raw  13,"MYSTERY.HOUSE"
 
-sFullName2     !text "Cranston Manor",0
-sSearchName2   !text "CRANSTON MANOR",0
-sVolumeName2   !raw  14,"CRANSTON.MANOR"
+sFullName2     !text "Mission: Asteroid",0
+sSearchName2   !text "MISSION ASTEROID",0
+sVolumeName2   !raw  15,"MISSIONASTEROID"
 
-sFullName3     !text "Adventureland",0
-sSearchName3   !text "ADVENTURELAND",0
-sVolumeName3   !raw  5,"SAGA1"
+sFullName3     !text "Cranston Manor",0
+sSearchName3   !text "CRANSTON MANOR",0
+sVolumeName3   !raw  14,"CRANSTON.MANOR"
 
-sFullName4     !text "Pirate Adventure",0
-sSearchName4   !text "PIRATE ADVENTURE",0
-sVolumeName4   !raw  5,"SAGA2"
+sFullName4     !text "Adventureland",0
+sSearchName4   !text "ADVENTURELAND",0
+sVolumeName4   !raw  5,"SAGA1"
 
-sFullName5     !text "Mission Impossible",0
-sSearchName5   !text "MISSION IMPOSSIBLE",0
-sVolumeName5   !raw  5,"SAGA3"
+sFullName5     !text "Pirate Adventure",0
+sSearchName5   !text "PIRATE ADVENTURE",0
+sVolumeName5   !raw  5,"SAGA2"
 
-sFullName6     !text "Voodoo Castle",0
-sSearchName6   !text "VOODOO CASTLE",0
-sVolumeName6   !raw  5,"SAGA4"
+sFullName6     !text "Mission Impossible",0
+sSearchName6   !text "MISSION IMPOSSIBLE",0
+sVolumeName6   !raw  5,"SAGA3"
 
-sFullName7     !text "The Count",0
-sSearchName7   !text "COUNT",0
-sVolumeName7   !raw  5,"SAGA5"
+sFullName7     !text "Voodoo Castle",0
+sSearchName7   !text "VOODOO CASTLE",0
+sVolumeName7   !raw  5,"SAGA4"
 
-sFullName8     !text "Strange Odyssey",0
-sSearchName8   !text "STRANGE ODYSSEY",0
-sVolumeName8   !raw  5,"SAGA6"
+sFullName8     !text "The Count",0
+sSearchName8   !text "COUNT",0
+sVolumeName8   !raw  5,"SAGA5"
 
-sFullName9     !text "Death in the Caribbean",0
-sSearchName9   !text "DEATH CARIBBEAN",0
-sVolumeName9   !raw  9,"CARIBBEAN"
+sFullName9     !text "Strange Odyssey",0
+sSearchName9   !text "STRANGE ODYSSEY",0
+sVolumeName9   !raw  5,"SAGA6"
 
-sFullName10    !text "Masquerade",0
-sSearchName10  !text "MASQUERADE",0
-sVolumeName10  !raw  10,"MASQUERADE"
+sFullName10    !text "Death in the Caribbean",0
+sSearchName10  !text "DEATH CARIBBEAN",0
+sVolumeName10  !raw  9,"CARIBBEAN"
 
-sFullName11    !text "Sorcerer of Claymorgue Castle",0
-sSearchName11  !text "SORCERER CLAYMORGUE CASTLE",0
-sVolumeName11  !raw  6,"SAGA13"
+sFullName11    !text "Masquerade",0
+sSearchName11  !text "MASQUERADE",0
+sVolumeName11  !raw  10,"MASQUERADE"
 
-sFullName12    !text "QuestProbe featuring The Hulk",0
-sSearchName12  !text "QUESTPROBE HULK",0
-sVolumeName12  !raw  8,"SAGA.QP1"
+sFullName12    !text "Sorcerer of Claymorgue Castle",0
+sSearchName12  !text "SORCERER CLAYMORGUE CASTLE",0
+sVolumeName12  !raw  6,"SAGA13"
 
-sFullName13    !text "FrakTured FaebLes",0
-sSearchName13  !text "FRACTURED FRAKTURED FABLES FAEBLES",0
-sVolumeName13  !raw  9,"FRAKTURED"
+sFullName13    !text "QuestProbe featuring The Hulk",0
+sSearchName13  !text "QUESTPROBE HULK",0
+sVolumeName13  !raw  8,"SAGA.QP1"
 
-sFullName14    !text "Transylvania",0
-sSearchName14  !text "TRANSYLVANIA",0
-sVolumeName14  !raw  12,"TRANSYLVANIA"
+sFullName14    !text "FrakTured FaebLes",0
+sSearchName14  !text "FRACTURED FRAKTURED FABLES FAEBLES",0
+sVolumeName14  !raw  9,"FRAKTURED"
 
-sFullName15    !text "Crimson Crown",0
-sSearchName15  !text "CRIMSON CROWN",0
-sVolumeName15  !raw  13,"CRIMSON.CROWN"
+sFullName15    !text "Transylvania",0
+sSearchName15  !text "TRANSYLVANIA",0
+sVolumeName15  !raw  12,"TRANSYLVANIA"
 
-sFullName16    !text "Snowball",0
-sSearchName16  !text "SNOWBALL",0
-sVolumeName16  !raw  8,"SNOWBALL"
+sFullName16    !text "Crimson Crown",0
+sSearchName16  !text "CRIMSON CROWN",0
+sVolumeName16  !raw  13,"CRIMSON.CROWN"
 
-sFullName17    !text "Return to Eden",0
-sSearchName17  !text "RETURN EDEN",0
-sVolumeName17  !raw  14,"RETURN.TO.EDEN"
+sFullName17    !text "Snowball",0
+sSearchName17  !text "SNOWBALL",0
+sVolumeName17  !raw  8,"SNOWBALL"
 
-sFullName18    !text "The Worm in Paradise",0
-sSearchName18  !text "WORM PARADISE",0
-sVolumeName18  !raw  13,"WORM.PARADISE"
+sFullName18    !text "Return to Eden",0
+sSearchName18  !text "RETURN EDEN",0
+sVolumeName18  !raw  14,"RETURN.TO.EDEN"
 
-sFullName19    !text "Oo-Topos",0
-sSearchName19  !text "OOTOPOS",0
-sVolumeName19  !raw  7,"OOTOPOS"
+sFullName19    !text "The Worm in Paradise",0
+sSearchName19  !text "WORM PARADISE",0
+sVolumeName19  !raw  13,"WORM.PARADISE"
 
-sFullName20    !text "The Coveted Mirror",0
-sSearchName20  !text "COVETED MIRROR",0
-sVolumeName20  !raw  14,"COVETED.MIRROR"
+sFullName20    !text "Oo-Topos",0
+sSearchName20  !text "OOTOPOS",0
+sVolumeName20  !raw  7,"OOTOPOS"
+
+sFullName21    !text "The Coveted Mirror",0
+sSearchName21  !text "COVETED MIRROR",0
+sVolumeName21  !raw  14,"COVETED.MIRROR"
 
 FullNames
          !word 0
@@ -138,6 +143,7 @@ FullNames
          !word sFullName18
          !word sFullName19
          !word sFullName20
+         !word sFullName21
 
 SearchNames
          !word 0
@@ -161,6 +167,7 @@ SearchNames
          !word sSearchName18
          !word sSearchName19
          !word sSearchName20
+         !word sSearchName21
          !word 0
 
 VolumeNames
@@ -185,3 +192,4 @@ VolumeNames
          !word sVolumeName18
          !word sVolumeName19
          !word sVolumeName20
+         !word sVolumeName21

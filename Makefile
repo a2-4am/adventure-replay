@@ -11,6 +11,7 @@ SOURCES := \
 	Sorcerer-of-Claymorgue-Castle-v2.2-122 \
 	Questprobe-The-Hulk-v2.3-127 \
 	Mystery-House \
+	Mission-Asteroid \
 	Cranston-Manor \
 	Transylvania-1985 \
 	Crimson-Crown-1985 \
