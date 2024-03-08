@@ -9,3 +9,11 @@ then replace successive reads at $B75D with 1 ProDOS read from OBJ file
 
 reads $5D sectors into $4000+ starting from T19,S00
 reads $17 sectors into $0900+ starting from T17,S00
+
+-=-=-
+
+accelerate drawing
+$4A5C JSR $6A00 which draws and updates description, which is
+as good an entry point as any
+no need to preserve A/X/Y
+
