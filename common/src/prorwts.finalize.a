@@ -1,3 +1,4 @@
+scrn_array=$fb00
 ;[music] you can't touch this [music]
 ;math magic to determine ideal loading address, and information dump
 !ifdef PASS2 {

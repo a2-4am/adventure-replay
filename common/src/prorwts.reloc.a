@@ -1392,25 +1392,3 @@ pblock          !byte   2, 0, 0
     }
   }
 } ;use_smartport = 1
-!if (rwts_mode + allow_multi) > 1 {
-vollist_b
-!byte D1S1
-vollist_e
-} ;rwts_mode = 1 and allow_multi = 1
-hddcodeend
-!if swap_scrn = 1 {
-scrn_array=$fb00
-  !if swap_zp = 1 {
-zp_array        = scrn_array + 64
-hdddataend      = zp_array + 1 + last_zp - first_zp
-  } else { ;swap_zp = 0
-hdddataend      ;scrn_array + 64
-  } ;swap_zp = 1
-} else { ;swap_scrn = 0
-  !if swap_zp = 1 {
-zp_array
-hdddataend      = zp_array + 1 + last_zp - first_zp
-  } else { ;swap_zp = 0
-hdddataend
-  } ;swap_zp = 1
-} ;swap_scrn = 1

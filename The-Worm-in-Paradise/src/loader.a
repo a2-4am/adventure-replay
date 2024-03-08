@@ -98,9 +98,9 @@ zz       lda   $b000,y
          lda   bauto
          beq   +
          ldx   #2
--        lda   phook,x
+-        lda   hook1,x
          sta   $400,x
-         lda   phook2,x
+         lda   hook2,x
          sta   $878,x
          dex
          bpl   -
@@ -118,9 +118,9 @@ file1 !byte f1_e-f1_b
 f1_b	!text	"GAME.1"
 f1_e
 
-sztbl	!byte	>(5888+511)&$fe, >(3072+511)&$fe, >(5109+511)&$fe, >(27904+511)&$fe, >(1536+511)&$fe
-phook !byte $20,<hook,>hook
-phook2 !byte $20,<hook2,>hook2
+sztbl	!byte	>(10240+511)&$fe, >(3072+511)&$fe, >(5109+511)&$fe, >(26112+511)&$fe, >(1536+511)&$fe
+hook1   !byte $20,<keyhook,>keyhook
+hook2   !byte $20,<drawhook,>drawhook
 
 bauto
 }
@@ -130,13 +130,13 @@ unrelochdd
 !pseudopc reloc {
          !src  "../common/src/prorwts.reloc.a"
 
-hook     lda   #0
+keyhook  lda   #0
 patch    nop
 ptr      lda   $f900
          beq   +++
          cmp   #$0d
          bne   +
-         jsr   hook2a
+         jsr   togglekeyhook
          lda   #$0d
 +        inc   ptr+1
          bne   ++
@@ -155,11 +155,14 @@ ptr      lda   $f900
 ++       ora   #$80
 +++      rts
 
-hook2    jsr   $d1eb
-hook2a   lda   patch
+drawhook jsr   $d1eb
+togglekeyhook
+         lda   patch
          eor   #$60 xor $ea
          sta   patch
          rts
+hddcodeend
+hdddataend
 } ;reloc
 
          !src  "../common/src/prorwts.finalize.a"
