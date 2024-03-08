@@ -1,0 +1,2 @@
+accelerated drawing
+$5E03 JSR $7900 which redraws and prints description

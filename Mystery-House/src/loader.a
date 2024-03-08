@@ -25,12 +25,23 @@ INPUT                     = $BE00    ; max $100 bytes (persistent)
 AUTO_INPUT                = INPUT
 AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 SAVE_INPUT_BUFFER         = $0228    ; $26 bytes (persistent, used by BetterLineInput)
+WRAP_DRAWING              = $0330
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
          !src  "../common/src/loader.rwts.dos.shim.a"
          !src  "../common/src/loader.automateinput.line.a"
          !src  "../common/src/loader.betterinput.line.a"
+
+move_wrap_drawing_start
+!pseudopc WRAP_DRAWING {
+         jsr   EnableAccelerator
+         jsr   $7900
+DisableAccelerator
+EnableAccelerator=*+3
+}
+move_wrap_drawing_end
+         !src  "../common/src/hw.accel.a"
 
 Stage1
          ; copy RWTS DOS shim into place
@@ -60,6 +71,19 @@ Stage1
          ; copy stage 2 loader code into place
          +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2
 
+         ; copy accelerated drawing wrapper into place
+         +SHORT_COPY move_wrap_drawing_start, move_wrap_drawing_end, WRAP_DRAWING
+
+         ; build EnableAccelerator and DisableAccelerator functions
+         ; and copy them into place
+         jsr   BuildAcceleratorFunction
+         +STAY @accel+1
+         dex
+@accel   lda   SELF_MODIFIED_WORD, x
+         sta   DisableAccelerator, x
+         dex
+         bpl   @accel
+
          lda   input_filename_start
          beq   @no_auto
          ; if we're using automation, install the AutomateInput hook.
@@ -79,6 +103,8 @@ Stage1
 move_stage2_start
 !pseudopc STAGE2 {
          +READ_ENTIRE_FILE parm_open2, parm_read2
+
+         +STA_16 $5E04, WRAP_DRAWING
 
          ldx   #$60
          stx   $2B
