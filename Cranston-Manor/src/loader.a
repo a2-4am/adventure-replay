@@ -82,10 +82,9 @@ Stage1
          ; SIDE.A contains patch to call $BE00 instead of $FD6B for input
          +INSTALL_AUTOMATE_LINE_INPUT
 
-         ; and install pre-game hook to make other changes
-         ; (code is in T00S00 of SIDE.A file)
-         +LDADDR $B600
-         +STAY $B746
+         ; don't pause after printing 4 lines
+         lda   #$00
+         sta   $6466
          jmp   @start_game
 
 @no_auto
