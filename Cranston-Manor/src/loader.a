@@ -27,7 +27,7 @@ SAVE_INPUT_BUFFER         = $0228    ; $26 bytes (persistent, used by BetterLine
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
-         !src  "../common/src/loader.rwts.dos.shim.a"
+         !src  "../common/src/loader.rwts.dos13.shim.a"
          !src  "../common/src/loader.automateinput.line.a"
          !src  "../common/src/loader.betterinput.line.a"
 
@@ -37,7 +37,40 @@ Stage1
          +INSTALL_RWTS_DOS_SHIM
 
          ; B600..B7FF
-         +READ_ENTIRE_FILE parm_boot_open, parm_boot_read
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word parm_boot_open
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_boot_read
+
+         ; 0900..1FFF from T21,S00+
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word parm_boot_seek
+         lda   #$09
+         sta   parm_boot_read_addr_hi
+         lda   #$17
+         sta   parm_boot_read_len_hi
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_boot_read
+
+         ; 4000..9CFF from T19,S00+
+         lda   #$45
+         sta   parm_boot_seek_hi
+         jsr   PRODOS_MLI
+         !byte CMD_SEEK
+         !word parm_boot_seek
+         lda   #$40
+         sta   parm_boot_read_addr_hi
+         lda   #$5D
+         sta   parm_boot_read_len_hi
+         jsr   PRODOS_MLI
+         !byte CMD_READ
+         !word parm_boot_read
+
+         jsr   CloseAllFiles
 
          ; set up our custom reset vector
          +STA_16 $3F2, QuitToProDOS
@@ -70,9 +103,23 @@ parm_boot_open
          !word side_a
          !word PRODOS_BUFFER
          !byte 0
+
 parm_boot_read
          !byte 4
          !byte 1
-         !word $B600
-         !word $0200
+         !byte 0
+parm_boot_read_addr_hi
+         !byte $B6
+         !byte 0
+parm_boot_read_len_hi
+         !byte $02
          !word 0
+
+parm_boot_seek
+         !byte 2
+         !byte 1                     ; refnum (always 1)
+         !byte 0                     ; seek offset lo (always 0)
+parm_boot_seek_hi
+         !byte $AD
+parm_boot_seek_very_hi
+         !byte $01
