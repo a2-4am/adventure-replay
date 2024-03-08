@@ -24,12 +24,24 @@ INPUT                     = $BE00    ; max $100 bytes (persistent)
 AUTO_INPUT                = INPUT
 AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 SAVE_INPUT_BUFFER         = $0228    ; $26 bytes (persistent, used by BetterLineInput)
+WRAP_DRAWING              = $B600
 
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
          !src  "../common/src/loader.rwts.dos13.shim.a"
          !src  "../common/src/loader.automateinput.line.a"
          !src  "../common/src/loader.betterinput.line.a"
+
+move_wrap_drawing_start
+!pseudopc WRAP_DRAWING {
+         jsr   EnableAccelerator
+WrapDrawingTarget=*+1
+         jsr   $6A00
+DisableAccelerator
+EnableAccelerator=*+3
+}
+move_wrap_drawing_end
+         !src  "../common/src/hw.accel.a"
 
 Stage1
          ; copy RWTS DOS shim into place
@@ -72,6 +84,20 @@ Stage1
 
          jsr   CloseAllFiles
 
+         ; copy accelerated drawing wrapper into place
+         +SHORT_COPY move_wrap_drawing_start, move_wrap_drawing_end, WRAP_DRAWING
+
+         ; build EnableAccelerator and DisableAccelerator functions
+         ; and copy them into place
+         jsr   BuildAcceleratorFunction
+         +STAY @accel+1
+         dex
+@accel   lda   SELF_MODIFIED_WORD, x
+         sta   DisableAccelerator, x
+         dex
+         bpl   @accel
+         +STA_16 $4A5D, WRAP_DRAWING
+
          ; set up our custom reset vector
          +STA_16 $3F2, QuitToProDOS
          jsr   ROM_FINALIZE_RESET
@@ -91,6 +117,8 @@ Stage1
          ; if we're not using automation, install the BetterInput hook instead.
          ; SIDE.A contains patch to call $BE00 instead of $FD6A for input
          +INSTALL_BETTER_LINE_INPUT
+         lda   #$00;TODO debug only
+         sta   $6466
 
 @start_game
          ldx   #$60

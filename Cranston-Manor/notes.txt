@@ -16,4 +16,3 @@ accelerate drawing
 $4A5C JSR $6A00 which draws and updates description, which is
 as good an entry point as any
 no need to preserve A/X/Y
-
