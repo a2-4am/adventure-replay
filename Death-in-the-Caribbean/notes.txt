@@ -127,3 +127,13 @@ adventure disk, which we should also skip
 
 note save command is "SAVE" not "SAVE GAME"
 and restore command is "LOAD" not anything else
+
+-=-=-
+
+accelerate drawing
+$742C JSR $0DC3 to draw new location
+no need to preserve registers
+
+$40B3 JSR $0DC3 to draw title screen
+
+$6595 JSR $0DC3 to draw something (not death screen)
