@@ -10,7 +10,7 @@ Claymorgue Castle         ✅       ✅      ✅ 159        ✅       ✅      �
 QP/Hulk (SAGA)            ✅       ✅      ✅ 190        ✅       ✅      ✅        ✅     ✅
 QP/Spider-Man (SAGA+)     ✅       ✅      ❌            ❌       ❌      ❌        ❌     ❌
 QP/Thing (SAGA+)
-Buckaroo Banzai (SAGA+)   ✅       ✅      ❌            ✅       ❌      ✅        ❌     ❌
+Buckaroo Banzai (SAGA+)   ✅       ✅      ❌            ✅       ✅      ✅        ❌     ❌
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 Masquerade                ✅       ✅      ✅ 211        ✅       ✅      ✅        ✅     --
 FrakTured FaebLes         ✅       ✅      ✅ 143        ✅       ✅      ✅        ✅     --

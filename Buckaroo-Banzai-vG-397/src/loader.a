@@ -23,6 +23,8 @@ INPUT                     = $BE00    ; max $100 bytes (persistent)
 AUTO_INPUT                = INPUT
 AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
 
+BETTER_INC_RANDOM = 0
+
          !src  "../common/src/loader.init.a"               ; must be first
                                                            ; exits via Stage1
          !src  "../common/src/loader.rwts.dos.shim.a"
@@ -44,8 +46,15 @@ Stage1
          +STA_16 $3F2, QuitToProDOS
          jsr   ROM_FINALIZE_RESET
 
+         ; skip 64K check
+         ; (with 64K, game would try to read some assets directly into
+         ; LC RAM 2 later, which doesn't work with the ProDOS wrapper)
+         +MAKE_JMP $813A, $8153
+
+         ; skip FLIP DISK prompt
+         +MAKE_JMP $818F, $81A3
+
          ; shorten prompt
-         ; TODO put this directly in OBJ file
          lda   #$8D
          sta   $836B
          lda   #$00
@@ -61,52 +70,37 @@ Stage1
          lda   #$20
          sta   $839C
 
+         ; disable waiting for RETURN after long printing
+         ; TODO only do this under automation
+         lda   #$A9
+         sta   $8583
+         lda   #$8D
+         sta   $8584
+         lda   #$EA
+         sta   $8585
+
+         ; always continue after returning from custom input routine
+         lda   #$10
+         sta   $168D
+         lda   #$1C
+         sta   $168E
+
          lda   input_filename_start
          beq   @no_auto
          ; if we're using automation, install the AutomateInput hook
          +INSTALL_AUTOMATE_INPUT
-         ; TODO
-;          lda   #$20
-;          sta   $6FCD
-;          lda   #<AutomateInput
-;          sta   $6FCE
-;          lda   #>AutomateInput
-;          sta   $6FCF
-;          lda   #$00
-;          sta   $6FD1
-;          ; and bypass title screen / restore game / voice slot
-;          lda   #$4C
-;          sta   $6A99
-;          lda   #$BE
-;          sta   $6A9A
-;          lda   #$6A
-;          sta   $6A9B
-;          ; and bypass text intro screen
-;          lda   #$2C
-;          sta   $6AC6
-;          ; and de-randomize
-;          lda   #$AD
-;          sta   $6FC5
-;          sta   $6FCA
+         +MAKE_JSR $1688, AutomateInput
+         +MAKE_JSR $B7A9, AutomateInput
          jmp   @start_game
 
 @no_auto
          ; if we're not using automation, install the BetterInput hook instead
          +INSTALL_BETTER_INPUT
          +MAKE_JSR $1688, BlockingBetterInput
-
-         ; TODO move these into OBJ file
-         lda   #$10
-         sta   $168D
-         lda   #$1C
-         sta   $168E
+         +MAKE_JSR $B7A9, BlockingBetterInput
 
 @start_game
-         jsr   ROM_TEXT
-         bit   $c053
-         bit   $c054
-         bit   $c057
-         jmp   $81A3
+         jmp   $8000
 
 parm_open1
          !byte 3
