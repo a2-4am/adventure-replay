@@ -34,3 +34,36 @@ tertiary input routine:
 there is a THIRD input routine at $B7A9 that just straight up calls JSR $FD0C
 (for example when you look under the table in the first room, or when you dig with the pickaxe later)
 change $B7A9 from JSR $FD0C to JSR BetterInput
+
+-=-=-
+
+save game
+
+$9030 JSR $B399 which switches to full text screen, calls HOME, and prints menu
+with 1)INIT, 2)SAVE, and 3)EXIT
+option 2 jumps to $B4A8 which prompts to insert data disk
+$B4BF calls $B522 to ensure disk is readable
+$B4C4 sets RWTS command to 2 (write)
+$B4C9 calls $B729 which prompts for save area (A-D) and stores choice-$C1 (so 0-3) in $B698
+$B4CC calls $B699 which handles low-level disk access for both save and restore
+for save, $1784 (RWTS command) is 2 so falls through to $B6A3
+$B6A3 calls $B7CC which reads T00,S01 into $1E00
+T00,S01 is a directory of sorts, it tracks which save slots have been used
+- first 4 bytes can be $33 (slot has saved game) or $FF (slot is unused)
+- rest of sector is unused
+$B6AB sets this slot as used ($33)
+$B6AE calls $B7BA which writes the directory sector back to disk
+$B6B4 sets X to $B698 again (save slot 0-3) and jumps to $B6C9
+$B6C9 sets $178F (sector count for disk R/W wrapper) to $40
+$B6CE sets start track ($177C) from array at $B694
+$B6D4 sets start sector ($177D) to $0F
+$B6D9 calls disk wrapper to write $40 sectors (decrementing) starting from address $4000 (incrementing)
+$B6E2 sets sector count to 1
+$B6F0 sets track from array at $B694 minus 4
+$B6F5 sets sector to $0F
+$1784 is still 2 (write) so falls through to $B6FF
+$B6FF copies $C4 bytes of state data from $1C76 into $1E00
+$B70C always branches to $B71F
+$B71F writes $1E00 to disk
+
+*** unclear why it writes 4 tracks of program code to disk, but it's definitely deliberate ***
