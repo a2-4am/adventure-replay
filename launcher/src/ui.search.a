@@ -106,8 +106,8 @@ PopulateSearchResults
          ; populate search result 1
          asl
          tax
-         lda   FullNames, x
-         ldy   FullNames+1, x
+         lda   Titles, x
+         ldy   Titles+1, x
          +STAY input
          +LDADDR txtSearchResult1
          jsr   CopyZeroTerminated
@@ -121,8 +121,8 @@ PopulateSearchResults
          beq   @done
          asl
          tax
-         lda   FullNames, x
-         ldy   FullNames+1, x
+         lda   Titles, x
+         ldy   Titles+1, x
          +STAY input
          +LDADDR txtSearchResult2
          jsr   CopyZeroTerminated
@@ -132,8 +132,8 @@ PopulateSearchResults
          beq   @done
          asl
          tax
-         lda   FullNames, x
-         ldy   FullNames+1, x
+         lda   Titles, x
+         ldy   Titles+1, x
          +STAY input
          +LDADDR txtSearchResult3
          jmp   CopyZeroTerminated

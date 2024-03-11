@@ -70,15 +70,6 @@ Stage1
          lda   #$20
          sta   $839C
 
-         ; disable waiting for RETURN after long printing
-         ; TODO only do this under automation
-         lda   #$A9
-         sta   $8583
-         lda   #$8D
-         sta   $8584
-         lda   #$EA
-         sta   $8585
-
          ; always continue after returning from custom input routine
          lda   #$10
          sta   $168D
@@ -91,6 +82,15 @@ Stage1
          +INSTALL_AUTOMATE_INPUT
          +MAKE_JSR $1688, AutomateInput
          +MAKE_JSR $B7A9, AutomateInput
+
+         ; and disable waiting for RETURN after long printing
+         lda   #$A9
+         sta   $8583
+         lda   #$8D
+         sta   $8584
+         lda   #$EA
+         sta   $8585
+
          jmp   @start_game
 
 @no_auto

@@ -10,6 +10,7 @@ SOURCES := \
 	Strange-Odyssey-v2.1-119 \
 	Sorcerer-of-Claymorgue-Castle-v2.2-122 \
 	Questprobe-The-Hulk-v2.3-127 \
+	Buckaroo-Banzai-vG-397 \
 	Mystery-House \
 	Mission-Asteroid \
 	Cranston-Manor \
@@ -61,7 +62,7 @@ $(EXE): $(BUILDDIR)
 
 $(GAMETITLES): $(BUILDDIR)
 	cat res/TITLE.HGR/REPLAY\#062000 > "$@" && \
-	for f in $$(awk -F'"' '/^sVolumeName/ { print $$2 }' < launcher/src/db.games.a); do \
+	for f in $$(awk -F'"' '/^sVolume/ { print $$2 }' < launcher/src/db.games.a); do \
 		cat res/TITLE.HGR/"$$f"\#062000 >> "$@"; \
 	done
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@" -C
