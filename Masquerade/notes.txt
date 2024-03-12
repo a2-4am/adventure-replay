@@ -97,3 +97,12 @@ room record first #$0F bytes is room info + exits string
 3f  --
 40  --
 41  Outside Topp's Door
+
+-=-=-
+
+accelerate drawing
+$16F7 JSR $082A
+don't need to preserve any registers
+wrapper can go at $328
+($300 clobbered by game with last typed command,
+which BetterInput caps at $26 bytes)
