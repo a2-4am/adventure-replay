@@ -2,14 +2,22 @@
 ;(c) 2024 by 4am
 ;
 
+kGameCount = 22
+
 GameCount
-         !byte 21
+         !byte kGameCount
 
 GameDifficulty
          !byte 0,2,1,3,4,2,4,3,3,3,2,5,4,4,4,4,3,3,1,1,1,5,5
+!if *-GameDifficulty != kGameCount+1 {
+         !serious "GameDifficulty array is wrong size, found ", *-GameDifficulty, ", expected ", kGameCount+1
+}
 
 GameLength
          !byte 0,1,1,4,3,4,1,2,3,3,3,4,3,3,4,2,3,4,1,1,1,5,5
+!if *-GameLength != kGameCount+1 {
+         !serious "GameLength array is wrong size, found ", *-GameLength, ", expected ", kGameCount+1
+}
 
 txtBrowse
          !text "                                        "
@@ -37,6 +45,10 @@ txtBrowse
          !text "1986  Polarware   The Coveted Mirror    "
          !text "                                        "
          !text "                                        "
+
+!if *-txtBrowse != 120+kGameCount*40 {
+         !serious "txtBrowse array is wrong size, found ", *-txtBrowse, ", expected ", 120+kGameCount*40
+}
 
 sTitleMysteryHouse        !text "Mystery House",0
 sSearchMysteryHouse       !text "MYSTERY HOUSE",0
@@ -151,6 +163,10 @@ Titles
          !word sTitleOoTopos
          !word sTitleTheCovetedMirror
 
+!if *-Titles != 2+kGameCount*2 {
+         !serious "Titles array is wrong size, found ", *-Titles, ", expected ", 2+kGameCount*2
+}
+
 SearchNames
          !word 0
          !word sSearchMysteryHouse
@@ -177,6 +193,10 @@ SearchNames
          !word sSearchTheCovetedMirror
          !word 0
 
+!if *-SearchNames != 4+kGameCount*2 {
+         !serious "SearchNames array is wrong size, found ", *-SearchNames, ", expected ", 4+kGameCount*2
+}
+
 VolumeNames
          !word 0
          !word sVolumeMysteryHouse
@@ -201,3 +221,7 @@ VolumeNames
          !word sVolumeWormInParadise
          !word sVolumeOoTopos
          !word sVolumeTheCovetedMirror
+
+!if *-VolumeNames != 2+kGameCount*2 {
+         !serious "VolumeNames array is wrong size, found ", *-VolumeNames, ", expected ", 2+kGameCount*2
+}
