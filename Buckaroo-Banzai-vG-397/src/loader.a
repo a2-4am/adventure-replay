@@ -22,6 +22,7 @@ RWTS                      = $BD00    ; max $100 bytes (persistent)
 INPUT                     = $BE00    ; max $100 bytes (persistent)
 AUTO_INPUT                = INPUT
 AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
+WRAP_DRAWING              = $1952
 
 BETTER_INC_RANDOM = 0
 
@@ -30,6 +31,17 @@ BETTER_INC_RANDOM = 0
          !src  "../common/src/loader.rwts.dos.shim.a"
          !src  "../common/src/loader.automateinput.blocking.a"
          !src  "../common/src/loader.betterinput.blocking.a"
+
+move_wrap_drawing_start
+!pseudopc WRAP_DRAWING {
+         jsr   EnableAccelerator
+WrapDrawingTarget=*+1
+         jsr   $B316
+DisableAccelerator
+EnableAccelerator=*+3
+}
+move_wrap_drawing_end
+         !src  "../common/src/hw.accel.a"
 
 Stage1
          ; copy RWTS DOS shim into place
@@ -41,6 +53,22 @@ Stage1
 
          ; 4000..B7FF
          +READ_ENTIRE_FILE parm_open2, parm_read2
+
+         ; copy accelerated drawing wrapper into place
+         +SHORT_COPY move_wrap_drawing_start, move_wrap_drawing_end, WRAP_DRAWING
+
+         ; build EnableAccelerator and DisableAccelerator functions
+         ; and copy them into place
+         jsr   BuildAcceleratorFunction
+         +STAY @accel+1
+         dex
+@accel   lda   SELF_MODIFIED_WORD, x
+         sta   DisableAccelerator, x
+         dex
+         bpl   @accel
+
+         ; hook accelerated drawing routine
+         +STA_16 $957F, WRAP_DRAWING
 
          ; set up our custom reset vector
          +STA_16 $3F2, QuitToProDOS

@@ -67,3 +67,10 @@ $B70C always branches to $B71F
 $B71F writes $1E00 to disk
 
 *** unclear why it writes 4 tracks of program code to disk, but it's definitely deliberate ***
+
+-=-=-
+
+accelerate drawing
+$957E JSR $B316
+no registers
+wrapper can live at $1952
