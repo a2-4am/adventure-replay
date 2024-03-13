@@ -1,0 +1,95 @@
+;license:MIT
+;(c) 2024 by 4am
+;
+!cpu 6502
+!to "build/LOADER.SYSTEM#FF2000",plain
+*=$2000
+
+; application-specific macros
+!macro RWTS_FILENAMES {
+side_1   !text 6,"SIDE.1"
+side_2   !text 6,"SIDE.2"
+side_3   !text 6,"SIDE.3"
+side_4   !text 6,"SIDE.4"
+side_5   !text 6,"SIDE.5"
+side_6   !text 6,"SIDE.6"
+rwts_filenames
+         !word side_1
+         !word side_2
+         !word side_3
+         !word side_4
+         !word side_5
+         !word side_6
+}
+
+; application-specific addresses
+PRODOS_BUFFER             = $B800    ; $400 bytes
+PREFIX_BUFFER             = $BC00    ; $40 bytes
+AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
+SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persistent)
+RWTS                      = $BD00    ; max $100 bytes (persistent)
+INPUT                     = $BE00    ; max $100 bytes (persistent)
+AUTO_INPUT                = INPUT
+AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
+
+         !src  "../common/src/loader.init.a"               ; must be first
+                                                           ; exits via Stage1
+         !src  "../common/src/loader.rwts.dos.shim.a"
+         !src  "../common/src/loader.automateinput.blocking.a"
+         !src  "../common/src/loader.betterinput.nonblocking.a"
+
+move_multiread_start
+!pseudopc $B7A2 {
+         sta   rwts_read_len_hi
+         jsr   $B71B
+         lda   #$01
+         sta   rwts_read_len_hi
+         rts
+}
+move_multiread_end
+
+Stage1
+         ; copy RWTS DOS shim into place
+         ; (includes CloseAllFiles routine, so must do this first)
+         +INSTALL_RWTS_DOS_SHIM
+
+         ; set up our custom reset vector (inside RWTS shim)
+         +STA_16 $3F2, QuitToProDOS
+         jsr   ROM_FINALIZE_RESET
+
+         ; $B600-$B7FF
+         +READ_ENTIRE_FILE parm_boot_open, parm_boot_read
+
+         ; copy multiread override into place
+         ; (repurposes game-specific routine that reads multiple sectors
+         ; to instead read larger blocks of the disk image in one shot)
+         +SHORT_COPY move_multiread_start, move_multiread_end, $B7A2
+
+         lda   input_filename_start
+         beq   @no_auto
+         ; if we're using automation, install the AutomateInput hook.
+         +INSTALL_AUTOMATE_INPUT
+
+         jmp   @start_game
+
+@no_auto
+         ; if we're not using automation, install the BetterInput hook instead.
+         +INSTALL_BETTER_INPUT
+
+@start_game
+         ldx   #$60
+         stx   $2B
+         jmp   $B700
+
+parm_boot_open
+         !byte 3
+         !word side_1
+         !word PRODOS_BUFFER
+         !byte 0
+
+parm_boot_read
+         !byte 4
+         !byte 1
+         !word $B600
+         !word $0200
+         !word 0

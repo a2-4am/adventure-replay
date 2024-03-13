@@ -1,0 +1,57 @@
+strictly 48K (works on 48K II+!)
+standard DOS 3.3 RWTS
+no DOS, RWTS only \o/
+
+-=-=-
+
+multi-disk is handled at $4630
+$464A prints prompt
+$4651 waits for <Return>
+$4658 calls $7121 which reads T00,S01 into $A000 and returns value of $A0FF
+$465E ORAs with #$B0 and compares to zero page $8C
+$4662 prints 'wrong side' if no match
+
+-=-=-
+
+can supercharge loader by capturing memory (0A00-88FF, 8B00-ADFF, B300-B4FF, B700-B7FF) at $b31c and entering there
+
+OBJ
+  load at $900
+  copy $900 to $B700
+  copy $8900 to $B300
+  copy $8A00 to $B400
+  jump to $B31C
+
+initial load
+07,04 -> 20
+- decrements to 05,0E -> 0A
+
+1F,0E -> AD
+- decrements to 1D,0C -> 8B
+
+00,0D -> 1F
+00,0E -> B5
+03,0B -> 66
+- decrements to 41 (inclusive)
+- could read from 01,06 -> 41 forward in one shot
+
+Oh hey even better, everything goes through a higher level entry point at $B7A2:
+
+$B7A2
+- A = number of sectors
+- $B70A = start track
+- $B70B = start sector
+- $B70E/F = start address
+
+The routine actually calculates the final track/sector/address so it can read
+backwards from floppy.
+
+Also don't need to preserve X or Y registers
+
+-=-=-
+
+save game
+stores data on separate disk
+26 slots labeled A-Z
+stores data on sectors 0-6 of track $03+slot (T03=A, T04=B ... T1C=Z)
+and some data on T00,S01 as index of which slots have been saved
