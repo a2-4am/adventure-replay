@@ -48,7 +48,7 @@ DrawMoreTextOffscreen                ; alternate entry point if you
          and   #$7F                  ; calculate proper inverse for altcharset
          cmp   #$41                  ; lowercase gets AND #$7F but
          bcc   +                     ; uppercase gets AND #$3F
-         cmp   #$5A
+         cmp   #$5B
          bcs   +
          and   #$3F
 +        sta   (output), y
@@ -76,4 +76,3 @@ CopyZeroTerminated
          iny
          bne   -
 +        rts
-
