@@ -1,0 +1,69 @@
+game text is stored compressed similar to ZSCII
+5 bits per value, $00..$1D are index into table 1 (lowercase letters)
+$1E & $1F shift to table 2 & 3 then use next 5-bit value as index
+
+save:
+
+old prompt
+Save 1,2,or 3?"
+
+new prompt
+Save game 1-9?"
+
+$95B0 = 73 F0 FB 3F 1F B2 13 E7 E5 FD FC 9C 00
+ covers part we want to change starting with " 1"
+
+|--73----||--F0---| |--FB---||--3F----||--1F---||--B2----||--13---| |--E7---||--E5----||--FD---||--FC----||--9C---| |--00--|
+0 11100 11111 10000 11111 01100 11111 10001 11111 01100 10000 10011 11100 11111 10010 11111 11011 11111 00100 11100 00000000
+   1C    1F    10    1F    0C    1F    11    1F    0C    10    13    1C    1F    12    1F    1B    1F    04    1C
+
+00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12 13 14 15 16 17 18 19 1A 1B 1C 1D
+-----------------------------------------------------------------------------------------
+      a  b  c  d  e  f  g  h  i  j  k  l  m  n  o  p  q  r  s  t  u  v  w  x  y  z     .    table 1
+      A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  [  ]    table 2 (shift=$1E 11110)
+      cr !  "  #  $  %  &  '  (  )  ,  -  /  0  1  2  3  4  5  6  7  8  9  :  ;  ?  <  >    table 3 (shift=$1F 11111)
+
+ 1,2,or 3?" --> 1C   1F 10   1F 0C    1F 11    1F 0C    10    13    1C    1F 12    1F 1B   1F 04
+                spc    1       ,        2        ,      o     r     spc     3        ?       "
+
+ game 1-9?" --> 1C   08   02   0E   06   1C   1F 10   1F 0D   1F 18   1F 1B   1F 04
+                spc  g    a    m    e    spc    1       -       9       ?       "
+
+0 11100 01000 00010 01110 00110 11100 11111 10000 11111 01101 11111 11000 11111 11011 11111 00100
+
+01110001 00000010 01110001 10111001 11111000 01111101 10111111 11000111 11110111 11110010 01110000 00000001 00000000
+   71       02       71       B9       F8       7D       BF       C7       F7       F2       70       01       00
+
+note: 01 00 is to pad out the encoded bytes to the same length as the original
+
+extremely important note: extra 00 bytes are not allowed because they are used
+at runtime to build an index of strings, so if there are extras then all
+remaining strings will be wrong
+
+---
+
+restore:
+
+old prompt
+Restore 1,2,or 3?"
+
+new prompt
+Restore game 1-9?"
+
+$95F7 = 9B 9F 87 D9 F8 FD 90 9F 3F 2F EF E4 00
+ covers part we want to change starting with " 1"
+
+|--9B----||--9F---| |--87---||--D9----||--F8---||--FD----||--90---| |--9F---||--3F----||--2F---||--EF----||--E4---| |--00---|
+1 00110 11100 11111 10000 11111 01100 11111 10001 11111 01100 10000 10011 11100 11111 10010 11111 11011 11111 00100 00000 000
+         1C    1F    10    1F    0C    1F    11    1F    0C    10    13    1C    1F    12    1F    1B    1F    04    00
+
+ 1,2,or 3?" --> 1C   1F 10   1F 0C    1F 11    1F 0C    10    13    1C    1F 12    1F 1B   1F 04
+                spc    1       ,        2        ,      o     r     spc     3        ?       "
+
+ game 1-9?" --> 1C   08   02   0E   06   1C   1F 10   1F 0D   1F 18   1F 1B   1F 04
+                spc  g    a    m    e    spc    1       -       9       ?       "
+
+1 00110 11100 01000 00010 01110 00110 11100 11111 10000 11111 01101 11111 11000 11111 11011 11111 00100
+
+10011011 10001000 00010011 10001101 11001111 11000011 11101101 11111110 00111111 10111111 10010000 00000001 00000000
+   9B       88       13       8D       CF       C3       ED       FE       3F       BF       90       01       00
