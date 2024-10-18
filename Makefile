@@ -17,10 +17,7 @@ SOURCES := \
 	Transylvania-1985 \
 	Crimson-Crown-1985 \
 	Oo-Topos-1985 \
-	The-Coveted-Mirror-1986 \
-	Snowball \
-	Return-to-Eden \
-	The-Worm-in-Paradise
+	The-Coveted-Mirror-1986
 
 # https://github.com/mach-kernel/cadius
 CADIUS=cadius
