@@ -33,9 +33,10 @@ prefix_loop
 op_prefix
          !byte CMD_GETPREFIX         ; self-modified
          !word parm_prefix
-         ldx   PREFIX_BUFFER
+         ldx   PREFIX_BUFFER         ; if we have a prefix, we're done
          bne   clear_memory_map
-         ; get boot volume name
+
+         ; no prefix (len=0) so get boot volume name instead
          lda   PRODOS_BOOT_UNIT
          sta   parm_online_unit
          jsr   PRODOS_MLI
