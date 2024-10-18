@@ -9,9 +9,7 @@
 
 LAUNCH_STAGE_2            = $0300
 
-sDemo
-         !byte 4
-         !raw  "DEMO"
+sDemo    +PATH "DEMO"
 
 ;------------------------------------------------------------------------------
 ; Launch
@@ -56,8 +54,7 @@ Launch
          jmp   LAUNCH_STAGE_2
 
 .sGameDirectory
-         !byte 1
-         !raw  "X"
+         +PATH "X"
 
 .SetPrefix
          +STAY .parm_setprefix+1
@@ -96,8 +93,7 @@ Launch
          !word PRODOS_BUFFER
          !byte 0
 .launch_filename
-         !byte 13
-         !raw  "LOADER.SYSTEM"
+         +PATH "LOADER.SYSTEM"
 .parm_launch_read
          !byte 4
          !byte 1

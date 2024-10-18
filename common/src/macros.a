@@ -6,6 +6,12 @@
 
          !src  "../common/src/constants.a"
 
+!macro   PATH .prodosname {
+         !byte +-*-1
+         !raw  .prodosname
++
+}
+
 !macro LDADDR .addr {
          lda   #<.addr
          ldy   #>.addr

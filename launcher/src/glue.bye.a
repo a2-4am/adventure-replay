@@ -99,8 +99,7 @@ move_bye_start
          !word $1300
          !byte 0
 .bye_filename
-         !byte 15
-         !raw  "LAUNCHER.SYSTEM"
+         +PATH "LAUNCHER.SYSTEM"
 .parm_bye_read
          !byte 4
          !byte 1

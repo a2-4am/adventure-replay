@@ -52,91 +52,91 @@ txtBrowse
 
 sTitleMysteryHouse        !text "Mystery House",0
 sSearchMysteryHouse       !text "MYSTERY HOUSE",0
-sVolumeMysteryHouse       !raw  13,"MYSTERY.HOUSE"
+sVolumeMysteryHouse       +PATH "MYSTERY.HOUSE"
 
 sTitleMissionAsteroid     !text "Mission: Asteroid",0
 sSearchMissionAsteroid    !text "MISSION ASTEROID",0
-sVolumeMissionAsteroid    !raw  15,"MISSIONASTEROID"
+sVolumeMissionAsteroid    +PATH "MISSIONASTEROID"
 
 sTitleCranstonManor       !text "Cranston Manor",0
 sSearchCranstonManor      !text "CRANSTON MANOR",0
-sVolumeCranstonManor      !raw  14,"CRANSTON.MANOR"
+sVolumeCranstonManor      +PATH "CRANSTON.MANOR"
 
 sTitleAdventureland       !text "Adventureland",0
 sSearchAdventureland      !text "ADVENTURELAND",0
-sVolumeAdventureland      !raw  5,"SAGA1"
+sVolumeAdventureland      +PATH "SAGA1"
 
 sTitlePirateAdventure     !text "Pirate Adventure",0
 sSearchPirateAdventure    !text "PIRATE ADVENTURE",0
-sVolumePirateAdventure    !raw  5,"SAGA2"
+sVolumePirateAdventure    +PATH "SAGA2"
 
 sTitleMissionImpossible   !text "Mission Impossible",0
 sSearchMissionImpossible  !text "MISSION IMPOSSIBLE",0
-sVolumeMissionImpossible  !raw  5,"SAGA3"
+sVolumeMissionImpossible  +PATH "SAGA3"
 
 sTitleVoodooCastle        !text "Voodoo Castle",0
 sSearchVoodooCastle       !text "VOODOO CASTLE",0
-sVolumeVoodooCastle       !raw  5,"SAGA4"
+sVolumeVoodooCastle       +PATH "SAGA4"
 
 sTitleTheCount            !text "The Count",0
 sSearchTheCount           !text "COUNT",0
-sVolumeTheCount           !raw  5,"SAGA5"
+sVolumeTheCount           +PATH "SAGA5"
 
 sTitleStrangeOdyssey      !text "Strange Odyssey",0
 sSearchStrangeOdyssey     !text "STRANGE ODYSSEY",0
-sVolumeStrangeOdyssey     !raw  5,"SAGA6"
+sVolumeStrangeOdyssey     +PATH "SAGA6"
 
 sTitleDeathInTheCaribbean  !text "Death in the Caribbean",0
 sSearchDeathInTheCaribbean !text "DEATH CARIBBEAN",0
-sVolumeDeathInTheCaribbean !raw  9,"CARIBBEAN"
+sVolumeDeathInTheCaribbean +PATH "CARIBBEAN"
 
 sTitleMasquerade          !text "Masquerade",0
 sSearchMasquerade         !text "MASQUERADE",0
-sVolumeMasquerade         !raw  10,"MASQUERADE"
+sVolumeMasquerade         +PATH "MASQUERADE"
 
 sTitleClaymorgueCastle    !text "Sorcerer of Claymorgue Castle",0
 sSearchClaymorgueCastle   !text "SORCERER CLAYMORGUE CASTLE",0
-sVolumeClaymorgueCastle   !raw  6,"SAGA13"
+sVolumeClaymorgueCastle   +PATH "SAGA13"
 
 sTitleQuestprobeHulk      !text "QuestProbe featuring The Hulk",0
 sSearchQuestprobeHulk     !text "QUESTPROBE HULK",0
-sVolumeQuestprobeHulk     !raw  8,"SAGA.QP1"
+sVolumeQuestprobeHulk     +PATH "SAGA.QP1"
 
 sTitleBuckarooBanzai      !text "The Adventures of Buckaroo Banzai",0
 sSearchBuckarooBanzai     !text "ADVENTURES BUCKAROO BANZAI",0
-sVolumeBuckarooBanzai     !raw  6,"SAGA41"
+sVolumeBuckarooBanzai     +PATH "SAGA41"
 
 sTitleFrakturedFaebles    !text "FrakTured FaebLes",0
 sSearchFrakturedFaebles   !text "FRACTURED FRAKTURED FABLES FAEBLES",0
-sVolumeFrakturedFaebles   !raw  9,"FRAKTURED"
+sVolumeFrakturedFaebles   +PATH "FRAKTURED"
 
 sTitleTransylvania        !text "Transylvania",0
 sSearchTransylvania       !text "TRANSYLVANIA",0
-sVolumeTransylvania       !raw  12,"TRANSYLVANIA"
+sVolumeTransylvania       +PATH "TRANSYLVANIA"
 
 sTitleCrimsonCrown        !text "Crimson Crown",0
 sSearchCrimsonCrown       !text "CRIMSON CROWN",0
-sVolumeCrimsonCrown       !raw  13,"CRIMSON.CROWN"
+sVolumeCrimsonCrown       +PATH "CRIMSON.CROWN"
 
 ; sTitleSnowball            !text "Snowball",0
 ; sSearchSnowball           !text "SNOWBALL",0
-; sVolumeSnowball           !raw  8,"SNOWBALL"
+; sVolumeSnowball           +PATH "SNOWBALL"
 
 ; sTitleReturnToEden        !text "Return to Eden",0
 ; sSearchReturnToEden       !text "RETURN EDEN",0
-; sVolumeReturnToEden       !raw  14,"RETURN.TO.EDEN"
+; sVolumeReturnToEden       +PATH "RETURN.TO.EDEN"
 
 ; sTitleWormInParadise      !text "The Worm in Paradise",0
 ; sSearchWormInParadise     !text "WORM PARADISE",0
-; sVolumeWormInParadise     !raw  13,"WORM.PARADISE"
+; sVolumeWormInParadise     +PATH "WORM.PARADISE"
 
 sTitleOoTopos             !text "Oo-Topos",0
 sSearchOoTopos            !text "OOTOPOS",0
-sVolumeOoTopos            !raw  7,"OOTOPOS"
+sVolumeOoTopos            +PATH "OOTOPOS"
 
 sTitleTheCovetedMirror    !text "The Coveted Mirror",0
 sSearchTheCovetedMirror   !text "COVETED MIRROR",0
-sVolumeTheCovetedMirror   !raw  14,"COVETED.MIRROR"
+sVolumeTheCovetedMirror   +PATH "COVETED.MIRROR"
 
 Titles
          !word 0
