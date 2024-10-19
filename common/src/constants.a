@@ -45,6 +45,7 @@ HIRES                     = $C057
 ROM_TEXT                  = $FB2F
 ROM_FINALIZE_RESET        = $FB6F
 ROM_MACHINEID             = $FBB3
+ROM_MACHINEID2            = $FBC0
 ROM_BASCALC               = $FBC1
 ROM_HOME                  = $FC58
 ROM_CLREOL_FROM_Y         = $FC9E
@@ -55,6 +56,7 @@ ROM_INVERSE               = $FE80    ; INVERSE text
 ROM_NORMAL                = $FE84    ; NORMAL text (instead of INVERSE or FLASH)
 ROM_IN0                   = $FE89    ; SETKBD
 ROM_PR0                   = $FE93    ; SETVID
+ROM_SAVEREGS              = $FF4A
 
 ; ProDOS constants
 CMD_ONLINE                = $C5

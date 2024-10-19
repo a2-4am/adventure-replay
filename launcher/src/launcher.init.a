@@ -42,7 +42,7 @@ OneTimeInit
          lda   FM+2
          cmp   #>LastMover
          bcc   -
-         ldx   #0
+         ldx   #$00
 FM       lda   FirstMover, x
 FMDEST   sta   RELOC, x
          inx
@@ -71,7 +71,7 @@ FMDEST   sta   RELOC, x
 @notGS
 
          ; clear text page 2 with spaces
-         ldx   #0
+         ldx   #$00
          lda   #$A0
 -        sta   $800, x
          sta   $900, x
@@ -91,7 +91,7 @@ FMDEST   sta   RELOC, x
          lda   ROM_MACHINEID
          cmp   #$06
          bne   @noMouseText
-         lda   $FBC0
+         lda   ROM_MACHINEID2
          beq   @yesMouseText
          cmp   #$E0
          beq   @yesMouseText
@@ -106,23 +106,28 @@ FMDEST   sta   RELOC, x
          ; restore previous Bye program if ours is already installed and we moved
          ; a previous Bye program on a previous launch
          +READ_RAM2_WRITE_RAM2
-         ldx   #$0b
--        lda   $d100, x              ; check if our Bye program is already installed
+         ldx   #$0B
+-        lda   $D100, x              ; check if our Bye program is already installed
          cmp   move_bye_start, x
          bne   @noBye
          dex
          bpl   -
          ; our Bye program is already installed, so uninstall it and
          ; reinstall the previous Bye program, if any
-         lda   $d400
-         cmp   #$d8                  ; CLD opcode
-         beq   +
+         lda   $D400
+         cmp   #$D8                  ; CLD opcode (ProDOS-8)
+         beq   @foundBye
+         lda   $D404
+         cmp   #$FB                  ; XCE opcode (GS/OS)
+         beq   @foundBye
          lda   #$00
-         sta   $d100
-         beq   @noBye
-+        lda   #$d4                  ; restore previous Bye from $D400..$D6FF
+         sta   $D100
+         sta   $D104
+         beq   @noBye                ; always branches
+@foundBye
+         lda   #$D4                  ; restore previous Bye from $D400..$D6FF
          sta   input+1
-         lda   #$d1
+         lda   #$D1
          sta   output+1
          ldy   #$00
          sty   input
@@ -137,7 +142,6 @@ FMDEST   sta   RELOC, x
          dex
          bne   -
 @noBye
-
          +READ_ROM_NO_WRITE
          +LDADDR QuitToProDOS
          +STAY $3F2
@@ -148,7 +152,7 @@ LoadingBuild
          !word BUILDNUMBER
 
 PrintAsDecimal
-         jsr   $FF4A
+         jsr   ROM_SAVEREGS
          ldy   #$02
 --       lda   #$00
          ldx   #$18
@@ -156,7 +160,7 @@ PrintAsDecimal
          bcc   +
          sbc   #$85
          sec
-+        rol   $45
++        rol   $45                   ; populated by ROM_SAVEREGS
          rol   $46
          rol   $47
          rol

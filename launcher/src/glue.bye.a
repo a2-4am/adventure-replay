@@ -6,12 +6,16 @@ RELOC_BYE                 = $1000    ; required by ProDOS
 
 InstallBye
          +READ_RAM2_WRITE_RAM2
-         lda   $d100
-         cmp   #$D8                  ; CLD opcode
+         lda   $D100
+         cmp   #$D8                  ; CLD opcode (ProDOS-8)
+         beq   @foundBye
+         lda   $D104
+         cmp   #$FB                  ; XCE opcode (GS/OS)
          bne   @noBye
-         lda   #$d1                  ; copy existing Bye to $D400..$D6FF
+@foundBye
+         lda   #$D1                  ; copy existing Bye to $D400..$D6FF
          sta   input+1
-         lda   #$d4
+         lda   #$D4
          sta   output+1
          ldy   #$00
          sty   input
@@ -33,7 +37,7 @@ InstallBye
          bne   -
          ;Y=0
 -        lda   move_bye_start, y     ; install our Bye program to $D100
-         sta   $d100, y              ; can be up to $300 bytes but we know
+         sta   $D100, y              ; can be up to $300 bytes but we know
          iny                         ; ours is less than $100
          bne   -
          +READ_ROM_NO_WRITE
@@ -53,18 +57,18 @@ move_bye_start
          sta   STOREOFF
          jsr   ROM_PR0
          jsr   ROM_IN0
-         sta   $4fb
+         sta   $4FB
          jsr   ROM_TEXT
          jsr   ROM_NORMAL
          jsr   ROM_HOME
-         ldx   #$df
-         lda   #$cf
--        sta   $be79, x
-         lda   #0
+         ldx   #$DF
+         lda   #$CF
+-        sta   $BE79, x
+         lda   #$00
          txs
          inx
          bne     -
-         inc   $bf6f
+         inc   $BF6F
 
          ; restore ProDOS prefix (saved during InstallBye)
          jsr   PRODOS_MLI
