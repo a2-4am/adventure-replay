@@ -74,12 +74,13 @@ MixedFizzle
 @copy1   lda   #$20
 @bit     lda   (input), y            ; SMC opcode BIT <-> LDA
          sta   (output), y
-         jsr   +
-+        jsr   ++
-++       jsr   +++
-+++      lda   #$7F
+         lda   #8
+         sta   counter
+-        lda   #$7F
          sta   (gfxdst), y
          lda   gfxdst+1
          adc   #$04
          sta   gfxdst+1
+         dec   counter
+         bne   -
 @exit    rts

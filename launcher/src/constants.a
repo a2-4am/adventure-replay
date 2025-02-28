@@ -14,6 +14,7 @@ IS_IIGS                   = %01000000
 
 ; zero page addresses
 LastKeyPressed            = $F0      ; byte, used everywhere, not persisted
+counter                   = $F9      ; byte, used by MixedFizzle, not persisted
 gfxdst                    = $FA      ; word, used by MixedFizzle, not persisted
 startLine                 = $FA      ; byte, used by DrawText, not persisted
 lineCount                 = $FB      ; byte, used by DrawText, not persisted
