@@ -6,3 +6,11 @@ no need to preserve A/X/Y
 -=-=-
 
 TODO seems to crash after dying
+
+-=-=-
+
+save game:
+
+535C JSR 6615 to print inline string (null-terminated)
+53AE JSR FD6F to handle input
+53B1 checks input and converts to save params
