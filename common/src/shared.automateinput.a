@@ -64,13 +64,13 @@ AutomateInput
 -        lda   #0
          jsr   ROM_WAIT
          bit   KBD
-         bmi   @done
+         bmi   AutoExit
          dex
          bpl   -
          ;A=0
          sta   @wait_time
          lda   AUTO_BUFFER, y
-         beq   @done
+         beq   AutoExit
          ora   #$80
          cmp   #$8D
          bne   +
@@ -79,8 +79,9 @@ AutomateInput
 +
 @x       ldx   #SELF_MODIFIED_BYTE
 @y       ldy   #SELF_MODIFIED_BYTE
+         ora   #$80                  ; sets N flag
          rts
-@done    jmp   ($3F2)
+AutoExit jmp   ($3F2)
 
 !if AUTO_TEMP_BUFFER > 0 {
 AutoSwapBuffer

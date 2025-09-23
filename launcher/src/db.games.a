@@ -2,19 +2,19 @@
 ;(c) 2024 by 4am
 ;
 
-kGameCount = 19
+kGameCount = 20
 
 GameCount
          !byte kGameCount
 
 GameDifficulty
-         !byte 0,2,1,3,4,2,4,3,3,3,2,5,4,4,4,4,3,3,5,5
+         !byte 0,2,1,3,4,2,4,3,3,3,2,4,5,4,4,4,4,3,3,5,5
 !if *-GameDifficulty != kGameCount+1 {
          !serious "GameDifficulty array is wrong size, found ", *-GameDifficulty, ", expected ", kGameCount+1
 }
 
 GameLength
-         !byte 0,1,1,4,3,4,1,2,3,3,3,4,3,3,4,2,3,4,5,5
+         !byte 0,1,1,4,3,4,1,2,3,3,3,5,4,3,3,4,2,3,4,5,5
 !if *-GameLength != kGameCount+1 {
          !serious "GameLength array is wrong size, found ", *-GameLength, ", expected ", kGameCount+1
 }
@@ -31,6 +31,7 @@ txtBrowse
          !text "1982  Adv Intl    The Count             "
          !text "1982  Adv Intl    Strange Odyssey       "
          !text "1983  Micro-Fun   Death in the Caribbean"
+         !text "1983  Sirius      Gruds in Space        "
          !text "1983  Phoenix     Masquerade            "
          !text "1984  Adv Intl    Claymorgue Castle     "
          !text "1984  Adv Intl    QuestProbe/The Hulk   "
@@ -89,6 +90,10 @@ sVolumeStrangeOdyssey     +PATH "SAGA6"
 sTitleDeathInTheCaribbean  !text "Death in the Caribbean",0
 sSearchDeathInTheCaribbean !text "DEATH CARIBBEAN",0
 sVolumeDeathInTheCaribbean +PATH "CARIBBEAN"
+
+sTitleGrudsInSpace        !text "Gruds in Space",0
+sSearchGrudsInSpace       !text "GRUDS SPACE",0
+sVolumeGrudsInSpace       +PATH "GRUDS.IN.SPACE"
 
 sTitleMasquerade          !text "Masquerade",0
 sSearchMasquerade         !text "MASQUERADE",0
@@ -150,6 +155,7 @@ Titles
          !word sTitleTheCount
          !word sTitleStrangeOdyssey
          !word sTitleDeathInTheCaribbean
+         !word sTitleGrudsInSpace
          !word sTitleMasquerade
          !word sTitleClaymorgueCastle
          !word sTitleQuestprobeHulk
@@ -179,6 +185,7 @@ SearchNames
          !word sSearchTheCount
          !word sSearchStrangeOdyssey
          !word sSearchDeathInTheCaribbean
+         !word sSearchGrudsInSpace
          !word sSearchMasquerade
          !word sSearchClaymorgueCastle
          !word sSearchQuestprobeHulk
@@ -209,6 +216,7 @@ VolumeNames
          !word sVolumeTheCount
          !word sVolumeStrangeOdyssey
          !word sVolumeDeathInTheCaribbean
+         !word sVolumeGrudsInSpace
          !word sVolumeMasquerade
          !word sVolumeClaymorgueCastle
          !word sVolumeQuestprobeHulk

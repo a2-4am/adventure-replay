@@ -1,0 +1,176 @@
+;license:MIT
+;(c) 2025 by 4am
+;
+!cpu 6502
+!to "build/LOADER.SYSTEM#FF2000",plain
+*=$2000
+
+; application-specific macros
+!macro RWTS_FILENAMES {
+side_b
+         !byte 6
+         !text "SIDE.B"
+rwts_filenames
+         !word side_b
+}
+
+; application-specific addresses
+PRODOS_BUFFER             = $B800    ; $400 bytes
+STAGE2                    = $B700
+TITLE_STAGE               = $6000
+PREFIX_BUFFER             = $BC00    ; $40 bytes during init
+AUTO_BUFFER               = $BC00    ; $100 bytes (if non-interactive, persistent)
+SAVEGAME                  = $BC00    ; max $100 bytes (if interactive, persistent)
+RWTS                      = $BD00    ; max $100 bytes (persistent)
+INPUT                     = $BE00    ; max $100 bytes (persistent)
+AUTO_INPUT                = INPUT
+AUTO_FILENAME             = $BEBF    ; $41 bytes (if non-interactive, persistent)
+
+; application-specific flags
+AUTO_DRAW_CURSOR          = 0        ; used by automate.input
+AUTO_TEMP_BUFFER          = 0
+
+         !src  "../common/src/loader.init.a"               ; must be first
+                                                           ; exits via Stage1
+         !src  "../common/src/loader.rwts.dos.shim.a"
+         !src  "../common/src/loader.automateinput.blocking.a"
+
+Stage1
+         ; copy RWTS DOS shim into place
+         +INSTALL_RWTS_DOS_SHIM
+
+         ; set up our custom reset vector
+         +STA_16 $3F2, QuitToProDOS
+         jsr   ROM_FINALIZE_RESET
+
+         ; copy stage 2 code into place
+         +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2
+
+         lda   input_filename_start
+         ; stage 2 (now in place) needs to know if we're using automation
+         sta   HasAutomationFile
+         beq   @no_auto
+         +INSTALL_AUTOMATE_INPUT
+         jmp   @goto_stage2
+
+@no_auto
+         ; copy savegame routines into place
+         +SHORT_COPY move_savegame_start, move_savegame_end, SAVEGAME
+
+@goto_stage2
+         ; continue from relocated stage 2
+         jmp   STAGE2
+
+move_stage2_start
+!pseudopc STAGE2 {
+         ; 0800..B5FF
+         +READ_ENTIRE_FILE parm_open_game, parm_read_game
+
+HasAutomationFile=*+1
+         lda   #SELF_MODIFIED_BYTE
+         beq   @no_auto
+
+         ; if we're using automation, install the AutomateInput hook
+         +MAKE_JSR $81A1, AutomateInput
+
+         ; game clobbers reset vector with no easy fix, so change
+         ; automate.input code to quit to ProDOS directly
+         +MAKE_JMP AutoExit, QuitToProDOS
+
+         ; also quit to ProDOS before playing end music
+         +MAKE_JMP $7DDE, QuitToProDOS
+         jmp   @start_game
+
+@no_auto
+         ; if playing interactively, patch the
+         ; save and restore game to redirect to ProDOS files
+         +MAKE_JMP $C00, SaveGame
+         +MAKE_JMP $B97, RestoreGame
+
+@start_game
+         ; game entry point
+         jmp   $68EA
+
+parm_open_game
+         !byte 3
+         !word obj_filename_game
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read_game
+         !byte 4
+         !byte 1
+         !word $0800
+         !word $FFFF
+         !word 0
+obj_filename_game
+         !byte 8
+         !text "OBJ.0800"
+}
+
+move_stage2_end
+
+move_savegame_start
+!pseudopc SAVEGAME {
+SaveGame
+         sec                         ; BC00
+         bcs   +
+RestoreGame
+         clc                         ; BC03
+         jsr   +
+         jmp   $084F
++
+; in:    A=save slot (#$00-#$09)
+;        C=0 if restore (read), C=1 if save (write)
+;        game data in $4000..41FF
+; out:   C=0 if success
+;        C=1 if failure
+         ora   #$30                  ; does not affect C
+         sta   save_slot_ascii
+         lda   #$65                  ; C=0 -> A=#$CA (CMD_READ)
+         rol                         ; C=1 -> A=#$CB (CMD_WRITE)
+         sta   save_op
+         jsr   PRODOS_MLI
+         !byte CMD_OPEN
+         !word save_open
+         bcs   push_error
+         jsr   PRODOS_MLI
+save_op  !byte SELF_MODIFIED_BYTE
+         !word save_rw
+         bcs   push_error
+         lda   save_rw_actual_lo
+         bne   set_error
+         lda   save_rw_actual_hi
+         cmp   #$02
+         bne   set_error
+         clc
+         !byte $A9
+set_error
+         sec
+push_error
+         php
+         jsr   CloseAllFiles
+         plp
+         rts
+
+save_open
+         !byte 3
+         !word save_filename
+         !word PRODOS_BUFFER
+         !byte 0
+save_rw
+         !byte 4
+         !byte 1
+save_rw_addr
+         !word $4000                 ; read/write address (constant)
+         !word $0200                 ; read/write length (constant)
+save_rw_actual_lo
+         !byte SELF_MODIFIED_BYTE
+save_rw_actual_hi
+         !byte SELF_MODIFIED_BYTE
+save_filename
+         !byte 6
+         !text "SAVE."
+save_slot_ascii
+         !text "0"                   ; self-modified
+}
+move_savegame_end

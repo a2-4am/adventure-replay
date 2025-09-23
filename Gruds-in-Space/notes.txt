@@ -1,0 +1,43 @@
+save
+
+command is SAVE GAME, not just SAVE, sigh
+already supports 9 save slots, actually 10 (0-9)
+after prompt and input check, execution continues at $BF3
+pushes save slot ASCII
+$BF7 "prints" carriage return (null-terminated string on stack)
+$BFC pulls save slot ASCII, converts to #$00-#$09
+converts save slot to start track/sector via tables at $BB3/$BBD
+writes $200 bytes from $4000..$41FF to 2 consecutive sectors
+fun fact: when game starts, it loads a save state from track $22, sector $E-$F
+  which is not accessible from LOAD GAME but is immediately after slot 9 on disk
+can patch save at $0C00 exactly, where A contains save slot #$00-#$09
+can just JMP to our custom code, rest of routine is devoted to writing
+save patch can just RTS
+
+-=-=-
+
+restore
+
+command is LOAD GAME, not just LOAD, sigh
+RESTORE GAME also works (but not just RESTORE, double sigh)
+can patch restore at $B97, where A contains restore slot #$00-#$09
+restore patch should exit via JMP $084F
+
+-=-=-
+
+secondary protection
+
+before GO WINDOW to board alien ship (about halfway through the game),
+game prompts for front side of disk and does another protection check,
+then prompts for flip side again
+
+flag is at $415C, change from #$00 to #$01 to make game think it's
+already done the delayed protection check (thus never shows messages)
+
+NOTE: this is in the save/restore game data buffer
+
+-=-=-
+
+soundn effects
+
+SOUND OFF turns off sounds

@@ -35,9 +35,12 @@ move_rwts_start
          lda   rwts_filenames-1, y
          sta   rwts_open_filename+1
          ldy   #$0C
-         lda   (RWTS_PTR), y         ; 1=read or 2=write
-         lsr                         ; 0=read or 1=write
-         ora   #CMD_READ             ; -> CMD_READ or CMD_WRITE
+         lda   (RWTS_PTR), y
+         ror                         ; mimic DOS RWTS logic exactly!
+         bcs   +                     ; do not optimize!
+         lda   #CMD_WRITE            ; some disks put any ol' value into the RWTS command
+         +HIDE_NEXT_2_BYTES          ; and rely on DOS checking bit 0 (e.g. Gruds in Space)
++        lda   #CMD_READ             ; so your clever arithmetic optimization will fail!
          sta   op_rwts
          lda   #$00
          sta   rwts_seek_very_hi

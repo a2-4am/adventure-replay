@@ -17,7 +17,7 @@ FirstMover
 PREFIX_BUFFER
 !pseudopc RELOC {
 persisted_globals_start
-         !fill $40                   ; for PREFIX_BUFFER (populated before relocation)
+         !fill $41                   ; for PREFIX_BUFFER (populated before relocation)
 
 ; ID of selected game, or 0 if none
 GameID

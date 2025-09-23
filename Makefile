@@ -2,6 +2,7 @@ SOURCES := \
 	Masquerade \
 	Fraktured-Faebles \
 	Death-in-the-Caribbean \
+	Gruds-in-Space \
 	Adventureland-v2.1-416 \
 	Pirate-Adventure-v2.1-408 \
 	Mission-Impossible-v2.1-306 \
