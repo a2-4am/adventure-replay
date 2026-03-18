@@ -10,9 +10,37 @@ General ideas for improvement (beyond porting to ProDOS):
     - Sherwood Forest only stores/checks the first 5
   - hotkey to game help and other commands
 
-- accelerate during drawing, decelerate for input
+* accelerate during drawing, decelerate for input
   (1 MHz during input is important for games that have short real-time components)
   - e.g. "The Quest v1.0" drawing routine starts at $A30 and ends at $A79
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+            Adventure Replay
+         GET KEY. UNLOCK STORY.
+
+These are graphical adventure games. You
+type commands, and the game shows where
+you are and what's happening there. You
+can navigate to different locations,
+take and use items to solve puzzles, and
+interact with other characters to move
+through the story and win the game.
+
+Most games use two-word commands, like
+GET LAMP and LIGHT LAMP. Some games also
+have limited support for prepositions
+(LOOK UNDER BED). It can be challenging
+to find the right verb/noun combination.
+
+You usually navigate by typing GO NORTH
+(or SOUTH or EAST or WEST). Most games
+allow you to abbreviate these (N/S/E/W).
+Most games also support pressing the up
+arrow to repeat the last command.
+
+LOOK and EXAMINE everything. Good luck!
+
 
 0123456789012345678901234567890123456789
 Welcome to Adventure Replay!   999 games

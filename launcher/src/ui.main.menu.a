@@ -54,6 +54,9 @@ MainMenuEventA
          lda   #kScreenAbout
          +HIDE_NEXT_2_BYTES
          ; /!\ execution falls through here to MainMenuEventA
+MainMenuEventH
+         lda   #kScreenGlobalHelp
+         +HIDE_NEXT_2_BYTES
 MainMenuEventS
          lda   #kScreenSearch
          jmp   GoForward
@@ -62,8 +65,6 @@ MainMenuEventQ
          jmp   GoBack
 
 MainMenuEventO
-         ;TODO
-MainMenuEventH
          ;TODO
 MainMenuEventDefault
          clc

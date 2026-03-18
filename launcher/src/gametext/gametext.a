@@ -28,4 +28,4 @@
          !src  "src/gametext/gunslinger.a"
          !src  "src/gametext/ootopos.a"
          !src  "src/gametext/the.coveted.mirror.a"
-
+         !src  "src/gametext/help.a"

@@ -36,7 +36,8 @@
 ; LoadGametext
 ; load screen of text from disk
 ;
-; in:    X=title index (0=main AR text, 1+ for individual games)
+; in:    X=index (0=main AR credits, 1..kGameCount for individual games,
+;                 kGameCount+1 for AR global help)
 ; out:   none
 ;------------------------------------------------------------------------------
 LoadGametext
