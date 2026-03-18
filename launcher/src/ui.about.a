@@ -8,12 +8,12 @@ kAboutKeys
 kAboutKeyHandlers
          !word AboutEventDefault
 
-DrawGlobalHelp
-         ldx   #(kGameCount+1)
-         bne   +                     ; always branches
 DrawAbout
          ldx   GameID
-+        jsr   LoadGametext
+         +HIDE_NEXT_2_BYTES
+DrawGlobalHelp
+         ldx   #(kGameCount+1)
+         jsr   LoadGametext
          lda   #$00
          sta   startLine
          lda   #$18
