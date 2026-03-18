@@ -1,0 +1,21 @@
+qkumba's ProDOS port handles
+- loading from disk image as file
+- no disk swapping
+- save games to separate files
+- reset vector
+
+89E2- pre-game prompt for 'do you want to use a joystick (y/n)'
+89E2:A9 CE D0 31 bypasses
+89C7 JSR $89E2 to prompt for joystick
+note at this point everything has been decompressed and 0800..AFFF is game code
+so could use a callback here to a short relocated routine to apply remaining patches
+then exit via $8A2A ('n' path)
+
+0D84- loop to wait for key or button press when text is >4 lines
+0D84:A9 8D EA bypasses
+
+08D5 calls 095A to flash cursor, increment random seed (4E/4F), and return $C000
+0973 is LDA $C000, final instruction before RTS
+could replace with JSR AUTOINPUT
+
+5D7B:A9 D1 EA to quit after game ends (at the 'load/restart/quit' prompt)

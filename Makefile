@@ -17,6 +17,7 @@ SOURCES := \
 	Cranston-Manor \
 	Transylvania-1985 \
 	Crimson-Crown-1985 \
+	Gunslinger \
 	Oo-Topos-1985 \
 	The-Coveted-Mirror-1986
 
@@ -40,13 +41,7 @@ $(BUILDDISK): $(targets) | $(SOURCES) $(BUILDDIR)
 	  $(CADIUS) EXTRACTVOLUME $$dir/build/*.po "$(BUILDDIR)/X/"; \
 	done
 	rm -f $(BUILDDIR)/X/**/PRODOS* $(BUILDDIR)/X/**/_FileInformation.txt
-# I refuse to use cadius ADDFOLDER command because it adds files in random order
-# and I want them added in alphabetical order
-	for dir in "$(BUILDDIR)/X/"*; do \
-	  for f in "$$dir/"*; do \
-	    $(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/X/$$(basename $$dir)/" "$$f" -C; \
-	  done \
-        done
+	$(CADIUS) ADDFOLDER "$@" "/$(DISKVOLUME)/X" "$(BUILDDIR)/X" -C
 	@touch "$@"
 
 # Build all games
@@ -81,3 +76,7 @@ $(BUILDDIR):
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" common/res/PRODOS#FF2000 -C
 
 launcher: $(EXE)
+
+all: clean mount
+
+.NOTPARALLEL:

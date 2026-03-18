@@ -1,0 +1,98 @@
+;license:MIT
+;(c) 2026 by 4am
+;
+!cpu 6502
+!to "build/LOADER.SYSTEM#FF2000",plain
+*=$2000
+
+; application-specific addresses
+PRODOS_BUFFER             = $BB00    ; $400 bytes
+PREFIX_BUFFER             = $0800    ; $40 bytes
+STAGE2                    = $B600
+AUTO_INPUT                = $B700    ; max $100 bytes (if non-interactive, persistent)
+AUTO_FILENAME             = $B7BF    ; $41 bytes (if non-interactive, persistent)
+AUTO_BUFFER               = $B800    ; $100 bytes (if non-interactive, persistent)
+AUTO_DRAW_CURSOR          = 0
+
+         !src  "../common/src/loader.init.a"               ; must be first
+                                                           ; exits via Stage1
+         !src  "../common/src/loader.automateinput.blocking.a"
+
+Stage1
+         ; copy stage 2 code into place
+         ; (includes CloseAllFiles, must do this first)
+         +SHORT_COPY move_stage2_start, move_stage2_end, STAGE2
+
+         ; 533A..8CA2
+         +READ_ENTIRE_FILE parm_open1, parm_read1
+
+         lda   input_filename_start
+         beq   @start_game
+
+         ; copy AutomateInput code and data into place
+         +INSTALL_AUTOMATE_INPUT
+
+         ; bypass title screen animation
+         lda   #$2C
+         sta   $89A4
+
+         +MAKE_JSR $89C7, Patcher
+
+@start_game
+         jmp   (entry)
+
+parm_open1
+         !byte 3
+         !word obj_filename1
+         !word PRODOS_BUFFER
+         !byte 0
+parm_read1
+         !byte 4
+         !byte 1
+entry    !word $533A
+         !word $FFFF
+         !word 0
+obj_filename1
+         +PATH "GUNSLINGER"
+
+;------------------------------------------------------------------------------
+; Stage 2 loader
+; applies patches for automation, then exits to game
+;------------------------------------------------------------------------------
+move_stage2_start
+!pseudopc STAGE2 {
+         !src  "../common/src/shared.swapzp.a"
+         !src  "../common/src/shared.closeallfiles.a"
+Patcher
+         ; patch 1- don't wait for keypress after 4 lines of game text
+         ; patch 2- don't wait for keypress after game over
+         lda   #$A9
+         sta   $0D84
+         sta   $5D7B
+         lda   #$8D
+         sta   $0D85
+         lda   #$D1
+         sta   $5D7C
+         lda   #$EA
+         sta   $0D86
+         sta   $5D7D
+
+         ; install the AutomateInput hook
+         +MAKE_JSR $0973, AutomateInput
+         +MAKE_JSR SwapZP_patch, SwapZP_callback
+
+         ; enter game without prompting for joystick
+         jmp   $8A2A
+
+SwapZP_callback
+         sta   save_200
+SwapZP_callback_patch
+         clc
+         lda   SwapZP_callback_patch
+         eor   #($18 xor $38)
+         sta   SwapZP_callback_patch
+         bcc   +
+         jmp   $BA47                 ; reopen game file handle
++        jmp   CloseAllFiles
+}
+move_stage2_end
